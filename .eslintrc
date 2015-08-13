@@ -1,0 +1,12 @@
+{
+    "rules": {
+        "camelcase": 0,
+        "comma-dangle": 0,
+        "global-strict": 0,
+        "no-underscore-dangle": 0,
+        "no-console": 0,
+        "block-scoped-var": 0,
+        "valid-jsdoc": [1],
+        "no-loop-func": 0,
+    }
+}
