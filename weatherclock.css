@@ -1,0 +1,18 @@
+text.hour {
+  font-size: 7px;
+  text-anchor: middle;
+  alignment-baseline: central;
+}
+line.hour-hand {
+    stroke: black;
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+line.minute-hand {
+    stroke: black;
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+svg {
+    position: fixed;
+}
