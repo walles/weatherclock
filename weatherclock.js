@@ -91,24 +91,15 @@ function fetchWeather(lat, lon) {
 function renderClock(weather) {
   // Empty the current hour marker to indicate where the forecast wraps
   var currentHour = new Date().getHours() % 12;
-  if (currentHour === 0) {
-    currentHour = 12;
-  }
   document.getElementById(currentHour + "h").textContent = "";
 
   // yr.no gives us data starting from the next hour
   var baseHour = (currentHour + 1) % 12;
-  if (baseHour === 0) {
-    baseHour = 12;
-  }
 
   // Loop over 11 hours, because we want to keep the one where the forecast
   // wraps blank.
   for (var dh = 0; dh < 11; dh++) {
     var h = (baseHour + dh) % 12;
-    if (h === 0) {
-      h = 12;
-    }
     log(h + ": "
       + weather.symbols[dh] + ", "
       + weather.precipitation[dh] + "mm, "

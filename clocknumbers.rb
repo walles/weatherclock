@@ -4,7 +4,6 @@ radius = 35
 
 (0..11).each do |n|
   h = n
-  h = 12 if h == 0
 
   a = 2 * Math::PI * (h / 12.0);
 
@@ -13,5 +12,5 @@ radius = 35
 
   puts "" if h % 3 == 0
   printf(%|   <text class="hour" id="%dh" x="%d" y="%d">%d</text>\n|,
-         h, x, y, h)
+         h, x, y, h == 0 ? 12 : h)
 end
