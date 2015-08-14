@@ -7,7 +7,6 @@ location on a clock face.
 It shows temperature where ordinary clocks show hour numbers, and weather symbols for each hour.
 
 # TODO
-* Add link to Github project at the top of the page.
 * Move clock to top of screen rather than centering it vertically.
 * Make image properly centered in Firefox (and keep functionality in Chrome and
   Safari)
@@ -39,3 +38,4 @@ pleasing way of doing this.
 * Clarify where the line goes between the current temperature and forecasts.
 * Put weather symbols on the clock face, between the temperatures and the clock
 center, but much closer to the temperatures.
+* Add link to Github project at the top of the page.

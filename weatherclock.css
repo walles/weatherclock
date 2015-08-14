@@ -22,3 +22,8 @@ svg {
   bottom: 0;
   right: 0;
 }
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
