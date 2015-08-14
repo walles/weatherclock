@@ -110,7 +110,9 @@ function renderClock(weather) {
     var temperatureString = Math.round(weather.temperatures[dh]) + "°";
     document.getElementById(h + "h").textContent = temperatureString;
 
-    // Show symbol for this hour
+    // Note that we *could* download an SVG weather symbol, but that doesn't
+    // work on Firefox 38.0.5 so we do PNG instead. And since cell phone screens
+    // are what we're aiming for, PNG should be fine.
     var symbolUrl =
       "http://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
       weather.symbols[dh] +
