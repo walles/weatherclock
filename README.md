@@ -5,6 +5,9 @@ location on a clock face.
 It shows temperature where ordinary clocks show hour numbers.
 
 # TODO
+* Move clock to top of screen rather than centering it vertically.
+* Make image properly centered in Firefox (and keep functionality in Chrome and
+  Safari)
 * Handle places like Alcudia where we only get numbers for every three hours.
 * Somehow figure out location name and put it on the clock face just below the
 center, kind of where the brand could be on an actual clock.
