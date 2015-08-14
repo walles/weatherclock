@@ -16,7 +16,7 @@ function log(message) {
 * array properties.  Each array has twelve element; one for each hour
 * of the clock.
 *
-* The first element of each array is for the upcoming hour.
+* The first element of each array is for the upcoming hour, not for now.
 * * temperatures (in celsius)
 * * wind (in m/s)
 * * precipitation  (in mm)
@@ -89,11 +89,23 @@ function fetchWeather(lat, lon) {
 }
 
 function renderClock(weather) {
-  var currentHour = new Date().getHours();
-  currentHour %= 12;
+  // Empty the current hour marker to indicate where the forecast wraps
+  var currentHour = new Date().getHours() % 12;
+  if (currentHour === 0) {
+    currentHour = 12;
+  }
+  document.getElementById(currentHour + "h").textContent = "";
 
-  for (var dh = 0; dh < 12; dh++) {
-    var h = (currentHour + dh) % 12;
+  // yr.no gives us data starting from the next hour
+  var baseHour = (currentHour + 1) % 12;
+  if (baseHour === 0) {
+    baseHour = 12;
+  }
+
+  // Loop over 11 hours, because we want to keep the one where the forecast
+  // wraps blank.
+  for (var dh = 0; dh < 11; dh++) {
+    var h = (baseHour + dh) % 12;
     if (h === 0) {
       h = 12;
     }
@@ -105,11 +117,6 @@ function renderClock(weather) {
 
     // Show temperature for this hour
     var temperatureString = Math.round(weather.temperatures[dh]) + "°";
-    if (dh === 0) {
-      // Hint the user on where the border is by omitting the current
-      // temperature.
-      temperatureString = "";
-    }
     document.getElementById(h + "h").textContent = temperatureString;
   }
 }

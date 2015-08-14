@@ -15,6 +15,7 @@ It shows temperature where ordinary clocks show hour numbers.
 * Test on other computer
 * Add wind speed visualization?
 * Support Fahrenheit?
+* Make sure we refresh the display if it's too out of date.
 
 # DONE
 * Display an SVG clock face.
