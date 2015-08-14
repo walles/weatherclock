@@ -1,8 +1,10 @@
 # Weather Clock
-Displays the weather forecast for the upcoming 12 (11?) hours for the current
+Try it here: <http://walles.github.io/weatherclock/>
+
+Displays the weather forecast for the upcoming 11 hours for the current
 location on a clock face.
 
-It shows temperature where ordinary clocks show hour numbers.
+It shows temperature where ordinary clocks show hour numbers, and weather symbols for each hour.
 
 # TODO
 * Add link to Github project at the top of the page.
