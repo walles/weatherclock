@@ -26,3 +26,4 @@ It shows temperature where ordinary clocks show hour numbers.
 * Draw clock hands
 * Use the current location
 * Appropriately give credit to yr.no for the weather data.
+* Clean up the clock to be just a circle with numbers in it.

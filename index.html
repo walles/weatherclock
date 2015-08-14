@@ -2,57 +2,44 @@
 <html>
 <script src="weatherclock.js"></script>
 <head>
-<meta charset="utf-8">
-<title>Weather Clock</title>
-<link rel="stylesheet" type="text/css" href="weatherclock.css" />
+  <meta charset="utf-8">
+  <title>Weather Clock</title>
+  <link rel="stylesheet" type="text/css" href="weatherclock.css" />
 </head>
 <body onload="setClock();">
 
 <svg
-   id="weatherclock"
-   width="95%" height="95%"
-   xmlns="http://www.w3.org/2000/svg" version="1.1"
-   viewbox="-50 -50 100 100">
-   <circle cx="0" cy="0" r="45" stroke="black" stroke-width="10" fill="red" />
+  id="weatherclock"
+  width="95%" height="95%"
+  xmlns="http://www.w3.org/2000/svg" version="1.1"
+  viewbox="-50 -50 100 100">
+  <circle cx="0" cy="0" r="45" stroke="black" stroke-width="5" fill="white" />
 
-   <path class="slice" id= "slice12to1" d="M0,0 L  0, 35 A35,35 0 0,1  17, 30 z" fill="silver" />
-   <path class="slice" id=  "slice1to2" d="M0,0 L 17, 30 A35,35 0 0,1  30, 18 z" fill=  "gray" />
-   <path class="slice" id=  "slice2to3" d="M0,0 L 30, 18 A35,35 0 0,1  35,  0 z" fill="silver" />
-   <path class="slice" id=  "slice3to4" d="M0,0 L 35,  0 A35,35 0 0,1  30,-17 z" fill=  "gray" />
-   <path class="slice" id=  "slice4to5" d="M0,0 L 30,-17 A35,35 0 0,1  17,-30 z" fill="silver" />
-   <path class="slice" id=  "slice5to6" d="M0,0 L 17,-30 A35,35 0 0,1   0,-35 z" fill=  "gray" />
-   <path class="slice" id=  "slice6to7" d="M0,0 L  0,-35 A35,35 0 0,1 -18,-30 z" fill="silver" />
-   <path class="slice" id=  "slice7to8" d="M0,0 L-18,-30 A35,35 0 0,1 -30,-18 z" fill=  "gray" />
-   <path class="slice" id=  "slice8to9" d="M0,0 L-30,-18 A35,35 0 0,1 -35,  0 z" fill="silver" />
-   <path class="slice" id= "slice9to10" d="M0,0 L-35,  0 A35,35 0 0,1 -30, 18 z" fill=  "gray" />
-   <path class="slice" id="slice10to11" d="M0,0 L-30, 18 A35,35 0 0,1 -18, 30 z" fill="silver" />
-   <path class="slice" id="slice11to12" d="M0,0 L-18, 30 A35,35 0 0,1   0, 35 z" fill=  "gray" />
+  <text class="hour" id="12h" x="0" y="-35">12</text>
+  <text class="hour" id="1h" x="17" y="-30">1</text>
+  <text class="hour" id="2h" x="30" y="-18">2</text>
 
-   <text class="hour" id="12h" x="0" y="-30">12</text>
-   <text class="hour" id="1h" x="15" y="-26">1</text>
-   <text class="hour" id="2h" x="26" y="-15">2</text>
+  <text class="hour" id="3h" x="35" y="0">3</text>
+  <text class="hour" id="4h" x="30" y="17">4</text>
+  <text class="hour" id="5h" x="17" y="30">5</text>
 
-   <text class="hour" id="3h" x="30" y="0">3</text>
-   <text class="hour" id="4h" x="26" y="15">4</text>
-   <text class="hour" id="5h" x="15" y="26">5</text>
+  <text class="hour" id="6h" x="0" y="35">6</text>
+  <text class="hour" id="7h" x="-18" y="30">7</text>
+  <text class="hour" id="8h" x="-30" y="18">8</text>
 
-   <text class="hour" id="6h" x="0" y="30">6</text>
-   <text class="hour" id="7h" x="-15" y="26">7</text>
-   <text class="hour" id="8h" x="-26" y="15">8</text>
+  <text class="hour" id="9h" x="-35" y="0">9</text>
+  <text class="hour" id="10h" x="-30" y="-18">10</text>
+  <text class="hour" id="11h" x="-18" y="-30">11</text>
 
-   <text class="hour" id="9h" x="-30" y="0">9</text>
-   <text class="hour" id="10h" x="-26" y="-15">10</text>
-   <text class="hour" id="11h" x="-15" y="-26">11</text>
-
-   <line id="hour-hand" class="hour-hand" x1="0" y1="0" x2="0" y2="-20" />
-   <line id="minute-hand" class="minute-hand" x1="0" y1="0" x2="0" y2="-25" />
+  <line id="hour-hand" class="hour-hand" x1="0" y1="0" x2="0" y2="-24" />
+  <line id="minute-hand" class="minute-hand" x1="0" y1="0" x2="0" y2="-28" />
 </svg>
 
 <pre id="log"></pre>
 
 <p class="footer">Weather forecast from <a href="yr.no">yr.no</a>, delivered by
   the <a href="http://met.no/English/">Norwegian
-  Meteorological Institute</a> and the <a href="http://www.nrk.no/">NRK</a>.</p>
+    Meteorological Institute</a> and the <a href="http://www.nrk.no/">NRK</a>.</p>
 
 </body>
 </html>
