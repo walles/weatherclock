@@ -5,7 +5,6 @@ location on a clock face.
 It shows temperature where ordinary clocks show hour numbers.
 
 # TODO
-* Appropriately give credit to yr.no for the weather data.
 * Put weather symbols on the clock face, between the temperatures and the clock center, but much closer to the temperatures.
 * Clarify where the line goes between the current temperature and
   forecasts.
@@ -26,3 +25,4 @@ It shows temperature where ordinary clocks show hour numbers.
 * Put temperature numbers on clock face
 * Draw clock hands
 * Use the current location
+* Appropriately give credit to yr.no for the weather data.

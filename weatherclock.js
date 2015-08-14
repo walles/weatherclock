@@ -76,6 +76,7 @@ function fetchWeather(lat, lon) {
   + lat
   + ";lon="
   + lon;
+  log("Getting weather from: " + url);
 
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.open("GET", url, false);

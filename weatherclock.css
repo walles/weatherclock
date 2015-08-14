@@ -16,3 +16,8 @@ line.minute-hand {
 svg {
     position: fixed;
 }
+.footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
