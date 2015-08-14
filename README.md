@@ -5,6 +5,7 @@ location on a clock face.
 It shows temperature where ordinary clocks show hour numbers.
 
 # TODO
+* Add link to Github project at the top of the page.
 * Move clock to top of screen rather than centering it vertically.
 * Make image properly centered in Firefox (and keep functionality in Chrome and
   Safari)
