@@ -5,9 +5,6 @@ location on a clock face.
 It shows temperature where ordinary clocks show hour numbers.
 
 # TODO
-* Put weather symbols on the clock face, between the temperatures and the clock
-center, but much closer to the temperatures. Get symbols from:
-<http://api.met.no/weatherapi/weathericon/1.1/?symbol=40;content_type=image/svg>
 * Handle places like Alcudia where we only get numbers for every three hours.
 * Somehow figure out location name and put it on the clock face just below the
 center, kind of where the brand could be on an actual clock.
@@ -34,3 +31,5 @@ pleasing way of doing this.
 * Appropriately give credit to yr.no for the weather data.
 * Clean up the clock to be just a circle with numbers in it.
 * Clarify where the line goes between the current temperature and forecasts.
+* Put weather symbols on the clock face, between the temperatures and the clock
+center, but much closer to the temperatures.

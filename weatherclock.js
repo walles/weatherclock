@@ -49,12 +49,12 @@ function parseWeatherXml(weatherXml) {
     var precipitationNode = nextPrognosis.getElementsByTagName("precipitation")[0];
     var precipitationValue = precipitationNode.attributes.value.value;
     var symbolNode = nextPrognosis.getElementsByTagName("symbol")[0];
-    var symbolValue = symbolNode.attributes.id.value;
+    var symbolNumber = symbolNode.attributes.number.value;
 
     temperatures.push(celsiusValue);
     wind.push(windValue);
     precipitation.push(precipitationValue);
-    symbols.push(symbolValue);
+    symbols.push(symbolNumber);
 
     if (temperatures.length >= 12) {
       break;
@@ -72,10 +72,10 @@ function parseWeatherXml(weatherXml) {
 function fetchWeather(lat, lon) {
   // Fetch weather from yr.no
   var url =
-  "http://crossorigin.me/http://api.met.no/weatherapi/locationforecast/1.9/?lat="
-  + lat
-  + ";lon="
-  + lon;
+    "http://crossorigin.me/http://api.met.no/weatherapi/locationforecast/1.9/?lat="
+    + lat
+    + ";lon="
+    + lon;
   log("Getting weather from: " + url);
 
   var xmlhttp = new XMLHttpRequest();
@@ -109,6 +109,13 @@ function renderClock(weather) {
     // Show temperature for this hour
     var temperatureString = Math.round(weather.temperatures[dh]) + "°";
     document.getElementById(h + "h").textContent = temperatureString;
+
+    // Show symbol for this hour
+    var symbolUrl =
+      "http://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
+      weather.symbols[dh] +
+      ";content_type=image/svg";
+    document.getElementById(h + "himage").setAttribute("xlink:href", symbolUrl);
   }
 }
 
