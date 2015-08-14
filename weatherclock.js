@@ -114,7 +114,7 @@ function renderClock(weather) {
     var symbolUrl =
       "http://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
       weather.symbols[dh] +
-      ";content_type=image/svg";
+      ";content_type=image/png";
     document.getElementById(h + "himage").setAttribute("xlink:href", symbolUrl);
   }
 }
