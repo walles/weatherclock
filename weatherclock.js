@@ -93,25 +93,24 @@ function renderClock(weather) {
   currentHour %= 12;
 
   for (var dh = 0; dh < 12; dh++) {
-    var h0 = (currentHour + dh) % 12;
-    if (h0 === 0) {
-      h0 = 12;
+    var h = (currentHour + dh) % 12;
+    if (h === 0) {
+      h = 12;
     }
-    var h1 = (h0 + 1) % 12;
-    if (h1 === 0) {
-      h1 = 12;
-    }
-    log(h0 + "-" + h1 + ": "
-    + weather.symbols[dh] + ", "
-    + weather.precipitation[dh] + "mm");
-    log("  " + h1 + ": "
-    + weather.temperatures[dh] + "C, "
-    + weather.wind[dh] + "m/s");
+    log(h + ": "
+      + weather.symbols[dh] + ", "
+      + weather.precipitation[dh] + "mm, "
+      + weather.temperatures[dh] + "C, "
+      + weather.wind[dh] + "m/s");
 
     // Show temperature for this hour
-    document.getElementById(h1 + "h").textContent =
-    Math.round(weather.temperatures[dh])
-    + "°";
+    var temperatureString = Math.round(weather.temperatures[dh]) + "°";
+    if (dh === 0) {
+      // Hint the user on where the border is by omitting the current
+      // temperature.
+      temperatureString = "";
+    }
+    document.getElementById(h + "h").textContent = temperatureString;
   }
 }
 
