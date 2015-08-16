@@ -4,9 +4,22 @@ Try it here: <http://walles.github.io/weatherclock/>
 Displays the weather forecast for the upcoming 11 hours for the current
 location on a clock face.
 
-It shows temperature where ordinary clocks show hour numbers, and weather symbols for each hour.
+It shows temperature where ordinary clocks show hour numbers, and weather
+symbols for each hour.
+
+# Refactoring time handling
+Here's how it should work:
+1. We download the weather XML.
+2. We put all on-the-hour observations in a timestamp->observation map.
+3. When rendering the clock, we think about what timestamp each of the twelve
+positions corresponds to, and use that to determine what to render.
+
+This would help with the only-every-third hour case, as well as simplifying
+identifying which hours are during the night.
 
 # TODO
+* Use night style icons at night. The icon fetching API we use has a parameter
+  for that.
 * Move clock to top of screen rather than centering it vertically.
 * Make image properly centered in Firefox (and keep functionality in Chrome and
   Safari)
@@ -19,7 +32,10 @@ center, kind of where the brand could be on an actual clock.
 * Test on other computer
 * Add wind speed visualization?
 * Support Fahrenheit?
-* Make sure we refresh the display if it's too out of date.
+* Imagine somebody opens this page on a cell phone. They then put the web
+  browser in the background. They then bring the web browser to the front again.
+  When this happens, we should detect it and refresh ourselves, first the clock
+  hands and then the forecasted weather.
 
 # Dropped
 * Draw precipitation from the center out. Basically a radial version of what
