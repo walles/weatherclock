@@ -12,24 +12,21 @@ function log(message) {
   console.log(message);
 }
 
-/* Parses weather XML from yr.no into a weather object with three
-* array properties.  Each array has twelve element; one for each hour
-* of the clock.
+/* Parses weather XML from yr.no into a weather object that maps timestamps (in
+* seconds since the epoch) to forecasts. A forecast has these fields:
 *
-* The first element of each array is for the upcoming hour, not for now.
-* * temperatures (in celsius)
-* * wind (in m/s)
-* * precipitation  (in mm)
-* * weather symbol (string, FIXME: should maybe be URL to icon?)
+* .celsius: The forecasted temperatures in centigrades
+*
+* .wind_m_s: The forecasted wind speed
+*
+* .symbol: The weather symbol index. Resolve using
+*         http://api.yr.no/weatherapi/weathericon
 */
 function parseWeatherXml(weatherXml) {
   var allPrognoses = weatherXml.getElementsByTagName("time");
   log("Parsing " + allPrognoses.length + " prognoses...");
 
-  var temperatures = [];
-  var wind = [];
-  var precipitation = [];
-  var symbols = [];
+  var forecasts = {};
   for (var i = 0; i < allPrognoses.length; i++) {
     var prognosis = allPrognoses[i];
     var from = prognosis.attributes.from.value;
@@ -39,34 +36,26 @@ function parseWeatherXml(weatherXml) {
       continue;
     }
 
+    var timestamp = Date.parse(from);
+
     var celsiusNode = prognosis.getElementsByTagName("temperature")[0];
     var celsiusValue = celsiusNode.attributes.value.value;
+
     var windNode = prognosis.getElementsByTagName("windSpeed")[0];
     var windValue = windNode.attributes.mps.value;
 
-    var nextPrognosis = allPrognoses[i + 1];
-
-    var precipitationNode = nextPrognosis.getElementsByTagName("precipitation")[0];
-    var precipitationValue = precipitationNode.attributes.value.value;
     var symbolNode = nextPrognosis.getElementsByTagName("symbol")[0];
     var symbolNumber = symbolNode.attributes.number.value;
 
-    temperatures.push(celsiusValue);
-    wind.push(windValue);
-    precipitation.push(precipitationValue);
-    symbols.push(symbolNumber);
+    var forecast = {};
+    forecast.celsius = celsiusValue;
+    forecast.wind_m_s = windValue;
+    forecast.symbol = symbolNumber;
 
-    if (temperatures.length >= 12) {
-      break;
-    }
+    forecasts[timestamp] = forecast;
   }
 
-  var weather = {};
-  weather.temperatures = temperatures;
-  weather.wind = wind;
-  weather.precipitation = precipitation;
-  weather.symbols = symbols;
-  return weather;
+  return forecasts;
 }
 
 function fetchWeather(lat, lon) {

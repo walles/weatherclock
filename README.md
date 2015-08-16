@@ -9,8 +9,8 @@ symbols for each hour.
 
 # Refactoring time handling
 Here's how it should work:
-1. We download the weather XML.
-2. We put all on-the-hour observations in a timestamp->observation map.
+1. OK: We download the weather XML.
+2. OK: We put all on-the-hour observations in a timestamp->observation map.
 3. When rendering the clock, we think about what timestamp each of the twelve
 positions corresponds to, and use that to determine what to render.
 
