@@ -78,34 +78,39 @@ function fetchWeather(lat, lon) {
 }
 
 function renderClock(weather) {
-  // Empty the current hour marker to indicate where the forecast wraps
-  var currentHour = new Date().getHours() % 12;
-  document.getElementById(currentHour + "h").textContent = "";
+  var baseTimestamp = new Date();
+  baseTimestamp.setMinutes(0);
+  baseTimestamp.setSeconds(0);
+  baseTimestamp.setMilliseconds(0);
 
-  // yr.no gives us data starting from the next hour
-  var baseHour = (currentHour + 1) % 12;
+  var baseHour = baseTimestamp.getHours() % 12;
 
-  // Loop over 11 hours, because we want to keep the one where the forecast
-  // wraps blank.
-  for (var dh = 0; dh < 11; dh++) {
-    var h = (baseHour + dh) % 12;
-    log(h + ": "
-      + weather.symbols[dh] + ", "
-      + weather.precipitation[dh] + "mm, "
-      + weather.temperatures[dh] + "C, "
-      + weather.wind[dh] + "m/s");
+  for (var dh = 0; dh < 12; dh++) {
+    var renderTimestamp = new Date(baseTimestamp.getTime() + dh * 3600 * 1000);
+    var renderHour = (baseHour + dh) % 12;
+    var renderWeather = weather[renderTimestamp];
 
-    // Show temperature for this hour
-    var temperatureString = Math.round(weather.temperatures[dh]) + "°";
+    var temperatureString = "";
+    var symbolUrl = "";
+
+    log(renderHour + ": " + renderTimestamp + ": " + renderWeather);
+
+    if (dh === 0) {
+      // To indicate where the line is between now and now + 12h, we leave the
+      // current hour empty.
+    } else if (renderWeather) {
+      temperatureString = Math.round(renderWeather.celsius) + "°";
+
+      // Note that we *could* download an SVG weather symbol, but that doesn't
+      // work on Firefox 38.0.5 so we do PNG instead. And since cell phone screens
+      // are what we're aiming for, PNG should be fine.
+      var symbolUrl =
+        "http://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
+        renderWeather.symbol +
+        ";content_type=image/png";
+    }
+
     document.getElementById(h + "h").textContent = temperatureString;
-
-    // Note that we *could* download an SVG weather symbol, but that doesn't
-    // work on Firefox 38.0.5 so we do PNG instead. And since cell phone screens
-    // are what we're aiming for, PNG should be fine.
-    var symbolUrl =
-      "http://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
-      weather.symbols[dh] +
-      ";content_type=image/png";
     document.getElementById(h + "himage").setAttribute("xlink:href", symbolUrl);
   }
 }
