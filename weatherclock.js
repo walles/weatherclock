@@ -112,6 +112,11 @@ function renderClock(weather) {
     var temperatureString = "";
     var symbolUrl = "";
 
+    var renderHour24 = renderTimestamp.getHours();
+
+    // FIXME: Replace 2100-0600 night with actual sunset / sunrise based limits
+    var isNight = (renderHour24 < 7) || (renderHour24 > 20);
+
     log(renderHour + ": " + renderTimestamp + ": " + renderWeather);
 
     if (dh === 0) {
@@ -126,7 +131,8 @@ function renderClock(weather) {
       var symbolUrl =
         "http://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
         renderWeather.symbol +
-        ";content_type=image/png";
+        ";content_type=image/png;is_night=" +
+        (isNight ? 1 : 0);
     }
 
     document.getElementById(renderHour + "h").textContent = temperatureString;

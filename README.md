@@ -8,8 +8,7 @@ It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
 # TODO
-* Use night style icons at night. The icon fetching API we use has a parameter
-  for that.
+* Use proper sunset / sunrise hours to determine when to use night symbols.
 * Move clock to top of screen rather than centering it vertically.
 * Make image properly centered in Firefox (and keep functionality in Chrome and
   Safari)
@@ -46,3 +45,4 @@ pleasing way of doing this.
 center, but much closer to the temperatures.
 * Add link to Github project at the top of the page.
 * Refactored timestamp handling
+* Use night style icons at night.
