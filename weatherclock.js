@@ -40,11 +40,13 @@ function parseWeatherXml(weatherXml) {
       var symbolNode = prognosis.getElementsByTagName("symbol")[0];
       var symbolNumber = symbolNode.attributes.number.value;
 
-      var forecast = forecasts[timestamp];
+      var forecast = forecasts[from];
       if (!forecast) {
         forecast = {};
       }
       forecast.symbol = symbolNumber;
+
+      forecasts[from] = forecast;
       continue;
     }
 
