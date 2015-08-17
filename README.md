@@ -7,17 +7,6 @@ location on a clock face.
 It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
-# Refactoring time handling
-Here's how it should work:
-1. OK: We download the weather XML.
-2. OK: We put all on-the-hour observations in a timestamp->observation map.
-3. OK: When rendering the clock, we think about what timestamp each of the
-twelve positions corresponds to, and use that to determine what to render.
-4. OK: Test the new implementation and get it working.
-
-This would help with the only-every-third hour case, as well as simplifying
-identifying which hours are during the night.
-
 # TODO
 * Use night style icons at night. The icon fetching API we use has a parameter
   for that.
@@ -56,3 +45,4 @@ pleasing way of doing this.
 * Put weather symbols on the clock face, between the temperatures and the clock
 center, but much closer to the temperatures.
 * Add link to Github project at the top of the page.
+* Refactored timestamp handling
