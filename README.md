@@ -9,10 +9,11 @@ symbols for each hour.
 
 # Refactoring time handling
 Here's how it should work:
-1. We download the weather XML.
-2. We put all on-the-hour observations in a timestamp->observation map.
-3. When rendering the clock, we think about what timestamp each of the twelve
-positions corresponds to, and use that to determine what to render.
+1. OK: We download the weather XML.
+2. OK: We put all on-the-hour observations in a timestamp->observation map.
+3. OK: When rendering the clock, we think about what timestamp each of the
+twelve positions corresponds to, and use that to determine what to render.
+4. OK: Test the new implementation and get it working.
 
 This would help with the only-every-third hour case, as well as simplifying
 identifying which hours are during the night.

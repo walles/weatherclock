@@ -12,61 +12,67 @@ function log(message) {
   console.log(message);
 }
 
-/* Parses weather XML from yr.no into a weather object with three
-* array properties.  Each array has twelve element; one for each hour
-* of the clock.
+/* Parses weather XML from yr.no into a weather object that maps timestamps (in
+* seconds since the epoch) to forecasts. A forecast has these fields:
 *
-* The first element of each array is for the upcoming hour, not for now.
-* * temperatures (in celsius)
-* * wind (in m/s)
-* * precipitation  (in mm)
-* * weather symbol (string, FIXME: should maybe be URL to icon?)
+* .celsius: The forecasted temperatures in centigrades
+*
+* .wind_m_s: The forecasted wind speed
+*
+* .symbol: The weather symbol index. Resolve using
+*         http://api.yr.no/weatherapi/weathericon
 */
 function parseWeatherXml(weatherXml) {
   var allPrognoses = weatherXml.getElementsByTagName("time");
   log("Parsing " + allPrognoses.length + " prognoses...");
 
-  var temperatures = [];
-  var wind = [];
-  var precipitation = [];
-  var symbols = [];
+  var forecasts = {};
   for (var i = 0; i < allPrognoses.length; i++) {
     var prognosis = allPrognoses[i];
-    var from = prognosis.attributes.from.value;
-    var to = prognosis.attributes.to.value;
-    if (from !== to) {
+
+    var from = new Date(prognosis.attributes.from.value);
+    var to = new Date(prognosis.attributes.to.value);
+    var dh = (to.getTime() - from.getTime()) / (3600 * 1000);
+
+    if (dh === 1) {
+      // The symbol is really for a range, but we pretend it's for the hour
+      // where it starts for now. FIXME: How should we really visualize this?
+      var symbolNode = prognosis.getElementsByTagName("symbol")[0];
+      var symbolNumber = symbolNode.attributes.number.value;
+
+      var forecast = forecasts[timestamp];
+      if (!forecast) {
+        forecast = {};
+      }
+      forecast.symbol = symbolNumber;
+      continue;
+    }
+
+    if (dh != 0) {
       // We only want the per-hour prognoses
       continue;
     }
 
+    var timestamp = from; // (=== to)
+
     var celsiusNode = prognosis.getElementsByTagName("temperature")[0];
     var celsiusValue = celsiusNode.attributes.value.value;
+
     var windNode = prognosis.getElementsByTagName("windSpeed")[0];
     var windValue = windNode.attributes.mps.value;
 
-    var nextPrognosis = allPrognoses[i + 1];
-
-    var precipitationNode = nextPrognosis.getElementsByTagName("precipitation")[0];
-    var precipitationValue = precipitationNode.attributes.value.value;
-    var symbolNode = nextPrognosis.getElementsByTagName("symbol")[0];
-    var symbolNumber = symbolNode.attributes.number.value;
-
-    temperatures.push(celsiusValue);
-    wind.push(windValue);
-    precipitation.push(precipitationValue);
-    symbols.push(symbolNumber);
-
-    if (temperatures.length >= 12) {
-      break;
+    var forecast = forecasts[timestamp];
+    if (!forecast) {
+      forecast = {};
     }
+    forecast.celsius = celsiusValue;
+    forecast.wind_m_s = windValue;
+    forecast.symbol = symbolNumber;
+
+    forecasts[timestamp] = forecast;
   }
 
-  var weather = {};
-  weather.temperatures = temperatures;
-  weather.wind = wind;
-  weather.precipitation = precipitation;
-  weather.symbols = symbols;
-  return weather;
+  return forecasts;
 }
 
 function fetchWeather(lat, lon) {
@@ -89,35 +95,40 @@ function fetchWeather(lat, lon) {
 }
 
 function renderClock(weather) {
-  // Empty the current hour marker to indicate where the forecast wraps
-  var currentHour = new Date().getHours() % 12;
-  document.getElementById(currentHour + "h").textContent = "";
+  var baseTimestamp = new Date();
+  baseTimestamp.setMinutes(0);
+  baseTimestamp.setSeconds(0);
+  baseTimestamp.setMilliseconds(0);
 
-  // yr.no gives us data starting from the next hour
-  var baseHour = (currentHour + 1) % 12;
+  var baseHour = baseTimestamp.getHours() % 12;
 
-  // Loop over 11 hours, because we want to keep the one where the forecast
-  // wraps blank.
-  for (var dh = 0; dh < 11; dh++) {
-    var h = (baseHour + dh) % 12;
-    log(h + ": "
-      + weather.symbols[dh] + ", "
-      + weather.precipitation[dh] + "mm, "
-      + weather.temperatures[dh] + "C, "
-      + weather.wind[dh] + "m/s");
+  for (var dh = 0; dh < 12; dh++) {
+    var renderTimestamp = new Date(baseTimestamp.getTime() + dh * 3600 * 1000);
+    var renderHour = (baseHour + dh) % 12;
+    var renderWeather = weather[renderTimestamp];
 
-    // Show temperature for this hour
-    var temperatureString = Math.round(weather.temperatures[dh]) + "°";
-    document.getElementById(h + "h").textContent = temperatureString;
+    var temperatureString = "";
+    var symbolUrl = "";
 
-    // Note that we *could* download an SVG weather symbol, but that doesn't
-    // work on Firefox 38.0.5 so we do PNG instead. And since cell phone screens
-    // are what we're aiming for, PNG should be fine.
-    var symbolUrl =
-      "http://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
-      weather.symbols[dh] +
-      ";content_type=image/png";
-    document.getElementById(h + "himage").setAttribute("xlink:href", symbolUrl);
+    log(renderHour + ": " + renderTimestamp + ": " + renderWeather);
+
+    if (dh === 0) {
+      // To indicate where the line is between now and now + 12h, we leave the
+      // current hour empty.
+    } else if (renderWeather) {
+      temperatureString = Math.round(renderWeather.celsius) + "°";
+
+      // Note that we *could* download an SVG weather symbol, but that doesn't
+      // work on Firefox 38.0.5 so we do PNG instead. And since cell phone screens
+      // are what we're aiming for, PNG should be fine.
+      var symbolUrl =
+        "http://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
+        renderWeather.symbol +
+        ";content_type=image/png";
+    }
+
+    document.getElementById(renderHour + "h").textContent = temperatureString;
+    document.getElementById(renderHour + "himage").setAttribute("xlink:href", symbolUrl);
   }
 }
 
