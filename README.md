@@ -13,7 +13,7 @@ Here's how it should work:
 2. OK: We put all on-the-hour observations in a timestamp->observation map.
 3. OK: When rendering the clock, we think about what timestamp each of the
 twelve positions corresponds to, and use that to determine what to render.
-4. Test the new implementation and get it working.
+4. OK: Test the new implementation and get it working.
 
 This would help with the only-every-third hour case, as well as simplifying
 identifying which hours are during the night.

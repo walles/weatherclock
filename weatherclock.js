@@ -29,14 +29,31 @@ function parseWeatherXml(weatherXml) {
   var forecasts = {};
   for (var i = 0; i < allPrognoses.length; i++) {
     var prognosis = allPrognoses[i];
-    var from = prognosis.attributes.from.value;
-    var to = prognosis.attributes.to.value;
-    if (from !== to) {
+
+    var from = new Date(prognosis.attributes.from.value);
+    var to = new Date(prognosis.attributes.to.value);
+    var dh = (to.getTime() - from.getTime()) / (3600 * 1000);
+
+    if (dh === 1) {
+      // The symbol is really for a range, but we pretend it's for the hour
+      // where it starts for now. FIXME: How should we really visualize this?
+      var symbolNode = prognosis.getElementsByTagName("symbol")[0];
+      var symbolNumber = symbolNode.attributes.number.value;
+
+      var forecast = forecasts[timestamp];
+      if (!forecast) {
+        forecast = {};
+      }
+      forecast.symbol = symbolNumber;
+      continue;
+    }
+
+    if (dh != 0) {
       // We only want the per-hour prognoses
       continue;
     }
 
-    var timestamp = Date.parse(from);
+    var timestamp = from; // (=== to)
 
     var celsiusNode = prognosis.getElementsByTagName("temperature")[0];
     var celsiusValue = celsiusNode.attributes.value.value;
@@ -44,10 +61,10 @@ function parseWeatherXml(weatherXml) {
     var windNode = prognosis.getElementsByTagName("windSpeed")[0];
     var windValue = windNode.attributes.mps.value;
 
-    var symbolNode = nextPrognosis.getElementsByTagName("symbol")[0];
-    var symbolNumber = symbolNode.attributes.number.value;
-
-    var forecast = {};
+    var forecast = forecasts[timestamp];
+    if (!forecast) {
+      forecast = {};
+    }
     forecast.celsius = celsiusValue;
     forecast.wind_m_s = windValue;
     forecast.symbol = symbolNumber;
@@ -110,8 +127,8 @@ function renderClock(weather) {
         ";content_type=image/png";
     }
 
-    document.getElementById(h + "h").textContent = temperatureString;
-    document.getElementById(h + "himage").setAttribute("xlink:href", symbolUrl);
+    document.getElementById(renderHour + "h").textContent = temperatureString;
+    document.getElementById(renderHour + "himage").setAttribute("xlink:href", symbolUrl);
   }
 }
 
