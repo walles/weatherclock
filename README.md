@@ -8,8 +8,6 @@ It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
 # TODO
-* Check for Geolocation support and inform people if it's unsupported. Maybe
-  point them to some relevant URL for how to enable it?
 * Be more obvious if the Geolocation request was denied or failed.
 * Think about putting the weather symbols between the temperatures, because
   that's how we get them from yr.no.
@@ -51,3 +49,5 @@ center, but much closer to the temperatures.
 * Use night style icons at night.
 * Make images properly centered in Firefox (and keep functionality in Chrome and
 Safari).
+* Check for Geolocation support and inform people if it's unsupported. Maybe
+point them to some relevant URL for how to enable it?

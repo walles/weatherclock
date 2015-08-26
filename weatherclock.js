@@ -169,5 +169,9 @@ function setClock() { // eslint-disable-line no-unused-vars
   document.getElementById("minute-hand").setAttributeNS(null, "transform", minuteTransform);
 }
 
-// One-shot position request.
-navigator.geolocation.getCurrentPosition(setPosition, positioningError);
+if (navigator.geolocation) {
+  // One-shot position request
+  navigator.geolocation.getCurrentPosition(setPosition, positioningError);
+} else {
+  log("ERROR: Geolocation unsupported, try enabling it: https://waziggle.com/BrowserAllow.aspx")
+}
