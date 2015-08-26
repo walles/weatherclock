@@ -3,6 +3,7 @@ text.hour {
   font-family: sans-serif;
   text-anchor: middle;
   alignment-baseline: central;
+  dominant-baseline: central;
 }
 line.hour-hand {
     stroke: black;

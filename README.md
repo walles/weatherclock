@@ -8,11 +8,14 @@ It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
 # TODO
+* Check for Geolocation support and inform people if it's unsupported. Maybe
+  point them to some relevant URL for how to enable it?
+* Be more obvious if the Geolocation request was denied or failed.
+* Think about putting the weather symbols between the temperatures, because
+  that's how we get them from yr.no.
+* Handle places like Alcudia where we only get numbers for every three hours.
 * Use proper sunset / sunrise hours to determine when to use night symbols.
 * Move clock to top of screen rather than centering it vertically.
-* Make image properly centered in Firefox (and keep functionality in Chrome and
-  Safari)
-* Handle places like Alcudia where we only get numbers for every three hours.
 * Somehow figure out location name and put it on the clock face just below the
 center, kind of where the brand could be on an actual clock.
 * Reset SVG before reloading weather.
@@ -46,3 +49,5 @@ center, but much closer to the temperatures.
 * Add link to Github project at the top of the page.
 * Refactored timestamp handling
 * Use night style icons at night.
+* Make images properly centered in Firefox (and keep functionality in Chrome and
+Safari).
