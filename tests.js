@@ -43,5 +43,19 @@ var xml_string = '<weatherdata><product class="pointData">' +
 var xml = parseXml(xml_string);
 
 QUnit.test( "hello test", function( assert ) {
-  assert.equal(parseWeatherXml(xml), "gris");
+  var expected = {};
+
+  var d0 = new Date("2015-08-27T19:00:00Z");
+  expected[d0] = {
+    "celsius": "17.9",
+    "symbol": undefined,
+    "wind_m_s": "3.2"
+  };
+
+  var d1 = new Date("2015-08-27T18:00:00Z");
+  expected[d1] = {
+    "symbol": "2"
+  };
+
+  assert.deepEqual(parseWeatherXml(xml), expected);
 });
