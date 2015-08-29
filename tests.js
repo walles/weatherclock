@@ -2,18 +2,18 @@ var parseXml;
 
 // From: http://stackoverflow.com/a/3054210/473672
 if (window.DOMParser) {
-    parseXml = function(xmlStr) {
-        return ( new window.DOMParser() ).parseFromString(xmlStr, "text/xml");
-    };
+  parseXml = function(xmlStr) {
+    return ( new window.DOMParser() ).parseFromString(xmlStr, "text/xml");
+  };
 } else if (typeof window.ActiveXObject != "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
-    parseXml = function(xmlStr) {
-        var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
-        xmlDoc.async = "false";
-        xmlDoc.loadXML(xmlStr);
-        return xmlDoc;
-    };
+  parseXml = function(xmlStr) {
+    var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+    xmlDoc.async = "false";
+    xmlDoc.loadXML(xmlStr);
+    return xmlDoc;
+  };
 } else {
-    parseXml = function() { return null; }
+  parseXml = function() { return null; }
 }
 
 var xml_string = '<weatherdata><product class="pointData">' +
@@ -39,7 +39,7 @@ var xml_string = '<weatherdata><product class="pointData">' +
   '    <symbol id="LightCloud" number="2"/>' +
   '  </location>' +
   '</time>' +
-  '</weatherdata>';
+  '</product></weatherdata>';
 var xml = parseXml(xml_string);
 
 QUnit.test( "hello test", function( assert ) {
