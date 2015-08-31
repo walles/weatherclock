@@ -66,8 +66,8 @@ QUnit.test("Temperature Positioning Test", function(assert) {
   assert.equal(coordinates.y, -30);
 
   coordinates = getCoordinates(8, 25, 9);
-  assert.equal(coordinates.x, -21);
-  assert.equal(coordinates.y, 14);
+  assert.equal(coordinates.x, -22);
+  assert.equal(coordinates.y, 13);
   assert.equal(coordinates.x0, -26);
   assert.equal(coordinates.y0, 9);
 });

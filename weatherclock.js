@@ -103,7 +103,18 @@ function fetchWeather(lat, lon) {
  * @returns {object} - Contains center x, y and upper left x0, y0
  */
 function getCoordinates(hour, radius, size) {
-  // FIXME: body...
+  var a = 2 * Math.PI * (hour / 12.0);
+
+  var returnMe = {};
+  returnMe.x =  Math.round(Math.sin(a) * radius);
+  returnMe.y = -Math.round(Math.cos(a) * radius);
+
+  if (size !== undefined) {
+    returnMe.x0 = returnMe.x - (size - 1) / 2;
+    returnMe.y0 = returnMe.y - (size - 1) / 2;
+  }
+
+  return returnMe;
 }
 
 function renderClock(weather) {
