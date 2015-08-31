@@ -140,9 +140,9 @@ function addHourString(hour, string) {
 function addHourSymbol(hour, url) {
   var image = document.createElementNS(SVG_NS, "image");
 
-  var coordinate = getCoordinates(hour, SYMBOL_RADIUS);
-  image.setAttributeNS(null, "x", coordinate.x);
-  image.setAttributeNS(null, "y", coordinate.y);
+  var coordinate = getCoordinates(hour, SYMBOL_RADIUS, SYMBOL_SIZE);
+  image.setAttributeNS(null, "x", coordinate.x0);
+  image.setAttributeNS(null, "y", coordinate.y0);
 
   image.setAttributeNS(null, "width", SYMBOL_SIZE);
   image.setAttributeNS(null, "height", SYMBOL_SIZE);
