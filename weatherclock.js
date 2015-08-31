@@ -5,6 +5,10 @@
 /* global navigator */
 /* global XMLHttpRequest */
 
+var HOUR_RADIUS = 35;
+var SYMBOL_RADIUS = 25;
+var SYMBOL_SIZE = 9;
+
 function log(message) {
   document.getElementById("log").innerHTML += message + "\n";
   console.log(message);
@@ -117,6 +121,21 @@ function getCoordinates(hour, radius, size) {
   return returnMe;
 }
 
+function addHourString(hour, string) {
+  var text = document.createElement("text");
+  text.setAttribute("class", "hour");
+
+  var coordinate = getCoordinates(hour, HOUR_RADIUS);
+  text.setAttribute("x", coordinate.x);
+  text.setAttribute("y", coordinate.y);
+
+  text.appendChild(document.createTextNode(hour));
+
+  document.getElementById("weatherclock").appendChild(text);
+
+  console.log(text);
+}
+
 function renderClock(weather) {
   var baseTimestamp = new Date();
   baseTimestamp.setMinutes(0);
@@ -156,7 +175,7 @@ function renderClock(weather) {
         (isNight ? 1 : 0);
     }
 
-    document.getElementById(renderHour + "h").textContent = temperatureString;
+    addHourString(renderHour, temperatureString);
     document.getElementById(renderHour + "himage").setAttribute("xlink:href", symbolUrl);
   }
 }
