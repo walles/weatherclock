@@ -9,6 +9,9 @@ var HOUR_RADIUS = 35;
 var SYMBOL_RADIUS = 25;
 var SYMBOL_SIZE = 9;
 
+var SVG_NS = "http://www.w3.org/2000/svg";
+var XLINK_NS = "http://www.w3.org/1999/xlink";
+
 function log(message) {
   document.getElementById("log").innerHTML += message + "\n";
   console.log(message);
@@ -122,12 +125,12 @@ function getCoordinates(hour, radius, size) {
 }
 
 function addHourString(hour, string) {
-  var text = document.createElement("text");
-  text.setAttribute("class", "hour");
+  var text = document.createElementNS(SVG_NS, "text");
+  text.setAttributeNS(null, "class", "hour");
 
   var coordinate = getCoordinates(hour, HOUR_RADIUS);
-  text.setAttribute("x", coordinate.x);
-  text.setAttribute("y", coordinate.y);
+  text.setAttributeNS(null, "x", coordinate.x);
+  text.setAttributeNS(null, "y", coordinate.y);
 
   text.appendChild(document.createTextNode(hour));
 
@@ -135,16 +138,16 @@ function addHourString(hour, string) {
 }
 
 function addHourSymbol(hour, url) {
-  var image = document.createElement("image");
+  var image = document.createElementNS(SVG_NS, "image");
 
   var coordinate = getCoordinates(hour, SYMBOL_RADIUS);
-  image.setAttribute("x", coordinate.x);
-  image.setAttribute("y", coordinate.y);
+  image.setAttributeNS(null, "x", coordinate.x);
+  image.setAttributeNS(null, "y", coordinate.y);
 
-  image.setAttribute("width", SYMBOL_SIZE);
-  image.setAttribute("height", SYMBOL_SIZE);
+  image.setAttributeNS(null, "width", SYMBOL_SIZE);
+  image.setAttributeNS(null, "height", SYMBOL_SIZE);
 
-  image.setAttribute("xlink:href", url);
+  image.setAttributeNS(XLINK_NS, "href", url);
 
   document.getElementById("weatherclock").appendChild(image);
 }
