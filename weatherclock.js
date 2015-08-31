@@ -132,7 +132,7 @@ function addHourString(hour, string) {
   text.setAttributeNS(null, "x", coordinate.x);
   text.setAttributeNS(null, "y", coordinate.y);
 
-  text.appendChild(document.createTextNode(hour));
+  text.appendChild(document.createTextNode(string));
 
   document.getElementById("weatherclock").appendChild(text);
 }
