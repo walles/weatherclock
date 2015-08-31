@@ -42,7 +42,7 @@ var xml_string = '<weatherdata><product class="pointData">' +
   '</product></weatherdata>';
 var xml = parseXml(xml_string);
 
-QUnit.test( "hello test", function( assert ) {
+QUnit.test("Weather XML Parsing Test", function(assert) {
   var expected = {};
 
   var d0 = new Date("2015-08-27T19:00:00Z");
@@ -58,4 +58,16 @@ QUnit.test( "hello test", function( assert ) {
   };
 
   assert.deepEqual(parseWeatherXml(xml), expected);
+});
+
+QUnit.test("Temperature Positioning Test", function(assert) {
+  var coordinates = getCoordinates(1, 35);
+  assert.equal(coordinates.x, 17);
+  assert.equal(coordinates.y, -30);
+
+  coordinates = getCoordinates(8, 25, 9);
+  assert.equal(coordinates.x, -21);
+  assert.equal(coordinates.y, 14);
+  assert.equal(coordinates.x0, -26);
+  assert.equal(coordinates.y0, 9);
 });

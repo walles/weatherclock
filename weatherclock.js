@@ -6,9 +6,7 @@
 /* global XMLHttpRequest */
 
 function log(message) {
-  document.getElementById("log").innerHTML
-  += message
-  + "\n";
+  document.getElementById("log").innerHTML += message + "\n";
   console.log(message);
 }
 
@@ -96,6 +94,18 @@ function fetchWeather(lat, lon) {
   return parseWeatherXml(xmldoc);
 }
 
+/**
+ * @param {number} hour - What hour to get coordinates for
+ * @param {number} radius - How far from the center the coordinate should
+ * be, 0-50
+ * @param {number} [size] - The width and height of a square we want to draw
+ *
+ * @returns {object} - Contains center x, y and upper left x0, y0
+ */
+function getCoordinates(hour, radius, size) {
+  // FIXME: body...
+}
+
 function renderClock(weather) {
   var baseTimestamp = new Date();
   baseTimestamp.setMinutes(0);
@@ -143,10 +153,7 @@ function renderClock(weather) {
 function setPosition(position) {
   var lat = position.coords.latitude;
   var lon = position.coords.longitude;
-  log("Position: lat="
-  + lat
-  + " lon="
-  + lon);
+  log("Position: lat=" + lat + " lon=" + lon);
 
   renderClock(fetchWeather(lat, lon));
 }
