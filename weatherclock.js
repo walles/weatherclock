@@ -132,8 +132,21 @@ function addHourString(hour, string) {
   text.appendChild(document.createTextNode(hour));
 
   document.getElementById("weatherclock").appendChild(text);
+}
 
-  console.log(text);
+function addHourSymbol(hour, url) {
+  var image = document.createElement("image");
+
+  var coordinate = getCoordinates(hour, SYMBOL_RADIUS);
+  image.setAttribute("x", coordinate.x);
+  image.setAttribute("y", coordinate.y);
+
+  image.setAttribute("width", SYMBOL_SIZE);
+  image.setAttribute("height", SYMBOL_SIZE);
+
+  image.setAttribute("xlink:href", url);
+
+  document.getElementById("weatherclock").appendChild(image);
 }
 
 function renderClock(weather) {
@@ -176,7 +189,7 @@ function renderClock(weather) {
     }
 
     addHourString(renderHour, temperatureString);
-    document.getElementById(renderHour + "himage").setAttribute("xlink:href", symbolUrl);
+    addHourSymbol(renderHour, symbolUrl);
   }
 }
 
