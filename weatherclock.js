@@ -134,7 +134,10 @@ function addHourString(hour, string) {
 
   text.appendChild(document.createTextNode(string));
 
-  document.getElementById("weatherclock").appendChild(text);
+  // Insert text before the hands to get the hands rendered on top
+  var clock = document.getElementById("weatherclock");
+  var hourHand = document.getElementById("hour-hand");
+  clock.insertBefore(text, hourHand);
 }
 
 function addHourSymbol(hour, url) {
@@ -149,7 +152,10 @@ function addHourSymbol(hour, url) {
 
   image.setAttributeNS(XLINK_NS, "href", url);
 
-  document.getElementById("weatherclock").appendChild(image);
+  // Insert image before the hands to get the hands rendered on top
+  var clock = document.getElementById("weatherclock");
+  var hourHand = document.getElementById("hour-hand");
+  clock.insertBefore(image, hourHand);
 }
 
 function renderClock(weather) {
