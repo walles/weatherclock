@@ -5,10 +5,15 @@
 /* global navigator */
 /* global XMLHttpRequest */
 
+var HOUR_RADIUS = 35;
+var SYMBOL_RADIUS = 25;
+var SYMBOL_SIZE = 9;
+
+var SVG_NS = "http://www.w3.org/2000/svg";
+var XLINK_NS = "http://www.w3.org/1999/xlink";
+
 function log(message) {
-  document.getElementById("log").innerHTML
-  += message
-  + "\n";
+  document.getElementById("log").innerHTML += message + "\n";
   console.log(message);
 }
 
@@ -96,6 +101,63 @@ function fetchWeather(lat, lon) {
   return parseWeatherXml(xmldoc);
 }
 
+/**
+ * @param {number} hour - What hour to get coordinates for
+ * @param {number} radius - How far from the center the coordinate should
+ * be, 0-50
+ * @param {number} [size] - The width and height of a square we want to draw
+ *
+ * @returns {object} - Contains center x, y and upper left x0, y0
+ */
+function getCoordinates(hour, radius, size) {
+  var a = 2 * Math.PI * (hour / 12.0);
+
+  var returnMe = {};
+  returnMe.x =  Math.round(Math.sin(a) * radius);
+  returnMe.y = -Math.round(Math.cos(a) * radius);
+
+  if (size !== undefined) {
+    returnMe.x0 = returnMe.x - (size - 1) / 2;
+    returnMe.y0 = returnMe.y - (size - 1) / 2;
+  }
+
+  return returnMe;
+}
+
+function addHourString(hour, string) {
+  var text = document.createElementNS(SVG_NS, "text");
+  text.setAttributeNS(null, "class", "hour");
+
+  var coordinate = getCoordinates(hour, HOUR_RADIUS);
+  text.setAttributeNS(null, "x", coordinate.x);
+  text.setAttributeNS(null, "y", coordinate.y);
+
+  text.appendChild(document.createTextNode(string));
+
+  // Insert text before the hands to get the hands rendered on top
+  var clock = document.getElementById("weatherclock");
+  var hourHand = document.getElementById("hour-hand");
+  clock.insertBefore(text, hourHand);
+}
+
+function addHourSymbol(hour, url) {
+  var image = document.createElementNS(SVG_NS, "image");
+
+  var coordinate = getCoordinates(hour, SYMBOL_RADIUS, SYMBOL_SIZE);
+  image.setAttributeNS(null, "x", coordinate.x0);
+  image.setAttributeNS(null, "y", coordinate.y0);
+
+  image.setAttributeNS(null, "width", SYMBOL_SIZE);
+  image.setAttributeNS(null, "height", SYMBOL_SIZE);
+
+  image.setAttributeNS(XLINK_NS, "href", url);
+
+  // Insert image before the hands to get the hands rendered on top
+  var clock = document.getElementById("weatherclock");
+  var hourHand = document.getElementById("hour-hand");
+  clock.insertBefore(image, hourHand);
+}
+
 function renderClock(weather) {
   var baseTimestamp = new Date();
   baseTimestamp.setMinutes(0);
@@ -135,18 +197,15 @@ function renderClock(weather) {
         (isNight ? 1 : 0);
     }
 
-    document.getElementById(renderHour + "h").textContent = temperatureString;
-    document.getElementById(renderHour + "himage").setAttribute("xlink:href", symbolUrl);
+    addHourString(renderHour, temperatureString);
+    addHourSymbol(renderHour, symbolUrl);
   }
 }
 
 function setPosition(position) {
   var lat = position.coords.latitude;
   var lon = position.coords.longitude;
-  log("Position: lat="
-  + lat
-  + " lon="
-  + lon);
+  log("Position: lat=" + lat + " lon=" + lon);
 
   renderClock(fetchWeather(lat, lon));
 }
