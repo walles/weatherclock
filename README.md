@@ -8,7 +8,6 @@ It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
 # TODO
-* Position the hour numbers and weather symbols from Javascript
 * Be more obvious if the Geolocation request was denied or failed.
 * Think about putting the weather symbols between the temperatures, because
   that's how we get them from yr.no.
@@ -53,3 +52,4 @@ Safari).
 * Check for Geolocation support and inform people if it's unsupported. Maybe
 point them to some relevant URL for how to enable it?
 * Make the unit tests pass on Firefox
+* Position the hour numbers and weather symbols from Javascript
