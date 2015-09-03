@@ -8,10 +8,10 @@ It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
 # TODO
-* Be more obvious if the Geolocation request was denied or failed.
 * Think about putting the weather symbols between the temperatures, because
   that's how we get them from yr.no.
 * Handle places like Alcudia where we only get numbers for every three hours.
+* Be more obvious if the Geolocation request was denied or failed.
 * Use proper sunset / sunrise hours to determine when to use night symbols.
 * Move clock to top of screen rather than centering it vertically.
 * Somehow figure out location name and put it on the clock face just below the
