@@ -60,8 +60,8 @@ QUnit.test("Weather XML Parsing Test", function(assert) {
   var d0 = new Date("2015-08-27T19:00:00Z");
   expected[d0] = {
     "celsius": "17.9",
-    "symbol": undefined,
-    "wind_m_s": "3.2"
+    "wind_m_s": "3.2",
+    "span_h": 0
   };
 
   var d1 = new Date("2015-08-27T18:30:00Z");

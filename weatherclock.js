@@ -38,43 +38,37 @@ function parseWeatherXml(weatherXml) {
     var from = new Date(prognosis.attributes.from.value);
     var to = new Date(prognosis.attributes.to.value);
     var dh = (to.getTime() - from.getTime()) / (3600 * 1000);
-
-    if (dh === 1) {
-      // The symbol is really for a range, but we pretend it's for the hour
-      // where it starts for now. FIXME: How should we really visualize this?
-      var symbolNode = prognosis.getElementsByTagName("symbol")[0];
-      var symbolNumber = symbolNode.attributes.number.value;
-
-      var forecast = forecasts[from];
-      if (!forecast) {
-        forecast = {};
-      }
-      forecast.symbol = symbolNumber;
-
-      forecasts[from] = forecast;
-      continue;
-    }
-
-    if (dh != 0) {
-      // We only want the per-hour prognoses
-      continue;
-    }
-
-    var timestamp = from; // (=== to)
-
-    var celsiusNode = prognosis.getElementsByTagName("temperature")[0];
-    var celsiusValue = celsiusNode.attributes.value.value;
-
-    var windNode = prognosis.getElementsByTagName("windSpeed")[0];
-    var windValue = windNode.attributes.mps.value;
+    var timestamp = new Date((from.getTime() + to.getTime()) / 2);
 
     var forecast = forecasts[timestamp];
     if (!forecast) {
       forecast = {};
     }
-    forecast.celsius = celsiusValue;
-    forecast.wind_m_s = windValue;
-    forecast.symbol = symbolNumber;
+
+    if (forecast.span_h !== undefined && forecast.span_h <= dh) {
+      // There's already better data here
+      continue;
+    }
+
+    forecast.span_h = dh;
+
+    var symbolNodes = prognosis.getElementsByTagName("symbol")
+    if (symbolNodes && symbolNodes.length > 0) {
+      var symbolNumber = symbolNodes[0].attributes.number.value;
+      forecast.symbol = symbolNumber;
+    }
+
+    var celsiusNodes = prognosis.getElementsByTagName("temperature");
+    if (celsiusNodes && celsiusNodes.length > 0) {
+      var celsiusValue = celsiusNodes[0].attributes.value.value;
+      forecast.celsius = celsiusValue;
+    }
+
+    var windNodes = prognosis.getElementsByTagName("windSpeed");
+    if (windNodes && windNodes.length > 0) {
+      var windValue = windNodes[0].attributes.mps.value;
+      forecast.wind_m_s = windValue;
+    }
 
     forecasts[timestamp] = forecast;
   }
