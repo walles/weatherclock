@@ -33,10 +33,22 @@ var xml_string = '<weatherdata><product class="pointData">' +
   '    <dewpointTemperature id="TD" unit="celsius" value="13.3"/>' +
   '  </location>' +
   '</time>' +
+  '<time datatype="forecast" from="2015-08-27T17:00:00Z" to="2015-08-27T20:00:00Z">' +
+  '  <location altitude="24" latitude="59.3190" longitude="18.0518">' +
+  '    <precipitation unit="mm" value="0.0" minvalue="0.0" maxvalue="0.0"/>' +
+  '    <symbol id="TooLong" number="5"/>' +
+  '  </location>' +
+  '</time>' +
   '<time datatype="forecast" from="2015-08-27T18:00:00Z" to="2015-08-27T19:00:00Z">' +
   '  <location altitude="24" latitude="59.3190" longitude="18.0518">' +
   '    <precipitation unit="mm" value="0.0" minvalue="0.0" maxvalue="0.0"/>' +
   '    <symbol id="LightCloud" number="2"/>' +
+  '  </location>' +
+  '</time>' +
+  '<time datatype="forecast" from="2015-08-27T16:00:00Z" to="2015-08-27T21:00:00Z">' +
+  '  <location altitude="24" latitude="59.3190" longitude="18.0518">' +
+  '    <precipitation unit="mm" value="0.0" minvalue="0.0" maxvalue="0.0"/>' +
+  '    <symbol id="EvenLonger" number="7"/>' +
   '  </location>' +
   '</time>' +
   '</product></weatherdata>';
@@ -48,13 +60,14 @@ QUnit.test("Weather XML Parsing Test", function(assert) {
   var d0 = new Date("2015-08-27T19:00:00Z");
   expected[d0] = {
     "celsius": "17.9",
-    "symbol": undefined,
-    "wind_m_s": "3.2"
+    "wind_m_s": "3.2",
+    "span_h": 0
   };
 
-  var d1 = new Date("2015-08-27T18:00:00Z");
+  var d1 = new Date("2015-08-27T18:30:00Z");
   expected[d1] = {
-    "symbol": "2"
+    "symbol": "2",
+    "span_h": 1
   };
 
   assert.deepEqual(parseWeatherXml(xml), expected);

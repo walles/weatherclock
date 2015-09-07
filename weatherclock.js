@@ -38,43 +38,37 @@ function parseWeatherXml(weatherXml) {
     var from = new Date(prognosis.attributes.from.value);
     var to = new Date(prognosis.attributes.to.value);
     var dh = (to.getTime() - from.getTime()) / (3600 * 1000);
-
-    if (dh === 1) {
-      // The symbol is really for a range, but we pretend it's for the hour
-      // where it starts for now. FIXME: How should we really visualize this?
-      var symbolNode = prognosis.getElementsByTagName("symbol")[0];
-      var symbolNumber = symbolNode.attributes.number.value;
-
-      var forecast = forecasts[from];
-      if (!forecast) {
-        forecast = {};
-      }
-      forecast.symbol = symbolNumber;
-
-      forecasts[from] = forecast;
-      continue;
-    }
-
-    if (dh != 0) {
-      // We only want the per-hour prognoses
-      continue;
-    }
-
-    var timestamp = from; // (=== to)
-
-    var celsiusNode = prognosis.getElementsByTagName("temperature")[0];
-    var celsiusValue = celsiusNode.attributes.value.value;
-
-    var windNode = prognosis.getElementsByTagName("windSpeed")[0];
-    var windValue = windNode.attributes.mps.value;
+    var timestamp = new Date((from.getTime() + to.getTime()) / 2);
 
     var forecast = forecasts[timestamp];
     if (!forecast) {
       forecast = {};
     }
-    forecast.celsius = celsiusValue;
-    forecast.wind_m_s = windValue;
-    forecast.symbol = symbolNumber;
+
+    if (forecast.span_h !== undefined && forecast.span_h <= dh) {
+      // There's already better data here
+      continue;
+    }
+
+    forecast.span_h = dh;
+
+    var symbolNodes = prognosis.getElementsByTagName("symbol")
+    if (symbolNodes && symbolNodes.length > 0) {
+      var symbolNumber = symbolNodes[0].attributes.number.value;
+      forecast.symbol = symbolNumber;
+    }
+
+    var celsiusNodes = prognosis.getElementsByTagName("temperature");
+    if (celsiusNodes && celsiusNodes.length > 0) {
+      var celsiusValue = celsiusNodes[0].attributes.value.value;
+      forecast.celsius = celsiusValue;
+    }
+
+    var windNodes = prognosis.getElementsByTagName("windSpeed");
+    if (windNodes && windNodes.length > 0) {
+      var windValue = windNodes[0].attributes.mps.value;
+      forecast.wind_m_s = windValue;
+    }
 
     forecasts[timestamp] = forecast;
   }
@@ -159,46 +153,51 @@ function addHourSymbol(hour, url) {
 }
 
 function renderClock(weather) {
-  var baseTimestamp = new Date();
-  baseTimestamp.setMinutes(0);
-  baseTimestamp.setSeconds(0);
-  baseTimestamp.setMilliseconds(0);
+  var now_ms = new Date().getTime();
+  var start = new Date(now_ms + 0.75 * 3600 * 1000);
+  var end = new Date(now_ms + 11.75 * 3600 * 1000);
 
-  var baseHour = baseTimestamp.getHours() % 12;
+  for (var timestamp in weather) {
+    if (!weather.hasOwnProperty(timestamp)) {
+      continue;
+    }
 
-  for (var dh = 0; dh < 12; dh++) {
-    var renderTimestamp = new Date(baseTimestamp.getTime() + dh * 3600 * 1000);
-    var renderHour = (baseHour + dh) % 12;
-    var renderWeather = weather[renderTimestamp];
+    timestamp = new Date(timestamp);
 
-    var temperatureString = "";
-    var symbolUrl = "";
+    if (timestamp < start) {
+      continue;
+    }
 
-    var renderHour24 = renderTimestamp.getHours();
+    if (timestamp > end) {
+      continue;
+    }
 
-    // FIXME: Replace 2100-0600 night with actual sunset / sunrise based limits
-    var isNight = (renderHour24 < 7) || (renderHour24 > 20);
+    var hour = timestamp.getHours() + timestamp.getMinutes() / 60.0;
 
-    log(renderHour + ": " + renderTimestamp + ": " + renderWeather);
+    var render_weather = weather[timestamp];
 
-    if (dh === 0) {
-      // To indicate where the line is between now and now + 12h, we leave the
-      // current hour empty.
-    } else if (renderWeather) {
-      temperatureString = Math.round(renderWeather.celsius) + "°";
+    var celsius = render_weather.celsius;
+    if (celsius !== undefined) {
+      var temperatureString = Math.round(celsius) + "°";
+      addHourString(hour, temperatureString);
+    }
+
+    var symbol = render_weather.symbol;
+    if (symbol !== undefined) {
+      // FIXME: Replace 2100-0600 night with actual sunset / sunrise based limits
+      var isNight = (hour < 7) || (hour > 20);
 
       // Note that we *could* download an SVG weather symbol, but that doesn't
       // work on Firefox 38.0.5 so we do PNG instead. And since cell phone screens
       // are what we're aiming for, PNG should be fine.
       var symbolUrl =
         "http://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
-        renderWeather.symbol +
+        symbol +
         ";content_type=image/png;is_night=" +
         (isNight ? 1 : 0);
-    }
 
-    addHourString(renderHour, temperatureString);
-    addHourSymbol(renderHour, symbolUrl);
+        addHourSymbol(hour, symbolUrl);
+    }
   }
 }
 
