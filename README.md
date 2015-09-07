@@ -8,6 +8,7 @@ It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
 # TODO
+* Fetch the forecast in the background.
 * Be more obvious if the Geolocation request was denied or failed.
 * Use proper sunset / sunrise hours to determine when to use night symbols.
 * Move clock to top of screen rather than centering it vertically.
@@ -15,6 +16,8 @@ symbols for each hour.
 center, kind of where the brand could be on an actual clock.
 * Reset SVG before reloading weather.
 * Move the clock hands each minute? Or each time the window is focused?
+* Put the most recent log message on the clock face, and make sure the last
+message contains the link to yr.no on success.
 * Add wind speed visualization?
 * Support Fahrenheit?
 * Imagine somebody opens this page on a cell phone. They then put the web
