@@ -8,7 +8,6 @@ It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
 # TODO
-* Handle places like Alcudia where we only get numbers for every three hours.
 * Be more obvious if the Geolocation request was denied or failed.
 * Use proper sunset / sunrise hours to determine when to use night symbols.
 * Move clock to top of screen rather than centering it vertically.
@@ -16,8 +15,6 @@ symbols for each hour.
 center, kind of where the brand could be on an actual clock.
 * Reset SVG before reloading weather.
 * Move the clock hands each minute? Or each time the window is focused?
-* Test on phone
-* Test on other computer
 * Add wind speed visualization?
 * Support Fahrenheit?
 * Imagine somebody opens this page on a cell phone. They then put the web
@@ -53,3 +50,6 @@ point them to some relevant URL for how to enable it?
 * Position the hour numbers and weather symbols from Javascript
 * Think about putting the weather symbols between the temperatures, because
   that's how we get them from yr.no.
+* Handle places like Alcudia where we only get numbers for every three hours.
+* Test on phone
+* Test on other computer
