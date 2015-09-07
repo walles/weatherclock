@@ -153,46 +153,51 @@ function addHourSymbol(hour, url) {
 }
 
 function renderClock(weather) {
-  var baseTimestamp = new Date();
-  baseTimestamp.setMinutes(0);
-  baseTimestamp.setSeconds(0);
-  baseTimestamp.setMilliseconds(0);
+  var now_ms = new Date().getTime();
+  var start = new Date(now_ms + 0.75 * 3600 * 1000);
+  var end = new Date(now_ms + 11.75 * 3600 * 1000);
 
-  var baseHour = baseTimestamp.getHours() % 12;
+  for (var timestamp in weather) {
+    if (!weather.hasOwnProperty(timestamp)) {
+      continue;
+    }
 
-  for (var dh = 0; dh < 12; dh++) {
-    var renderTimestamp = new Date(baseTimestamp.getTime() + dh * 3600 * 1000);
-    var renderHour = (baseHour + dh) % 12;
-    var renderWeather = weather[renderTimestamp];
+    timestamp = new Date(timestamp);
 
-    var temperatureString = "";
-    var symbolUrl = "";
+    if (timestamp < start) {
+      continue;
+    }
 
-    var renderHour24 = renderTimestamp.getHours();
+    if (timestamp > end) {
+      continue;
+    }
 
-    // FIXME: Replace 2100-0600 night with actual sunset / sunrise based limits
-    var isNight = (renderHour24 < 7) || (renderHour24 > 20);
+    var hour = timestamp.getHours() + timestamp.getMinutes() / 60.0;
 
-    log(renderHour + ": " + renderTimestamp + ": " + renderWeather);
+    var render_weather = weather[timestamp];
 
-    if (dh === 0) {
-      // To indicate where the line is between now and now + 12h, we leave the
-      // current hour empty.
-    } else if (renderWeather) {
-      temperatureString = Math.round(renderWeather.celsius) + "°";
+    var celsius = render_weather.celsius;
+    if (celsius !== undefined) {
+      var temperatureString = Math.round(celsius) + "°";
+      addHourString(hour, temperatureString);
+    }
+
+    var symbol = render_weather.symbol;
+    if (symbol !== undefined) {
+      // FIXME: Replace 2100-0600 night with actual sunset / sunrise based limits
+      var isNight = (hour < 7) || (hour > 20);
 
       // Note that we *could* download an SVG weather symbol, but that doesn't
       // work on Firefox 38.0.5 so we do PNG instead. And since cell phone screens
       // are what we're aiming for, PNG should be fine.
       var symbolUrl =
         "http://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
-        renderWeather.symbol +
+        symbol +
         ";content_type=image/png;is_night=" +
         (isNight ? 1 : 0);
-    }
 
-    addHourString(renderHour, temperatureString);
-    addHourSymbol(renderHour, symbolUrl);
+        addHourSymbol(hour, symbolUrl);
+    }
   }
 }
 

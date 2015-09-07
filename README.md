@@ -8,8 +8,6 @@ It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
 # TODO
-* Think about putting the weather symbols between the temperatures, because
-  that's how we get them from yr.no.
 * Handle places like Alcudia where we only get numbers for every three hours.
 * Be more obvious if the Geolocation request was denied or failed.
 * Use proper sunset / sunrise hours to determine when to use night symbols.
@@ -53,3 +51,5 @@ Safari).
 point them to some relevant URL for how to enable it?
 * Make the unit tests pass on Firefox
 * Position the hour numbers and weather symbols from Javascript
+* Think about putting the weather symbols between the temperatures, because
+  that's how we get them from yr.no.
