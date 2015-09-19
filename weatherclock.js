@@ -209,9 +209,13 @@ function setPosition(position) {
   renderClock(fetchWeather(lat, lon));
 }
 
+function logError(message) {
+  console.log("ERROR: " + message);
+  alert(message);
+}
+
 function positioningError(positionError) {
-  log("ERROR: " + positionError.message);
-  log("ERROR: Can't show weather for unknown location, giving up :(");
+  logError(positionError.message);
 }
 
 function setClock() { // eslint-disable-line no-unused-vars
@@ -233,6 +237,6 @@ function doWeather() {
     log("Getting current position...");
     navigator.geolocation.getCurrentPosition(setPosition, positioningError);
   } else {
-    log("ERROR: Geolocation unsupported, try enabling it: https://waziggle.com/BrowserAllow.aspx")
+    logError("Geolocation unsupported");
   }
 }
