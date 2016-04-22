@@ -242,6 +242,14 @@ function doWeather() {
 }
 
 function main() {
+  // Redirect to https, this helps with positioning in some circumstances
+  var protocol = location.protocol;
+  if (protocol == "http:") {
+    // From http://stackoverflow.com/a/4723302/473672
+    window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+    return;
+  }
+
   setClock();
   doWeather();
 }
