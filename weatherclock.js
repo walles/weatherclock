@@ -240,3 +240,8 @@ function doWeather() {
     logError("Geolocation unsupported");
   }
 }
+
+function main() {
+  setClock();
+  doWeather();
+}
