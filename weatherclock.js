@@ -206,7 +206,14 @@ function setPosition(position) {
   var lon = position.coords.longitude;
   log("Position: lat=" + lat + " lon=" + lon);
 
-  renderClock(fetchWeather(lat, lon));
+  var weather;
+  try {
+    weather = fetchWeather(lat, lon);
+  } catch(exception) {
+    logError("Fetching weather failed: " + exception);
+    return;
+  }
+  renderClock(weather);
 }
 
 function logError(message) {
