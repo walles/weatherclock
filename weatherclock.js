@@ -194,7 +194,7 @@ function renderClock(weather) {
       // work on Firefox 38.0.5 so we do PNG instead. And since cell phone screens
       // are what we're aiming for, PNG should be fine.
       var symbolUrl =
-        "https://crossorigin.me/http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
+        "http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
         symbol +
         ";content_type=image/png;is_night=" +
         (isNight ? 1 : 0);
