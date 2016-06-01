@@ -213,7 +213,7 @@ function setPosition(position) {
   try {
     weather = fetchWeather(lat, lon);
   } catch(exception) {
-    logError("Fetching weather failed: " + exception);
+    logError("Fetching weather failed: " + exception.toString());
     return;
   }
   renderClock(weather);
