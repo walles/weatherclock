@@ -88,6 +88,9 @@ function fetchWeather(lat, lon) {
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.open("GET", url, false);
   xmlhttp.send();
+  if (xmlhttp.status < 200 || xmlhttp.status > 299) {
+    throw xmlhttp.statusText;
+  }
   var xmldoc = xmlhttp.responseXML;
   log("Got weather XML...");
   log(xmldoc);
