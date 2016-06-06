@@ -25,7 +25,7 @@ function log(message) {
 * .wind_m_s: The forecasted wind speed
 *
 * .symbol: The weather symbol index. Resolve using
-*         http://api.yr.no/weatherapi/weathericon
+*         https://api.yr.no/weatherapi/weathericon
 */
 function parseWeatherXml(weatherXml) {
   var allPrognoses = weatherXml.getElementsByTagName("time");
@@ -79,7 +79,7 @@ function parseWeatherXml(weatherXml) {
 function fetchWeather(lat, lon) {
   // Fetch weather from yr.no
   var url =
-    "https://crossorigin.me/http://api.met.no/weatherapi/locationforecast/1.9/?lat="
+    "https://crossorigin.me/https://api.met.no/weatherapi/locationforecast/1.9/?lat="
     + lat
     + ";lon="
     + lon;
@@ -194,7 +194,7 @@ function renderClock(weather) {
       // work on Firefox 38.0.5 so we do PNG instead. And since cell phone screens
       // are what we're aiming for, PNG should be fine.
       var symbolUrl =
-        "http://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
+        "https://api.met.no/weatherapi/weathericon/1.1/?symbol=" +
         symbol +
         ";content_type=image/png;is_night=" +
         (isNight ? 1 : 0);

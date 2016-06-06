@@ -1,5 +1,5 @@
 # Weather Clock
-Try it here: <http://walles.github.io/weatherclock/>
+Try it here: <https://walles.github.io/weatherclock/>
 
 Displays the weather forecast for the upcoming 11 hours for the current
 location on a clock face.
