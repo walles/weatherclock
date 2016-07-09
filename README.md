@@ -11,7 +11,6 @@ symbols for each hour.
 * Fetch the forecast in the background.
 * Be more obvious if the Geolocation request was denied or failed.
 * Use proper sunset / sunrise hours to determine when to use night symbols.
-* Move clock to top of screen rather than centering it vertically.
 * Somehow figure out location name and put it on the clock face just below the
 center, kind of where the brand could be on an actual clock.
 * Reset SVG before reloading weather.
