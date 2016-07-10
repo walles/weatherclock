@@ -6,8 +6,13 @@
 
   <title>Weather Clock</title>
 
-  <link rel="stylesheet" type="text/css" href="weatherclock.css" />
+  <!-- Bootstrap, from: http://www.w3schools.com/bootstrap/bootstrap_get_started.asp -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
+  <!-- Weatherclock -->
+  <link rel="stylesheet" type="text/css" href="weatherclock.css" />
   <script src="weatherclock.js"></script>
 </head>
 <body onload="main();">
@@ -45,7 +50,7 @@ https://developers.facebook.com/docs/plugins/share-button
 Share-on-Facebook button, see:
 https://developers.facebook.com/docs/plugins/share-button
 -->
-<iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fwalles.github.io%2Fweatherclock&layout=button_count&mobile_iframe=false&width=99&height=20&appId" width="99" height="20"></iframe>
+<iframe id="fb" src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fwalles.github.io%2Fweatherclock&layout=button_count&mobile_iframe=false&width=99&height=20&appId" width="99" height="20"></iframe>
 
 <p>
   <a href="https://github.com/walles/weatherclock">Source code on GitHub</a>

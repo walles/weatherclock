@@ -28,7 +28,7 @@ svg {
 }
 
 /* Facebook Share button styling, moved here from the HTML code. */
-iframe {
+iframe#fb {
   scrolling: no;
   frameborder: 0;
   allowtransparency: true;
