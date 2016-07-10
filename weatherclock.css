@@ -16,25 +16,13 @@ line.minute-hand {
     stroke-linecap: round;
 }
 svg {
-    position: fixed;
     width: 95vmin;
     height: 95vmin;
 
+    display: block;
     margin: auto;
-    position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0;
 }
-.footer {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-}
-.header {
-  position: fixed;
-  top: 0;
-  right: 0;
-  text-align: right;
-}
+
 #log {
   display: none;
 }
