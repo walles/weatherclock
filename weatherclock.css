@@ -35,3 +35,6 @@ svg {
   right: 0;
   text-align: right;
 }
+#log {
+  display: none;
+}
