@@ -26,3 +26,12 @@ svg {
 #log {
   display: none;
 }
+
+/* Facebook Share button styling, moved here from the HTML code. */
+iframe {
+  scrolling: no;
+  frameborder: 0;
+  allowtransparency: true;
+  border: none;
+  overflow: hidden;
+}
