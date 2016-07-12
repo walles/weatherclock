@@ -85,9 +85,14 @@ function fetchWeather(lat, lon) {
     + lon;
   log("Getting weather from: " + url);
 
+  var t0_millis = (new Date()).getTime();
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.open("GET", url, false);
   xmlhttp.send();
+  var t1_millis = (new Date()).getTime();
+  var dt_seconds = (t1_millis - t0_millis) / 1000.0;
+  ga('set', 'metric1', dt_seconds.toString());
+
   if (xmlhttp.status < 200 || xmlhttp.status > 299) {
     throw xmlhttp.statusText;
   }
@@ -213,6 +218,11 @@ function setPosition(position) {
   try {
     weather = fetchWeather(lat, lon);
   } catch(exception) {
+    ga('send', 'exception', {
+      'exDescription': exception.message,
+      'exFatal': true
+    });
+
     logError("Fetching weather failed: " + exception.toString());
     return;
   }
