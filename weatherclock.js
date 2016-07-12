@@ -255,7 +255,14 @@ function doWeather() {
   if (navigator.geolocation) {
     // One-shot position request
     log("Getting current position...");
-    navigator.geolocation.getCurrentPosition(setPosition, positioningError);
+    var t0_millis = (new Date()).getTime();
+    navigator.geolocation.getCurrentPosition(function _setPosition(position) {
+      var t1_millis = (new Date()).getTime();
+      var dt_seconds = (t1_millis - t0_millis) / 1000.0;
+      ga('set', 'metric2', dt_seconds.toString());
+
+      setPosition(position);
+    }, positioningError);
   } else {
     logError("Geolocation unsupported");
   }
