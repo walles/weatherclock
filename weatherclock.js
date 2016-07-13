@@ -231,6 +231,7 @@ function setPosition(position) {
 
 function logError(message) {
   console.log("ERROR: " + message);
+  ga('send', 'event', 'rendering', 'failure');
   alert(message);
 }
 
@@ -264,7 +265,7 @@ function doWeather() {
       setPosition(position);
 
       // Send collected metrics
-      ga('send', 'event');
+      ga('send', 'event', 'rendering', 'success');
     }, positioningError);
   } else {
     logError("Geolocation unsupported");
