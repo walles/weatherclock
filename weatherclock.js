@@ -91,7 +91,7 @@ function fetchWeather(lat, lon) {
   xmlhttp.send();
   var t1_millis = (new Date()).getTime();
   var dt_seconds = (t1_millis - t0_millis) / 1000.0;
-  ga('send', 'metric1', dt_seconds.toString());
+  ga('set', 'metric1', dt_seconds.toString());
 
   if (xmlhttp.status < 200 || xmlhttp.status > 299) {
     throw xmlhttp.statusText;
@@ -259,9 +259,12 @@ function doWeather() {
     navigator.geolocation.getCurrentPosition(function _setPosition(position) {
       var t1_millis = (new Date()).getTime();
       var dt_seconds = (t1_millis - t0_millis) / 1000.0;
-      ga('send', 'metric2', dt_seconds.toString());
+      ga('set', 'metric2', dt_seconds.toString());
 
       setPosition(position);
+
+      // Send collected metrics
+      ga('send', 'event');
     }, positioningError);
   } else {
     logError("Geolocation unsupported");
