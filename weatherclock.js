@@ -91,6 +91,10 @@ function fetchWeather(lat, lon) {
   xmlhttp.send();
   var t1_millis = (new Date()).getTime();
   var dt_seconds = (t1_millis - t0_millis) / 1000.0;
+
+  // Got weather forecast
+  setProgress0to2(2);
+
   ga('set', 'metric1', dt_seconds.toString());
 
   if (xmlhttp.status < 200 || xmlhttp.status > 299) {
@@ -260,6 +264,10 @@ function doWeather() {
     navigator.geolocation.getCurrentPosition(function _setPosition(position) {
       var t1_millis = (new Date()).getTime();
       var dt_seconds = (t1_millis - t0_millis) / 1000.0;
+
+      // Positioning done
+      setProgress0to2(1);
+
       ga('set', 'metric2', dt_seconds.toString());
 
       setPosition(position);
@@ -272,6 +280,16 @@ function doWeather() {
   }
 
   setClock();
+}
+
+function setProgress0to2(progress0to2) {
+  log("Progress: " + progress0to2 + "/2");
+
+  var hour_visible = ((progress0to2 >= 1) ? "visible" : "hidden");
+  var minute_visible = ((progress0to2 >= 2) ? "visible" : "hidden");
+
+  document.getElementById("hour-hand").setAttributeNS(null, "visibility", hour_visible);
+  document.getElementById("minute-hand").setAttributeNS(null, "visibility", minute_visible);
 }
 
 function main() {
