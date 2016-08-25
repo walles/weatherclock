@@ -1,7 +1,11 @@
 "use strict";
 
-/* global document */
+/* global ga */
+/* global alert */
+/* global window */
 /* global console */
+/* global document */
+/* global location */
 /* global navigator */
 /* global XMLHttpRequest */
 
@@ -292,7 +296,7 @@ function setProgress0to2(progress0to2) {
   document.getElementById("minute-hand").setAttributeNS(null, "visibility", minute_visible);
 }
 
-function main() {
+function main() { // eslint-disable-line no-unused-vars
   // Redirect to https, this helps with positioning in some circumstances
   var protocol = location.protocol;
   if (protocol == "http:") {
