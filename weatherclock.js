@@ -56,7 +56,7 @@ function parseWeatherXml(weatherXml) {
 
     forecast.span_h = dh;
 
-    var symbolNodes = prognosis.getElementsByTagName("symbol")
+    var symbolNodes = prognosis.getElementsByTagName("symbol");
     if (symbolNodes && symbolNodes.length > 0) {
       var symbolNumber = symbolNodes[0].attributes.number.value;
       forecast.symbol = symbolNumber;
