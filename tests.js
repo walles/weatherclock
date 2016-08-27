@@ -1,3 +1,10 @@
+"use strict";
+
+/* global QUnit */
+/* global window */
+/* global getCoordinates */
+/* global parseWeatherXml */
+
 var parseXml;
 
 // From: http://stackoverflow.com/a/3054210/473672
@@ -13,7 +20,7 @@ if (window.DOMParser) {
     return xmlDoc;
   };
 } else {
-  parseXml = function() { return null; }
+  parseXml = function() { return null; };
 }
 
 var xml_string = '<weatherdata><product class="pointData">' +
