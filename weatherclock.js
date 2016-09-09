@@ -3,11 +3,11 @@
 /* global ga */
 /* global alert */
 /* global window */
+/* global Worker */
 /* global console */
 /* global document */
 /* global location */
 /* global navigator */
-/* global XMLHttpRequest */
 
 var HOUR_RADIUS = 35;
 var SYMBOL_RADIUS = 25;
@@ -16,9 +16,51 @@ var SYMBOL_SIZE = 9;
 var SVG_NS = "http://www.w3.org/2000/svg";
 var XLINK_NS = "http://www.w3.org/1999/xlink";
 
+var WORKER = new Worker("webworker.js");
+WORKER.addEventListener('message', function(e) {
+  log("Got message from worker thread: [" + e.data.join() + "]");
+  try {
+    handleMessage(e.data);
+  } catch (err) {
+    logError(err.message + "\n" + err.stack);
+  }
+}, false);
+
+// Handle messages from webworker.js, thrown exceptions will be logged
+function handleMessage(message) {
+  var verb = message[0];
+  if (verb == "log") {
+    log(message[1]);
+  } else if (verb == "logError") {
+    logError(message[1]);
+  } else if (verb == "ga") {
+    ga.apply(ga, message.slice(1));
+  } else if (verb == "setWeatherXmlString") {
+    var xmlObject = (new window.DOMParser()).parseFromString(message[1], "text/xml");
+    var forecasts = parseWeatherXml(xmlObject);
+    renderClock(forecasts);
+
+    // We're done, flush metrics to Google Analytics
+    ga('send', 'event', 'rendering', 'success');
+  } else {
+    logError("Unknown verb from worker thread: <" + verb + ">");
+  }
+}
+
 function log(message) {
   document.getElementById("log").innerHTML += message + "\n";
   console.log(message);
+}
+
+function logError(message) {
+  ga('send', 'exception', {
+    'exDescription': message,
+    'exFatal': true
+  });
+
+  console.log("ERROR: " + message);
+  ga('send', 'event', 'rendering', 'failure');
+  alert(message);
 }
 
 /* Parses weather XML from yr.no into a weather object that maps timestamps (in
@@ -78,33 +120,6 @@ function parseWeatherXml(weatherXml) {
   }
 
   return forecasts;
-}
-
-function fetchWeather(lat, lon) {
-  // Fetch weather from yr.no
-  var url =
-    "https://crossorigin.me/https://api.met.no/weatherapi/locationforecast/1.9/?lat="
-    + lat
-    + ";lon="
-    + lon;
-  log("Getting weather from: " + url);
-
-  var t0_millis = (new Date()).getTime();
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("GET", url, false);
-  xmlhttp.send();
-  var t1_millis = (new Date()).getTime();
-  var dt_seconds = (t1_millis - t0_millis) / 1000.0;
-  ga('set', 'metric1', dt_seconds.toString());
-
-  if (xmlhttp.status < 200 || xmlhttp.status > 299) {
-    throw xmlhttp.statusText;
-  }
-  var xmldoc = xmlhttp.responseXML;
-  log("Got weather XML...");
-  log(xmldoc);
-
-  return parseWeatherXml(xmldoc);
 }
 
 /**
@@ -213,32 +228,6 @@ function renderClock(weather) {
   }
 }
 
-function setPosition(position) {
-  var lat = position.coords.latitude;
-  var lon = position.coords.longitude;
-  log("Position: lat=" + lat + " lon=" + lon);
-
-  var weather;
-  try {
-    weather = fetchWeather(lat, lon);
-  } catch(exception) {
-    ga('send', 'exception', {
-      'exDescription': exception.message,
-      'exFatal': true
-    });
-
-    logError("Fetching weather failed: " + exception.toString());
-    return;
-  }
-  renderClock(weather);
-}
-
-function logError(message) {
-  console.log("ERROR: " + message);
-  ga('send', 'event', 'rendering', 'failure');
-  alert(message);
-}
-
 function positioningError(positionError) {
   logError(positionError.message);
 }
@@ -266,10 +255,9 @@ function doWeather() {
       var dt_seconds = (t1_millis - t0_millis) / 1000.0;
       ga('set', 'metric2', dt_seconds.toString());
 
-      setPosition(position);
-
-      // Send collected metrics
-      ga('send', 'event', 'rendering', 'success');
+      var lat = position.coords.latitude;
+      var lon = position.coords.longitude;
+      WORKER.postMessage(["fetch weather for position", lat, lon]);
     }, positioningError);
   } else {
     logError("Geolocation unsupported");
