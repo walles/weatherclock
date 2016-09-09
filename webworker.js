@@ -24,7 +24,11 @@ function logError(message) {
 
 function ga() {
   // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments
-  postMessage(['ga'].concat(Array.from(arguments)));
+
+  // We can't use Array.from() since it doesn't work in Samsung's Android
+  // browser version 4.0.10-53.
+  var arg_array = Array.prototype.slice.call(arguments);
+  postMessage(['ga'].concat(arg_array));
 }
 
 function handleMessage(message) {
