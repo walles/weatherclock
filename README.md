@@ -7,6 +7,16 @@ location on a clock face.
 It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
+## Favicon
+To update the favicon:
+* Edit `src/weatherclock.xcf` in [GIMP](http://gimp.org/)
+* Export as PNG
+* Generate favicons using <http://realfavicongenerator.net/>, make sure you
+set the directory to `favicons` (no slashes)
+* Follow instructions on that web site for how to apply the favicons, possibly
+including updating the headers in `index.html`
+* Commit changes to `src/weatherclock.xcf` and favicons
+
 # TODO
 * Fetch the forecast in the background.
 * Be more obvious if the Geolocation request was denied or failed.
