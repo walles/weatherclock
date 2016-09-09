@@ -9,11 +9,13 @@ line.hour-hand {
     stroke: black;
     stroke-width: 4;
     stroke-linecap: round;
+    visibility: hidden;
 }
 line.minute-hand {
     stroke: black;
     stroke-width: 3;
     stroke-linecap: round;
+    visibility: hidden;
 }
 svg {
     width: 95vmin;

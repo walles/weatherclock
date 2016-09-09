@@ -254,6 +254,9 @@ function doWeather() {
       var dt_seconds = (t1_millis - t0_millis) / 1000.0;
       ga('set', 'metric2', dt_seconds.toString());
 
+      document.getElementById("hour-hand").style.visibility = "visible";
+      document.getElementById("minute-hand").style.visibility = "visible";
+
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
       WORKER.postMessage(["fetch weather for position", lat, lon]);
