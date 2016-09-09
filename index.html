@@ -8,8 +8,6 @@
 
   <link rel="stylesheet" type="text/css" href="weatherclock.css" />
 
-  <script src="weatherclock.js"></script>
-
   <!--
   Google Analytics
   -->
@@ -44,7 +42,6 @@ https://developers.facebook.com/docs/plugins/share-button
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
     js = d.createElement(s); js.id = id;
-    js.async = true;
     js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
@@ -62,6 +59,8 @@ https://developers.facebook.com/docs/plugins/share-button
 <p>Weather forecast from <a href="yr.no">yr.no</a>, delivered by
   the <a href="http://met.no/English/">Norwegian
   Meteorological Institute</a> and the <a href="http://www.nrk.no/">NRK</a>.</p>
+
+<script src="weatherclock.js"></script>
 
 <!--
 Share-on-Facebook button, see:
