@@ -48,7 +48,6 @@ function handleMessage(message) {
 }
 
 function log(message) {
-  document.getElementById("log").innerHTML += message + "\n";
   console.log(message);
 }
 

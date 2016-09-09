@@ -23,10 +23,6 @@ svg {
     margin: auto;
 }
 
-#log {
-  display: none;
-}
-
 /* Facebook Share button styling, moved here from the HTML code. */
 iframe {
   scrolling: no;
