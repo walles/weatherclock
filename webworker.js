@@ -62,7 +62,7 @@ function fetchWeather(lat, lon) {
   ga('set', 'metric1', dt_seconds.toString());
 
   if (xmlhttp.status < 200 || xmlhttp.status > 299) {
-    throw xmlhttp.statusText;
+    throw new Error("Status " + xmlhttp.status + ": " + xmlhttp.statusText);
   }
 
   // FIXME: Can we return .response here to get a parsed document?
