@@ -47,7 +47,7 @@ function handleMessage(message) {
 function fetchWeather(lat, lon) {
   // Fetch weather from yr.no
   var url =
-    "https://crossorigin.me/https://api.met.no/weatherapi/locationforecast/1.9/?lat="
+    "https://yr-no-api-proxy.appspot.com/weatherapi/locationforecast/1.9/?lat="
     + lat
     + ";lon="
     + lon;
