@@ -47,7 +47,7 @@ function handleMessage(message) {
 function fetchWeather(lat, lon) {
   // Fetch weather from yr.no
   var url =
-    "https://yr-no-api-proxy.appspot.com/weatherapi/locationforecast/1.9/?lat="
+    "https://api-met-no-proxy.appspot.com/weatherapi/locationforecast/1.9/?lat="
     + lat
     + ";lon="
     + lon;
