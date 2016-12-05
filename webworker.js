@@ -45,7 +45,10 @@ function handleMessage(message) {
 }
 
 function fetchWeather(lat, lon) {
-  // Fetch weather from yr.no
+  // Fetch weather from yr.no, via a proxy (due to upstream's (lack of) CORS
+  // settings).
+  //
+  // Proxy information here: https://github.com/walles/api-met-no-proxy
   var url =
     "https://api-met-no-proxy.appspot.com/weatherapi/locationforecast/1.9/?lat="
     + lat
