@@ -10,21 +10,16 @@
 /* global navigator */
 
 var HOUR_RADIUS = 35;
+var WIND_TEXT_RADIUS = 13;
 var SYMBOL_RADIUS = 25;
 var SYMBOL_SIZE = 9;
 
 var SVG_NS = "http://www.w3.org/2000/svg";
 var XLINK_NS = "http://www.w3.org/1999/xlink";
 
-var WORKER = new Worker("webworker.js");
-WORKER.addEventListener('message', function(e) {
-  log("Got message from worker thread: [" + e.data.join() + "]");
-  try {
-    handleMessage(e.data);
-  } catch (err) {
-    logError(err.message + "\n" + err.stack);
-  }
-}, false);
+// WORKER will be initialized lazily the first time we post a message. The unit
+// tests didn't work until we made this lazy.
+var WORKER = undefined;
 
 // Handle messages from webworker.js, thrown exceptions will be logged
 function handleMessage(message) {
@@ -236,6 +231,10 @@ function renderClock(weather) {
     }
   }
 
+  drawWind(minWindMs, maxWindMs);
+}
+
+function drawWind(minWindMs, maxWindMs) {
   var windString;
   if (minWindMs == maxWindMs) {
     // "3m/s"
@@ -253,16 +252,78 @@ function positioningError(positionError) {
 }
 
 function setClock() {
-  var currentHour = new Date().getHours();
-  currentHour %= 12;
+  var currentHour = new Date().getHours() % 12;
   var currentMinutes = new Date().getMinutes();
-  var hourTransform = "rotate(" + (((currentHour * 60) + currentMinutes) * 360 / (12 * 60)) + ")";
+
+  var hourDegrees = (((currentHour * 60) + currentMinutes) * 360 / (12 * 60));
+  var hourTransform = "rotate(" + hourDegrees + ")";
   log("Hour transform: " + hourTransform);
   document.getElementById("hour-hand").setAttributeNS(null, "transform", hourTransform);
 
-  var minuteTransform = "rotate(" + (currentMinutes * 360 / 60) + ")";
+  var minuteDegrees = (currentMinutes * 360 / 60);
+  var minuteTransform = "rotate(" + minuteDegrees + ")";
   log("Minute transform: " + minuteTransform);
   document.getElementById("minute-hand").setAttributeNS(null, "transform", minuteTransform);
+
+  // FIXME: Move the wind text element to a place where it is not obscured by the dials
+  // First, score each direction by how far the closest hand is
+  var bestDegrees = 0;
+  var bestScore = 0;
+  for (var i = 0; i < 4; i++) {
+    var degrees = i * 90;
+    var minuteDistance = degreeDistance(degrees, minuteDegrees);
+    var hourDistance = degreeDistance(degrees, hourDegrees);
+
+    // How many degrees away is the closest hand?
+    var score = Math.min(minuteDistance, hourDistance);
+    console.log("Score for " + degrees + " degrees: " + score);
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestDegrees = degrees;
+    }
+  }
+  console.log("Best degrees to put wind numbers: " + bestDegrees);
+  var bestRadians = bestDegrees * (Math.PI / 180);
+
+  var windText = document.createElementNS(SVG_NS, "text");
+  windText.setAttributeNS(null, "class", "wind");
+  windText.setAttributeNS(null, "id", "wind");
+
+  windText.setAttributeNS(null, "x", WIND_TEXT_RADIUS * Math.sin(bestRadians));
+  windText.setAttributeNS(null, "y", WIND_TEXT_RADIUS * -Math.cos(bestRadians));
+
+  // Insert an empty text node for the wind text, to be filled in by drawWind()
+  windText.appendChild(document.createTextNode(""));
+
+  // Insert text after clock frame to make it appear like background
+  var clockFrame = document.getElementById("clock-frame");
+  // From: http://stackoverflow.com/a/4793630/473672
+  clockFrame.parentNode.insertBefore(windText, clockFrame.nextSibling);
+}
+
+function degreeDistance(d0, d1) {
+  var distance = Math.abs(d1 - d0);
+  if (distance > 180) {
+    distance = 360 - distance;
+  }
+  return distance;
+}
+
+function postMessage(message) {
+  if (WORKER == undefined) {
+    WORKER = new Worker("webworker.js");
+    WORKER.addEventListener('message', function(e) {
+      log("Got message from worker thread: [" + e.data.join() + "]");
+      try {
+        handleMessage(e.data);
+      } catch (err) {
+        logError(err.message + "\n" + err.stack);
+      }
+    }, false);
+  }
+
+  WORKER.postMessage(message);
 }
 
 function doWeather() {
@@ -280,7 +341,7 @@ function doWeather() {
 
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
-      WORKER.postMessage(["fetch weather for position", lat, lon]);
+      postMessage(["fetch weather for position", lat, lon]);
     }, positioningError);
   } else {
     logError("Geolocation unsupported");
