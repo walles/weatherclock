@@ -183,6 +183,8 @@ function renderClock(weather) {
   var start = new Date(now_ms + 0.75 * 3600 * 1000);
   var end = new Date(now_ms + 11.75 * 3600 * 1000);
 
+  var maxWindMs = undefined;
+  var minWindMs = undefined;
   for (var timestamp in weather) {
     if (!weather.hasOwnProperty(timestamp)) {
       continue;
@@ -224,14 +226,33 @@ function renderClock(weather) {
 
         addHourSymbol(hour, symbolUrl);
     }
+
+    var windMs = Math.round(render_weather.wind_m_s);
+    if (maxWindMs == undefined || windMs > maxWindMs) {
+      maxWindMs = windMs;
+    }
+    if (minWindMs == undefined || windMs < minWindMs) {
+      minWindMs = windMs;
+    }
   }
+
+  var windString;
+  if (minWindMs == maxWindMs) {
+    // "3m/s"
+    windString = "" + minWindMs + "m/s";
+  } else {
+    // "3-7 m/s"
+    windString = "" + minWindMs + "-" + maxWindMs + " m/s";
+  }
+  console.log("Wind: " + windString);
+  document.getElementById("wind").textContent = windString;
 }
 
 function positioningError(positionError) {
   logError(positionError.message);
 }
 
-function setClock() { // eslint-disable-line no-unused-vars
+function setClock() {
   var currentHour = new Date().getHours();
   currentHour %= 12;
   var currentMinutes = new Date().getMinutes();

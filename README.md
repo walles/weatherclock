@@ -18,6 +18,7 @@ including updating the headers in `index.html`
 * Commit changes to `src/weatherclock.xcf` and favicons
 
 # TODO
+* Add wind speed numbers in m/s
 * Be more obvious if the Geolocation request was denied or failed.
 * Use proper sunset / sunrise hours to determine when to use night symbols.
 * Somehow figure out location name and put it on the clock face just below the
