@@ -1,9 +1,19 @@
-text.hour {
-  font-size: 7px;
-  font-family: sans-serif;
+text {
   text-anchor: middle;
   alignment-baseline: central;
   dominant-baseline: central;
+}
+text.hour {
+  font-size: 7px;
+  font-family: sans-serif;
+}
+text.wind {
+  color: black;
+  font-size: 5px;
+  font-family: serif;
+}
+rect#wind-rect {
+  fill: lightgray;
 }
 line.hour-hand {
     stroke: black;

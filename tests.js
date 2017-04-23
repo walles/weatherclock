@@ -4,6 +4,7 @@
 /* global window */
 /* global getCoordinates */
 /* global parseWeatherXml */
+/* global degreeDistance */
 
 var parseXml;
 
@@ -90,4 +91,14 @@ QUnit.test("Temperature Positioning Test", function(assert) {
   assert.equal(coordinates.y, 13);
   assert.equal(coordinates.x0, -26);
   assert.equal(coordinates.y0, 9);
+});
+
+QUnit.test("Degree Distance Test", function(assert) {
+  assert.equal(degreeDistance(5, 5), 0);
+
+  assert.equal(degreeDistance(5, 10), 5);
+  assert.equal(degreeDistance(10, 5), 5);
+
+  assert.equal(degreeDistance(350, 10), 20);
+  assert.equal(degreeDistance(10, 350), 20);
 });

@@ -65,3 +65,5 @@ point them to some relevant URL for how to enable it?
 * Test on phone
 * Test on other computer
 * Fetch the forecast in the background.
+* Add wind speed numbers in m/s
+* Put some kind of border around / background behind the wind speed numbers
