@@ -13,7 +13,7 @@ text.wind {
   font-family: serif;
 }
 rect#wind-rect {
-  fill: lightgray;
+  fill: #eee;
 }
 line.hour-hand {
     stroke: black;
