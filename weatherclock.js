@@ -13,6 +13,7 @@ var HOUR_RADIUS = 35;
 var WIND_TEXT_RADIUS = 13;
 var SYMBOL_RADIUS = 25;
 var SYMBOL_SIZE = 9;
+var WINDBOX_SCALE = 1.2;
 
 var SVG_NS = "http://www.w3.org/2000/svg";
 var XLINK_NS = "http://www.w3.org/1999/xlink";
@@ -245,6 +246,26 @@ function drawWind(minWindMs, maxWindMs) {
   }
   console.log("Wind: " + windString);
   document.getElementById("wind").textContent = windString;
+
+  var weatherclock = document.getElementById("weatherclock"),
+  windText = weatherclock.getElementById("wind"),
+  windTextBox = windText.getBBox();
+
+  // Scale the wind rectangle around the text center
+  var windRectWidth = windTextBox.width * WINDBOX_SCALE;
+  var windRectHeight = windTextBox.height * WINDBOX_SCALE;
+  var windRectX = (windTextBox.x + (windTextBox.width / 2)) - windRectWidth / 2;
+  var windRectY = (windTextBox.y + (windTextBox.height / 2)) - windRectHeight / 2;
+
+  var rect = document.createElementNS(SVG_NS, "rect");
+  rect.setAttribute("id", "wind-rect");
+  rect.setAttribute("x", windRectX);
+  rect.setAttribute("y", windRectY);
+  rect.setAttribute("width", windRectWidth);
+  rect.setAttribute("height", windRectHeight);
+  rect.setAttribute("rx", 2);
+  rect.setAttribute("ry", 2);
+  weatherclock.insertBefore(rect, windText);
 }
 
 function positioningError(positionError) {

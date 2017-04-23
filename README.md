@@ -18,7 +18,6 @@ including updating the headers in `index.html`
 * Commit changes to `src/weatherclock.xcf` and favicons
 
 # TODO
-* Put some kind of border around / background behind the wind speed numbers
 * Be more obvious if the Geolocation request was denied or failed.
 * Use proper sunset / sunrise hours to determine when to use night symbols.
 * Somehow figure out location name and put it on the clock face just below the
@@ -67,3 +66,4 @@ point them to some relevant URL for how to enable it?
 * Test on other computer
 * Fetch the forecast in the background.
 * Add wind speed numbers in m/s
+* Put some kind of border around / background behind the wind speed numbers

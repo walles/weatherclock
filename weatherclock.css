@@ -8,8 +8,12 @@ text.hour {
   font-family: sans-serif;
 }
 text.wind {
+  color: black;
   font-size: 5px;
   font-family: serif;
+}
+rect#wind-rect {
+  fill: lightgray;
 }
 line.hour-hand {
     stroke: black;
