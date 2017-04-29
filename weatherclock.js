@@ -9,10 +9,10 @@
 /* global location */
 /* global navigator */
 
-var HOUR_RADIUS = 35;
+var HOUR_RADIUS = 40;
 var WIND_TEXT_RADIUS = 13;
-var SYMBOL_RADIUS = 25;
-var SYMBOL_SIZE = 9;
+var SYMBOL_RADIUS = 30;
+var SYMBOL_SIZE = 10;
 var WINDBOX_SCALE = 1.2;
 
 var SVG_NS = "http://www.w3.org/2000/svg";

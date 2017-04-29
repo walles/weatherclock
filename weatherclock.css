@@ -4,7 +4,7 @@ text {
   dominant-baseline: central;
 }
 text.hour {
-  font-size: 7px;
+  font-size: 8px;
   font-family: sans-serif;
 }
 text.wind {

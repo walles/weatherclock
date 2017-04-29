@@ -7,9 +7,14 @@ location on a clock face.
 It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
+## Clock Face Graphics
+To update the clock face graphics:
+* Edit `src/clock-face.blend` in [Blender](https://blender.org)
+* Render and save as `clock-face.jpg`
+
 ## Favicon
 To update the favicon:
-* Edit `src/weatherclock.xcf` in [GIMP](http://gimp.org/)
+* Edit `src/weatherclock.xcf` in [GIMP](https://gimp.org/)
 * Export as PNG
 * Generate favicons using <http://realfavicongenerator.net/>, make sure you
 set the directory to `favicons` (no slashes)
