@@ -317,10 +317,10 @@ function setClock() {
   // Insert an empty text node for the wind text, to be filled in by drawWind()
   windText.appendChild(document.createTextNode(""));
 
-  // Insert text after clock frame to make it appear like background
-  var clockFrame = document.getElementById("clock-frame");
-  // From: http://stackoverflow.com/a/4793630/473672
-  clockFrame.parentNode.insertBefore(windText, clockFrame.nextSibling);
+  // Insert windText node before the hour hand to put it underneath the hands.
+  var weatherclock = document.getElementById("weatherclock");
+  var hourHand = document.getElementById("hour-hand");
+  weatherclock.insertBefore(windText, hourHand);
 }
 
 function degreeDistance(d0, d1) {

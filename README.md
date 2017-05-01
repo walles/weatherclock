@@ -9,8 +9,8 @@ symbols for each hour.
 
 ## Clock Face Graphics
 To update the clock face graphics:
-* Edit `src/clock-face.blend` in [Blender](https://blender.org)
-* Render and save as `clock-face.jpg`
+* Edit `src/clock-frame.blend` in [Blender](https://blender.org)
+* Render and save as `clock-frame.png`
 
 ## Favicon
 To update the favicon:
