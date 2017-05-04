@@ -27,6 +27,10 @@ line.minute-hand {
     stroke-linecap: round;
     visibility: hidden;
 }
+line.shadow {
+    stroke: black;
+    stroke-opacity: 0.1;
+}
 svg {
     width: 95vmin;
     height: 95vmin;

@@ -72,3 +72,4 @@ point them to some relevant URL for how to enable it?
 * Fetch the forecast in the background.
 * Add wind speed numbers in m/s
 * Put some kind of border around / background behind the wind speed numbers
+* Add shadows to the hands for prettiness and realism
