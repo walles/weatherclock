@@ -58,6 +58,29 @@ function logError(message) {
   alert(message);
 }
 
+function createShadow(elementName) {
+  var element = document.getElementById(elementName);
+
+  // Create the shadow
+  var shadow = element.cloneNode(false);
+  shadow.setAttribute("id", shadow.getAttribute("id") + "-shadow");
+
+  var oldClass = shadow.getAttribute("class");
+  if (oldClass == null) {
+    oldClass = "";
+  }
+  shadow.setAttribute("class", oldClass + " shadow");
+
+  var oldTransform = shadow.getAttribute("transform");
+  if (oldTransform == null) {
+    oldTransform = "";
+  }
+  shadow.setAttribute("transform", "translate(-1 1) " + oldTransform);
+
+  // Add shadow element before original element
+  element.parentElement.insertBefore(shadow, element);
+}
+
 /* Parses weather XML from yr.no into a weather object that maps timestamps (in
 * seconds since the epoch) to forecasts. A forecast has these fields:
 *
@@ -360,6 +383,10 @@ function doWeather() {
       ga('set', 'metric2', dt_seconds.toString());
 
       document.getElementById("hands").style.visibility = "visible";
+
+      createShadow("hour-hand");
+      createShadow("minute-hand");
+      createShadow("hand-center");
 
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
