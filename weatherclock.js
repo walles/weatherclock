@@ -64,8 +64,18 @@ function createShadow(elementName) {
   // Create the shadow
   var shadow = element.cloneNode(false);
   shadow.setAttribute("id", shadow.getAttribute("id") + "-shadow");
-  shadow.setAttribute("class", shadow.getAttribute("class") + " shadow");
-  shadow.setAttribute("transform", "translate(-1 1) " + shadow.getAttribute("transform"));
+
+  var oldClass = shadow.getAttribute("class");
+  if (oldClass == null) {
+    oldClass = "";
+  }
+  shadow.setAttribute("class", oldClass + " shadow");
+
+  var oldTransform = shadow.getAttribute("transform");
+  if (oldTransform == null) {
+    oldTransform = "";
+  }
+  shadow.setAttribute("transform", "translate(-1 1) " + oldTransform);
 
   // Add shadow element before original element
   element.parentElement.insertBefore(shadow, element);
@@ -165,8 +175,8 @@ function addHourString(hour, string) {
 
   // Insert text before the hands to get the hands rendered on top
   var clock = document.getElementById("weatherclock");
-  var hourHandShadow = document.getElementById("hour-hand-shadow");
-  clock.insertBefore(text, hourHandShadow);
+  var hands = document.getElementById("hands");
+  clock.insertBefore(text, hands);
 }
 
 function addHourSymbol(hour, url) {
@@ -183,8 +193,8 @@ function addHourSymbol(hour, url) {
 
   // Insert image before the hands to get the hands rendered on top
   var clock = document.getElementById("weatherclock");
-  var hourHandShadow = document.getElementById("hour-hand-shadow");
-  clock.insertBefore(image, hourHandShadow);
+  var hands = document.getElementById("hands");
+  clock.insertBefore(image, hands);
 }
 
 function renderClock(weather) {
@@ -334,8 +344,8 @@ function setClock() {
 
   // Insert windText node before the hour hand to put it underneath the hands.
   var weatherclock = document.getElementById("weatherclock");
-  var hourHandShadow = document.getElementById("hour-hand-shadow");
-  weatherclock.insertBefore(windText, hourHandShadow);
+  var hands = document.getElementById("hands");
+  weatherclock.insertBefore(windText, hands);
 }
 
 function degreeDistance(d0, d1) {
@@ -372,11 +382,11 @@ function doWeather() {
       var dt_seconds = (t1_millis - t0_millis) / 1000.0;
       ga('set', 'metric2', dt_seconds.toString());
 
-      document.getElementById("hour-hand").style.visibility = "visible";
-      document.getElementById("minute-hand").style.visibility = "visible";
+      document.getElementById("hands").style.visibility = "visible";
 
       createShadow("hour-hand");
       createShadow("minute-hand");
+      createShadow("hand-center");
 
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;

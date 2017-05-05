@@ -18,11 +18,14 @@ rect#wind-rect {
 line.hand {
     stroke: black;
     stroke-linecap: square;
-    visibility: hidden;
 }
 line.shadow {
     stroke: black;
     stroke-opacity: 0.1;
+}
+circle.shadow {
+    fill: black;
+    opacity: 0.1;
 }
 svg {
     width: 95vmin;
