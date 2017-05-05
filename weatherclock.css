@@ -15,16 +15,9 @@ text.wind {
 rect#wind-rect {
   fill: #eee;
 }
-line.hour-hand {
+line.hand {
     stroke: black;
-    stroke-width: 4;
-    stroke-linecap: round;
-    visibility: hidden;
-}
-line.minute-hand {
-    stroke: black;
-    stroke-width: 3;
-    stroke-linecap: round;
+    stroke-linecap: square;
     visibility: hidden;
 }
 line.shadow {
