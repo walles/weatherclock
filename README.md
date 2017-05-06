@@ -23,6 +23,8 @@ including updating the headers in `index.html`
 * Commit changes to `src/weatherclock.xcf` and favicons
 
 # TODO
+* Re-apply d7d3afcd4863f19dfaf0d85676539f1348d14bd5 when Android Firefox can
+render the filter. Didn't work on Android Firefox 53.0.1.
 * Be more obvious if the Geolocation request was denied or failed.
 * Use proper sunset / sunrise hours to determine when to use night symbols.
 * Somehow figure out location name and put it on the clock face just below the
