@@ -9,9 +9,9 @@
 /* global location */
 /* global navigator */
 
-var HOUR_RADIUS = 40;
+var HOUR_RADIUS = 39;
 var WIND_TEXT_RADIUS = 13;
-var SYMBOL_RADIUS = 30;
+var SYMBOL_RADIUS = 29;
 var SYMBOL_SIZE = 10;
 var WINDBOX_SCALE = 1.2;
 
