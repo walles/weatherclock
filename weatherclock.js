@@ -198,7 +198,7 @@ function addHourSymbol(hour, url) {
 }
 
 function renderClock(weather) {
-  var now_ms = new Date().getTime();
+  var now_ms = (new Date()).getTime();
   var start = new Date(now_ms + 0.75 * 3600 * 1000);
   var end = new Date(now_ms + 11.75 * 3600 * 1000);
 
@@ -296,8 +296,8 @@ function positioningError(positionError) {
 }
 
 function setClock() {
-  var currentHour = new Date().getHours() % 12;
-  var currentMinutes = new Date().getMinutes();
+  var currentHour = (new Date()).getHours() % 12;
+  var currentMinutes = (new Date()).getMinutes();
 
   var hourDegrees = (((currentHour * 60) + currentMinutes) * 360 / (12 * 60));
   var hourTransform = "rotate(" + hourDegrees + ")";
