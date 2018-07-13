@@ -1,13 +1,6 @@
 "use strict";
 
 /* global ga */
-/* global alert */
-/* global window */
-/* global Worker */
-/* global console */
-/* global document */
-/* global location */
-/* global navigator */
 
 var HOUR_RADIUS = 39;
 var WIND_TEXT_RADIUS = 13;

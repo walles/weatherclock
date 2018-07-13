@@ -1,9 +1,5 @@
 "use strict";
 
-/* global postMessage */
-/* global XMLHttpRequest */
-/* global addEventListener */
-
 // See: http://www.html5rocks.com/en/tutorials/workers/basics/
 addEventListener('message', function(e) {
   log("Got message from main thread: [" + e.data.join() + "]");

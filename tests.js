@@ -1,7 +1,6 @@
 "use strict";
 
 /* global QUnit */
-/* global window */
 /* global getCoordinates */
 /* global parseWeatherXml */
 /* global degreeDistance */
