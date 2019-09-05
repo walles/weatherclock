@@ -1,3 +1,29 @@
+# Weather Clock
+Try it here: <https://walles.github.io/weatherclock/>
+
+Displays the weather forecast for the upcoming 11 hours for the current
+location on a clock face.
+
+It shows temperature where ordinary clocks show hour numbers, and weather
+symbols for each hour.
+
+## Clock Face Graphics
+To update the clock face graphics:
+* Edit `src/images/clock-frame.blend` in [Blender](https://blender.org)
+* Render and save as `public/clock-frame.png`
+
+## Favicon
+To update the favicon:
+* Edit `src/images/weatherclock.xcf` in [GIMP](https://gimp.org/)
+* Export as PNG
+* Generate favicons using <http://realfavicongenerator.net/>, make sure you
+set the directory to `favicons` (no slashes)
+* Follow instructions on that web site for how to apply the favicons, possibly
+including updating the headers in `public/index.html`
+* Commit changes to `src/weatherclock.xcf` and `public/favicons`
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
