@@ -1,4 +1,5 @@
 # Weather Clock
+
 Try it here: <https://walles.github.io/weatherclock/>
 
 Displays the weather forecast for the upcoming 11 hours for the current
@@ -8,19 +9,22 @@ It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
 ## Clock Face Graphics
+
 To update the clock face graphics:
-* Edit `src/images/clock-frame.blend` in [Blender](https://blender.org)
+
+* Edit `src/images/clock-frame.blend` using [Blender](https://blender.org)
 * Render and save as `public/clock-frame.png`
 
 ## Favicon
+
 To update the favicon:
-* Edit `src/images/weatherclock.xcf` in [GIMP](https://gimp.org/)
-* Export as PNG
-* Generate favicons using <http://realfavicongenerator.net/>, make sure you
-set the directory to `favicons` (no slashes)
-* Follow instructions on that web site for how to apply the favicons, possibly
-including updating the headers in `public/index.html`
-* Commit changes to `src/weatherclock.xcf` and `public/favicons`
+
+* Edit `src/images/weatherclock.xcf` using [GIMP](https://gimp.org/)
+* Overwrite the following files with your changes:
+  * `public/favicon.ico`
+  * `public/logo192.png`
+  * `public/logo512.png`
+* Commit changes to `src/weatherclock.xcf` and the icons in `public/`
 
 ---
 
