@@ -1,10 +1,11 @@
 import React from 'react';
 import './App.css';
+import Clock from './Clock.js';
 
 function App() {
   return (
     <div className="App">
-      <p>Imagine a clock face here</p>
+      <Clock></Clock>
 
       {/*
       If you add a Weatherclock launcher to your home screen on an iPhone,
