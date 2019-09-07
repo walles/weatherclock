@@ -7,21 +7,22 @@ class Clock extends React.Component {
 
         if (navigator.geolocation) {
             this.state = {
-                'geolocation_excuse': 'pending',
-                'geolocation_error': null,
+                'status': 'pending',
+                'error_message': null,
                 'position': null,
             }
         } else {
             this.state = {
-                'geolocation_excuse': 'unsupported',
-                'geolocation_error': null,
+                'status': 'geolocation_unsupported',
+                'error_message': null,
                 'position': null,
             }
         }
     }
 
     componentDidMount = () => {
-        if (this.state.geolocation_excuse === 'pending') {
+        if (this.state.status === 'pending') {
+            console.log("Geolocating...");
             navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError);
         }
     }
@@ -31,39 +32,66 @@ class Clock extends React.Component {
         const longitude = position.coords.longitude;
         console.log(`got position: ${latitude} ${longitude}`);
         this.setState({
-            'geolocation_excuse': null,
-            'geolocation_error': null,
+            'status': 'forecast pending',
+            'error_message': null,
             'position': position.coords,
+        });
+
+        this.download_weather(latitude, longitude);
+    }
+
+    download_weather = (latitude, longitude) => {
+        const url =
+            `https://api-met-no-proxy.appspot.com/weatherapi/locationforecast/1.9/?lat=${latitude};lon=${longitude}`;
+        console.log("Getting weather from: " + url);
+
+        // FIXME: Handle fetch() error
+        // FIXME: Handle JSON parsing error
+        fetch(url).then(function(response) {
+            return response.text();
+        }).then(function(weatherXmlString) {
+            // FIXME: Somehow handle the weather XML
+            console.log(weatherXmlString);
         });
     }
 
     geoError = (error) => {
+        console.log("Geolocation failed");
         this.setState({
-            'geolocation_excuse': 'failed',
-            'geolocation_error': error.message,
+            'status': 'geolocation_failed',
+            'error_message': error.message,
             'position': null,
         });
     }
 
     render = () => {
-        if (this.state.geolocation_excuse === 'unsupported') {
+        if (this.state.error_message !== null) {
+            // FIXME: Do something better looking here
+            return (
+                <p>Error: {this.state.error_message}</p>
+            );
+        }
+
+        if (this.state.status === 'geolocation_unsupported') {
             // FIXME: Do something more informative here
             return (
                 <p>Geolocation not supported</p>
             );
         }
 
-        if (this.state.geolocation_excuse === 'pending') {
+        if (this.state.status === 'pending') {
             // FIXME: Do something better looking here
+            // FIXME: Maybe inspired by this? https://stackoverflow.com/a/30933053/473672
             return (
                 <p>Geolocating...</p>
             );
         }
 
-        if (this.state.geolocation_error !== null) {
+        if (this.state.status === 'forecast pending') {
             // FIXME: Do something better looking here
+            // FIXME: Maybe inspired by this? https://stackoverflow.com/a/30933053/473672
             return (
-                <p>Geolocation failed: {this.state.geolocation_error}</p>
+                <p>Downloading weather forecast...</p>
             );
         }
 
