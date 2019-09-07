@@ -2,7 +2,71 @@ import React from 'react';
 import './Clock.css';
 
 class Clock extends React.Component {
-    render() {
+    constructor(props) {
+        super(props);
+
+        if (navigator.geolocation) {
+            this.state = {
+                'geolocation_excuse': 'pending',
+                'geolocation_error': null,
+                'position': null,
+            }
+        } else {
+            this.state = {
+                'geolocation_excuse': 'unsupported',
+                'geolocation_error': null,
+                'position': null,
+            }
+        }
+    }
+
+    componentDidMount = () => {
+        if (this.state.geolocation_excuse === 'pending') {
+            navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError);
+        }
+    }
+
+    setPosition = (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        console.log(`got position: ${latitude} ${longitude}`);
+        this.setState({
+            'geolocation_excuse': null,
+            'geolocation_error': null,
+            'position': position.coords,
+        });
+    }
+
+    geoError = (error) => {
+        this.setState({
+            'geolocation_excuse': 'failed',
+            'geolocation_error': error.message,
+            'position': null,
+        });
+    }
+
+    render = () => {
+        if (this.state.geolocation_excuse === 'unsupported') {
+            // FIXME: Do something more informative here
+            return (
+                <p>Geolocation not supported</p>
+            );
+        }
+
+        if (this.state.geolocation_excuse === 'pending') {
+            // FIXME: Do something better looking here
+            return (
+                <p>Geolocating...</p>
+            );
+        }
+
+        if (this.state.geolocation_error !== null) {
+            // FIXME: Do something better looking here
+            return (
+                <p>Geolocation failed: {this.state.geolocation_error}</p>
+            );
+        }
+
         return (
             <svg
             id="weatherclock"
