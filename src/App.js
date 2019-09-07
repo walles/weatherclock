@@ -17,9 +17,9 @@ function App() {
       {/* FIXME: Should be "onClick" not "onclick, then read console messages for further inspiration" */}
       <button type="button" onclick="location.reload();">Update forecast FIXME: Handler doesnt work</button>
 
-      <p>Weather forecast from <a href="yr.no">yr.no</a>, delivered by the
-      <a href="http://met.no/English/">Norwegian Meteorological Institute</a>
-      and the <a href="http://www.nrk.no/">NRK</a>.</p>
+      <p>Weather forecast from <a href="yr.no">yr.no</a>, delivered by
+      the <a href="http://met.no/English/">Norwegian Meteorological
+      Institute</a> and the <a href="http://www.nrk.no/">NRK</a>.</p>
 
       <p>Imagine a share-on-Facebook button here</p>
 
