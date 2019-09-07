@@ -14,6 +14,7 @@ function App() {
 
       So we add a reload button of our own here.
       */}
+      {/* FIXME: Should be "onClick" not "onclick, then read console messages for further inspiration" */}
       <button type="button" onclick="location.reload();">Update forecast FIXME: Handler doesnt work</button>
 
       <p>Weather forecast from <a href="yr.no">yr.no</a>, delivered by the
