@@ -45,6 +45,8 @@ class Clock extends React.Component {
             `https://api-met-no-proxy.appspot.com/weatherapi/locationforecast/1.9/?lat=${latitude};lon=${longitude}`;
         console.log("Getting weather from: " + url);
 
+        const self = this;
+
         // FIXME: Handle fetch() error
         // FIXME: Handle JSON parsing error
         fetch(url).then(function(response) {
@@ -52,6 +54,12 @@ class Clock extends React.Component {
         }).then(function(weatherXmlString) {
             // FIXME: Somehow handle the weather XML
             console.log(weatherXmlString);
+
+            self.setState({
+                'status': 'got forecast',
+                'error_message': null,
+                'position': self.state.position,
+            });
         });
     }
 
@@ -64,37 +72,15 @@ class Clock extends React.Component {
         });
     }
 
+    textElement = (text) => {
+        // FIXME: Make sure the text fits in the circle
+        // FIXME: Maybe inspired by this? https://stackoverflow.com/a/30933053/473672
+        return (
+            <text x="0" y="0">{text}</text>
+        )
+    }
+
     render = () => {
-        if (this.state.error_message !== null) {
-            // FIXME: Do something better looking here
-            return (
-                <p>Error: {this.state.error_message}</p>
-            );
-        }
-
-        if (this.state.status === 'geolocation_unsupported') {
-            // FIXME: Do something more informative here
-            return (
-                <p>Geolocation not supported</p>
-            );
-        }
-
-        if (this.state.status === 'pending') {
-            // FIXME: Do something better looking here
-            // FIXME: Maybe inspired by this? https://stackoverflow.com/a/30933053/473672
-            return (
-                <p>Geolocating...</p>
-            );
-        }
-
-        if (this.state.status === 'forecast pending') {
-            // FIXME: Do something better looking here
-            // FIXME: Maybe inspired by this? https://stackoverflow.com/a/30933053/473672
-            return (
-                <p>Downloading weather forecast...</p>
-            );
-        }
-
         return (
             <svg
             id="weatherclock"
@@ -103,15 +89,30 @@ class Clock extends React.Component {
 
             <image id="clock-frame" x="-50" y="-50" width="100" height="100" xlinkHref="clock-frame.png" />
 
-            {/*
-            <g id="hands" visibility="hidden">
-                <line id="hour-hand" class="hand" x1="0" y1="2" x2="0" y2="-23" stroke-width="2.5" />
-                <line id="minute-hand" class="hand" x1="0" y1="3" x2="0" y2="-34" stroke-width="2" />
-                <circle id="hand-center" cx="0" cy="0" r="2" fill="black"/>
-            </g>
-            */}
+            {this.getClockContents()}
+
             </svg>
         );
+    }
+
+    getClockContents = () => {
+        if (this.state.error_message !== null) {
+            return this.textElement("Error: " + this.state.error_message);
+        }
+
+        if (this.state.status === 'geolocation_unsupported') {
+            return this.textElement("Geolocation not supported");
+        }
+
+        if (this.state.status === 'pending') {
+            return this.textElement("Locating phone...");
+        }
+
+        if (this.state.status === 'forecast pending') {
+            return this.textElement("Downloading weather forecast...")
+        }
+
+        return this.textElement("Imagine a weather forecast here");
     }
 }
 
