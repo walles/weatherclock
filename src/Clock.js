@@ -1,6 +1,8 @@
 import React from 'react';
 import './Clock.css';
 
+import Weather from './Weather.js';
+
 class Clock extends React.Component {
     constructor(props) {
         super(props);
@@ -161,10 +163,6 @@ class Clock extends React.Component {
         );
     }
 
-    renderForecast = (forecast) => {
-        return this.textElement("Imagine forecast here");
-    }
-
     getClockContents = () => {
         if (this.state.error_message !== null) {
             return this.textElement("Error: " + this.state.error_message);
@@ -182,7 +180,9 @@ class Clock extends React.Component {
             return this.textElement("Downloading weather forecast...")
         }
 
-        return this.renderForecast(this.state.forecast);
+        return (
+            <Weather forecast={this.state.forecast}></Weather>
+        );
     }
 }
 

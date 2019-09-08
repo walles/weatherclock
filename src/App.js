@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+
 import Clock from './Clock.js';
 
 // FIXME: Redirect to https if we're asked for http, this
