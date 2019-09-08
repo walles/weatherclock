@@ -10,12 +10,14 @@ class Clock extends React.Component {
                 'status': 'pending',
                 'error_message': null,
                 'position': null,
+                'forecast': null,
             }
         } else {
             this.state = {
                 'status': 'geolocation_unsupported',
                 'error_message': null,
                 'position': null,
+                'forecast': null,
             }
         }
     }
@@ -35,6 +37,7 @@ class Clock extends React.Component {
             'status': 'forecast pending',
             'error_message': null,
             'position': position.coords,
+            'forecast': null,
         });
 
         this.download_weather(latitude, longitude);
@@ -52,15 +55,75 @@ class Clock extends React.Component {
         fetch(url).then(function(response) {
             return response.text();
         }).then(function(weatherXmlString) {
-            // FIXME: Somehow handle the weather XML
-            console.log(weatherXmlString);
+            const forecast = self.parseWeatherXml(weatherXmlString);
 
             self.setState({
                 'status': 'got forecast',
                 'error_message': null,
                 'position': self.state.position,
+                'forecast': forecast,
             });
         });
+    }
+
+    /* Parses weather XML from yr.no into a weather object that maps timestamps (in
+    * seconds since the epoch) to forecasts. A forecast has these fields:
+    *
+    * .celsius: The forecasted temperatures in centigrades
+    *
+    * .wind_m_s: The forecasted wind speed
+    *
+    * .symbol: The weather symbol index. Resolve using
+    *         https://api.yr.no/weatherapi/weathericon
+    */
+    parseWeatherXml = (weatherXmlString) => {
+        const weatherXml = (new window.DOMParser()).parseFromString(weatherXmlString, "text/xml");
+        const allPrognoses = weatherXml.getElementsByTagName("time");
+        console.log("Parsing " + allPrognoses.length + " prognoses...");
+
+        const forecasts = {};
+        for (var i = 0; i < allPrognoses.length; i++) {
+            const prognosis = allPrognoses[i];
+
+            const from = new Date(prognosis.attributes.from.value);
+            const to = new Date(prognosis.attributes.to.value);
+            const dh = (to.getTime() - from.getTime()) / (3600 * 1000);
+            const timestamp = new Date((from.getTime() + to.getTime()) / 2);
+
+            var forecast = forecasts[timestamp];
+            if (!forecast) {
+                forecast = {};
+            }
+
+            if (forecast.span_h !== undefined && forecast.span_h <= dh) {
+                // There's already better data here
+                continue;
+            }
+
+            forecast.span_h = dh;
+
+            const symbolNodes = prognosis.getElementsByTagName("symbol");
+            if (symbolNodes && symbolNodes.length > 0) {
+                const symbolNumber = symbolNodes[0].attributes.number.value;
+                forecast.symbol = symbolNumber;
+            }
+
+            const celsiusNodes = prognosis.getElementsByTagName("temperature");
+            if (celsiusNodes && celsiusNodes.length > 0) {
+                const celsiusValue = celsiusNodes[0].attributes.value.value;
+                forecast.celsius = celsiusValue;
+            }
+
+            const windNodes = prognosis.getElementsByTagName("windSpeed");
+            if (windNodes && windNodes.length > 0) {
+                const windValue = windNodes[0].attributes.mps.value;
+                forecast.wind_m_s = windValue;
+            }
+
+            forecasts[timestamp] = forecast;
+        }
+
+        return forecasts;
     }
 
     geoError = (error) => {
@@ -69,6 +132,7 @@ class Clock extends React.Component {
             'status': 'geolocation_failed',
             'error_message': error.message,
             'position': null,
+            'forecast': null,
         });
     }
 
@@ -95,6 +159,10 @@ class Clock extends React.Component {
         );
     }
 
+    renderForecast = (forecast) => {
+        return this.textElement("Imagine forecast here");
+    }
+
     getClockContents = () => {
         if (this.state.error_message !== null) {
             return this.textElement("Error: " + this.state.error_message);
@@ -112,7 +180,7 @@ class Clock extends React.Component {
             return this.textElement("Downloading weather forecast...")
         }
 
-        return this.textElement("Imagine a weather forecast here");
+        return this.renderForecast(this.state.forecast);
     }
 }
 
