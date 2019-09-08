@@ -137,6 +137,8 @@ class Clock extends React.Component {
     }
 
     textElement = (text) => {
+        console.log(text);
+
         // FIXME: Make sure the text fits in the circle
         // FIXME: Maybe inspired by this? https://stackoverflow.com/a/30933053/473672
         return (
