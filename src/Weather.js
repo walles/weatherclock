@@ -4,13 +4,18 @@ import Temperature from './Temperature.js';
 
 class Weather extends React.Component {
     renderTemperatures = (renderUs) => {
-        // FIXME: Add the actual temperatures
+        const returnMe = [];
 
-        console.log(renderUs);
+        renderUs.forEach(forecast => {
+            if (forecast.celsius !== undefined) {
+                const hour = forecast.timestamp.getHours() + forecast.timestamp.getMinutes() / 60.0;
+                returnMe.push((
+                   <Temperature degreesCelsius={forecast.celsius} hour={hour}/>
+                ));
+            }
+        });
 
-        return (
-            <Temperature degreesCelsius={25} hour={1} />
-        );
+        return returnMe;
     }
 
     getForecastsToRender = () => {

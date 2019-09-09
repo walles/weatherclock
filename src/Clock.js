@@ -115,7 +115,7 @@ class Clock extends React.Component {
             const celsiusNodes = prognosis.getElementsByTagName("temperature");
             if (celsiusNodes && celsiusNodes.length > 0) {
                 const celsiusValue = celsiusNodes[0].attributes.value.value;
-                forecast.celsius = celsiusValue;
+                forecast.celsius = parseFloat(celsiusValue);
             }
 
             const windNodes = prognosis.getElementsByTagName("windSpeed");
