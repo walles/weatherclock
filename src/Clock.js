@@ -97,6 +97,8 @@ class Clock extends React.Component {
                 forecast = {};
             }
 
+            forecast.timestamp = timestamp;
+
             if (forecast.span_h !== undefined && forecast.span_h <= dh) {
                 // There's already better data here
                 continue;
