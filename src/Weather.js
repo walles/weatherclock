@@ -10,7 +10,7 @@ class Weather extends React.Component {
             if (forecast.celsius !== undefined) {
                 const hour = forecast.timestamp.getHours() + forecast.timestamp.getMinutes() / 60.0;
                 returnMe.push((
-                   <Temperature degreesCelsius={forecast.celsius} hour={hour}/>
+                   <Temperature key={hour} degreesCelsius={forecast.celsius} hour={hour}/>
                 ));
             }
         });
