@@ -2,14 +2,21 @@ import React from 'react'
 
 import Temperature from './Temperature.js'
 import WeatherSymbol from './WeatherSymbol.js'
+import ClockCoordinates from './ClockCoordinates.js'
 
 class Weather extends React.Component {
   renderTemperatures = renderUs => {
     return renderUs
       .filter(forecast => forecast.celsius !== undefined)
       .map(forecast => {
-        const hour = forecast.timestamp.getHours() + forecast.timestamp.getMinutes() / 60.0
-        return <Temperature key={`hour-${hour}`} hour={hour} degreesCelsius={forecast.celsius} />
+        const coords = new ClockCoordinates(forecast.timestamp)
+        return (
+          <Temperature
+            key={`hour-${coords.decimalHour}`}
+            coordinates={coords}
+            degreesCelsius={forecast.celsius}
+          />
+        )
       })
   }
 
