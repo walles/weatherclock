@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ClockCoordinates from './ClockCoordinates'
+
 const DISTANCE_FROM_CENTER = 29
 const SIZE = 10
 
@@ -13,22 +15,21 @@ class WeatherSymbol extends React.Component {
       'https://api.met.no/weatherapi/weathericon/1.1/?symbol=' +
       this.props.symbol +
       ';content_type=image/png;is_night=' +
-      (this.props.isNight ? 1 : 0)
+      (this.props.coordinates.isNight() ? 1 : 0)
 
     // FIXME: The symbol we're getting has a start time and a span.
     // We should think of how to place it mid-span, rather than just
     // placing it at the start of the span like we do here.
-    const radians = 2 * Math.PI * (this.props.hour / 12.0)
-    const x = Math.round(Math.sin(radians) * DISTANCE_FROM_CENTER) - (SIZE - 1) / 2
-    const y = -Math.round(Math.cos(radians) * DISTANCE_FROM_CENTER) - (SIZE - 1) / 2
+
+    const x = this.props.coordinates.symbolDx(DISTANCE_FROM_CENTER, SIZE)
+    const y = this.props.coordinates.symbolDy(DISTANCE_FROM_CENTER, SIZE)
 
     return <image className='symbol' x={x} y={y} width={SIZE} height={SIZE} href={url} />
   }
 }
 
 WeatherSymbol.propTypes = {
-  hour: PropTypes.number,
-  night: PropTypes.bool,
+  coordinates: PropTypes.instanceOf(ClockCoordinates),
   symbol: PropTypes.string
 }
 

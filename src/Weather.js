@@ -24,16 +24,12 @@ class Weather extends React.Component {
     return renderUs
       .filter(forecast => forecast.symbol !== undefined)
       .map(forecast => {
-        const hour = forecast.timestamp.getHours() + forecast.timestamp.getMinutes() / 60.0
-
-        // FIXME: Actually compute this based on date, latitude and longitude?
-        const isNight = hour < 7 || hour > 20
+        const coords = new ClockCoordinates(forecast.timestamp)
 
         return (
           <WeatherSymbol
-            key={`weather-${hour}`}
-            hour={hour}
-            night={isNight}
+            key={`weather-${coords.decimalHour}`}
+            coordinates={coords}
             symbol={forecast.symbol}
           />
         )
