@@ -1,0 +1,14 @@
+line.hand {
+    stroke: black;
+    stroke-linecap: square;
+}
+
+circle {
+    fill: black
+}
+
+.shadow {
+    stroke-opacity: 0.1;
+    fill-opacity: 0.1;
+    transform: translate(-1px, 1px)
+}

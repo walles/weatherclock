@@ -1,10 +1,17 @@
 import React from 'react'
 
+import Hand from './Hand.js'
 import Temperature from './Temperature.js'
 import WeatherSymbol from './WeatherSymbol.js'
 import Display from './Display.js'
 import ClockCoordinates from './ClockCoordinates.js'
 
+const HOUR_HAND_LENGTH = 23
+
+/**
+ * This is what the clock shows after forecasts have been downloaded,
+ * up to and including the hour and minute hands.
+ */
 class Weather extends React.Component {
   renderTemperatures = renderUs => {
     return renderUs
@@ -63,6 +70,18 @@ class Weather extends React.Component {
     return <Display coords={coords}>{windString}</Display>
   }
 
+  renderHourHand = () => {
+    const nowCoords = new ClockCoordinates(new Date())
+
+    return (
+      <Hand
+        width={2.5}
+        dx={nowCoords.hourDx(HOUR_HAND_LENGTH)}
+        dy={nowCoords.hourDy(HOUR_HAND_LENGTH)}
+      />
+    )
+  }
+
   getForecastsToRender = () => {
     const renderUs = []
 
@@ -98,6 +117,7 @@ class Weather extends React.Component {
         {this.renderTemperatures(renderUs)}
         {this.renderWeathers(renderUs)}
         {this.renderWind(renderUs)}
+        {this.renderHourHand()}
       </React.Fragment>
     )
   }
