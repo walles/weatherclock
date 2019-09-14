@@ -33,6 +33,16 @@ class ClockCoordinates {
     // FIXME: Actually compute this based on latitude and longitude?
     return this.decimalHour < 7 || this.decimalHour > 20
   }
+
+  /**
+   * Return an array of directions (0-360 degrees). The first direction
+   * is the one that is most clear of the clock hands, second one is second
+   * most clear and so on.
+   */
+  rankFreeDirections = () => {
+    // FIXME: Actually figure this out properly
+    return [90]
+  }
 }
 
 export default ClockCoordinates
