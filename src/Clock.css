@@ -12,3 +12,7 @@ text {
     alignment-baseline: central;
     dominant-baseline: central;
 }
+
+body {
+    margin: 8px
+}
