@@ -9,22 +9,22 @@ class Hand extends React.Component {
     return (
       <React.Fragment>
         <line
-          class='hand shadow'
+          className='hand shadow'
           x1='0'
           y1='0'
           x2={this.props.dx}
           y2={this.props.dy}
-          stroke-width={this.props.width}
+          strokeWidth={this.props.width}
         />
-        <circle class='shadow' cx='0' cy='0' r='2' />
+        <circle className='shadow' cx='0' cy='0' r='2' />
 
         <line
-          class='hand'
+          className='hand'
           x1='0'
           y1='0'
           x2={this.props.dx}
           y2={this.props.dy}
-          stroke-width={this.props.width}
+          strokeWidth={this.props.width}
         />
         <circle cx='0' cy='0' r='2' />
       </React.Fragment>
