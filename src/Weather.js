@@ -2,6 +2,7 @@ import React from 'react'
 
 import Temperature from './Temperature.js'
 import WeatherSymbol from './WeatherSymbol.js'
+import Display from './Display.js'
 import ClockCoordinates from './ClockCoordinates.js'
 
 const WIND_TEXT_RADIUS = 13
@@ -54,20 +55,14 @@ class Weather extends React.Component {
     maxWind = Math.round(maxWind)
 
     const windString = minWind === maxWind ? `${minWind} m/s` : `${minWind}-${maxWind} m/s`
+    console.log(`Wind: ${windString}`)
 
     // Where do we draw the wind?
     const nowCoords = new ClockCoordinates(new Date())
     const degrees = nowCoords.rankFreeDirections()[0]
     const coords = new ClockCoordinates((12.0 * degrees) / 360.0)
 
-    // FIXME: Draw the wind!
-    console.log(`Wind: ${windString}`)
-
-    return (
-      <text x={coords.hourDx(WIND_TEXT_RADIUS)} y={coords.hourDy(WIND_TEXT_RADIUS)}>
-        {windString}
-      </text>
-    )
+    return <Display coords={coords}>{windString}</Display>
   }
 
   getForecastsToRender = () => {
