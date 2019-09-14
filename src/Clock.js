@@ -153,7 +153,7 @@ class Clock extends React.Component {
     // FIXME: Make sure the text fits in the circle
     // FIXME: Maybe inspired by this? https://stackoverflow.com/a/30933053/473672
     return (
-      <text x='0' y='0'>
+      <text x='0' y='0' className='progress'>
         {text}
       </text>
     )

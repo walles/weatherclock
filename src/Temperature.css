@@ -1,4 +1,7 @@
 text.hour {
     font-size: 8px;
     font-family: sans-serif;
+    text-anchor: middle;
+    alignment-baseline: central;
+    dominant-baseline: central;
 }
