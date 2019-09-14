@@ -3,3 +3,7 @@ text.wind {
     font-size: 5px;
     font-family: serif;
 }
+
+rect.wind {
+    fill: #eee;
+}

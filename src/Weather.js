@@ -5,8 +5,6 @@ import WeatherSymbol from './WeatherSymbol.js'
 import Display from './Display.js'
 import ClockCoordinates from './ClockCoordinates.js'
 
-const WIND_TEXT_RADIUS = 13
-
 class Weather extends React.Component {
   renderTemperatures = renderUs => {
     return renderUs

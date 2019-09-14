@@ -16,9 +16,13 @@ class Display extends React.Component {
     const y = this.props.coords.hourDy(WIND_TEXT_RADIUS)
 
     return (
-      <text x={x} y={y} className='wind'>
-        {this.props.children}
-      </text>
+      <React.Fragment>
+        {/* FIXME: Adapt rect dimensions to text */}
+        <rect x='0' y='0' width='10' height='10' rx='2' ry='2' className='wind' />
+        <text x={x} y={y} className='wind' dominant-baseline='middle' text-anchor='middle'>
+          {this.props.children}
+        </text>
+      </React.Fragment>
     )
   }
 }
