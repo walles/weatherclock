@@ -7,6 +7,7 @@ import Display from './Display.js'
 import ClockCoordinates from './ClockCoordinates.js'
 
 const HOUR_HAND_LENGTH = 23
+const MINUTE_HAND_LENGTH = 34
 
 /**
  * This is what the clock shows after forecasts have been downloaded,
@@ -70,15 +71,24 @@ class Weather extends React.Component {
     return <Display coords={coords}>{windString}</Display>
   }
 
-  renderHourHand = () => {
+  renderHands = () => {
     const nowCoords = new ClockCoordinates(new Date())
 
+    // FIXME: This doubles the center circle shadow, maybe draw
+    // the center circle once here to get us only one of those?
     return (
-      <Hand
-        width={2.5}
-        dx={nowCoords.hourDx(HOUR_HAND_LENGTH)}
-        dy={nowCoords.hourDy(HOUR_HAND_LENGTH)}
-      />
+      <React.Fragment>
+        <Hand
+          width={2.5}
+          dx={nowCoords.hourDx(HOUR_HAND_LENGTH)}
+          dy={nowCoords.hourDy(HOUR_HAND_LENGTH)}
+        />
+        <Hand
+          width={2}
+          dx={nowCoords.minuteDx(MINUTE_HAND_LENGTH)}
+          dy={nowCoords.minuteDy(MINUTE_HAND_LENGTH)}
+        />
+      </React.Fragment>
     )
   }
 
@@ -117,7 +127,7 @@ class Weather extends React.Component {
         {this.renderTemperatures(renderUs)}
         {this.renderWeathers(renderUs)}
         {this.renderWind(renderUs)}
-        {this.renderHourHand()}
+        {this.renderHands()}
       </React.Fragment>
     )
   }

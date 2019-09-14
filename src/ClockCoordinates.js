@@ -19,6 +19,16 @@ class ClockCoordinates {
     return -Math.cos(radians) * radius
   }
 
+  minuteDx = radius => {
+    const radians = 2 * Math.PI * (this.decimalHour % 12.0)
+    return Math.sin(radians) * radius
+  }
+
+  minuteDy = radius => {
+    const radians = 2 * Math.PI * (this.decimalHour % 12.0)
+    return -Math.cos(radians) * radius
+  }
+
   symbolDx = (radius, size) => {
     const radians = 2 * Math.PI * (this.decimalHour / 12.0)
     return Math.sin(radians) * radius - (size - 1) / 2
