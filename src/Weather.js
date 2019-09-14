@@ -48,6 +48,7 @@ class Weather extends React.Component {
   renderWind = renderUs => {
     let minWind = null
     let maxWind = null
+
     renderUs.forEach(weather => {
       if (minWind == null || minWind > weather.wind_m_s) {
         minWind = weather.wind_m_s
@@ -69,6 +70,27 @@ class Weather extends React.Component {
     const coords = new ClockCoordinates((12.0 * degrees) / 360.0)
 
     return <Display coords={coords}>{windString}</Display>
+  }
+
+  renderPrecipitation = renderUs => {
+    let precipitation_mm = 0
+    renderUs
+      .filter(forecast => forecast.precipitation_mm !== undefined)
+      .forEach(forecast => {
+        precipitation_mm += forecast.precipitation_mm
+      })
+
+    precipitation_mm = Math.round(precipitation_mm)
+
+    const precipitationString = `${precipitation_mm}mm`
+    console.log(`Precipitation: ${precipitationString}`)
+
+    // Where do we draw the precipitation
+    const nowCoords = new ClockCoordinates(new Date())
+    const degrees = nowCoords.rankFreeDirections()[1]
+    const coords = new ClockCoordinates((12.0 * degrees) / 360.0)
+
+    return <Display coords={coords}>{precipitationString}</Display>
   }
 
   renderHands = () => {
@@ -127,6 +149,7 @@ class Weather extends React.Component {
         {this.renderTemperatures(renderUs)}
         {this.renderWeathers(renderUs)}
         {this.renderWind(renderUs)}
+        {this.renderPrecipitation(renderUs)}
         {this.renderHands()}
       </React.Fragment>
     )

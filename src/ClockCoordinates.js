@@ -51,7 +51,7 @@ class ClockCoordinates {
    */
   rankFreeDirections = () => {
     // FIXME: Actually figure this out properly
-    return [90]
+    return [90, 180]
   }
 }
 
