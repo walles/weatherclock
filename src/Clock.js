@@ -4,6 +4,11 @@ import PropTypes from 'prop-types'
 import './Clock.css'
 
 import Weather from './Weather.js'
+import Hand from './Hand.js'
+import ClockCoordinates from './ClockCoordinates.js'
+
+const HOUR_HAND_LENGTH = 23
+const MINUTE_HAND_LENGTH = 34
 
 class Clock extends React.Component {
   constructor (props) {
@@ -181,35 +186,71 @@ class Clock extends React.Component {
     )
   }
 
-  render = () => {
-    return (
-      <svg
-        id='weatherclock'
-        xmlns='http://www.w3.org/2000/svg'
-        version='1.1'
-        viewBox='-50 -50 100 100'
-      >
-        <image
-          id='clock-frame'
-          x='-50'
-          y='-50'
-          width='100'
-          height='100'
-          xlinkHref='clock-frame.png'
-        />
+  renderHands = () => {
+    const nowCoords = new ClockCoordinates(this.state.now)
 
-        {this.getClockContents()}
-      </svg>
+    // FIXME: This doubles the center circle shadow, maybe draw
+    // the center circle once here to get us only one of those?
+    return (
+      <React.Fragment>
+        <Hand
+          width={2.5}
+          dx={nowCoords.hourDx(HOUR_HAND_LENGTH)}
+          dy={nowCoords.hourDy(HOUR_HAND_LENGTH)}
+        />
+        <Hand
+          width={2}
+          dx={nowCoords.minuteDx(MINUTE_HAND_LENGTH)}
+          dy={nowCoords.minuteDy(MINUTE_HAND_LENGTH)}
+        />
+      </React.Fragment>
     )
   }
 
-  getClockContents = () => {
+  render = () => {
+    return (
+      <React.Fragment>
+        <svg
+          id='weatherclock'
+          xmlns='http://www.w3.org/2000/svg'
+          version='1.1'
+          viewBox='-50 -50 100 100'
+        >
+          <image
+            id='clock-frame'
+            x='-50'
+            y='-50'
+            width='100'
+            height='100'
+            xlinkHref='clock-frame.png'
+          />
+
+          {this.getClockContents()}
+        </svg>
+        {this.getExcuses()}
+      </React.Fragment>
+    )
+  }
+
+  getExcuses = () => {
     if (this.state.error_message !== null) {
-      return this.textElement('Error: ' + this.state.error_message)
+      // FIXME: Turn this into an error dialog
+      return <p>Error: {this.state.error_message}</p>
     }
 
     if (this.state.status === 'geolocation_unsupported') {
-      return this.textElement('Geolocation not supported')
+      // FIXME: Turn this into an error dialog
+      return <p>Error: Geolocation not supported</p>
+    }
+
+    return null
+  }
+
+  getClockContents = () => {
+    const excuses = this.getExcuses()
+    if (excuses != null) {
+      // Excuses schmexcuses, no forecast for you
+      return this.renderHands()
     }
 
     if (this.state.status === 'pending') {
@@ -217,10 +258,15 @@ class Clock extends React.Component {
     }
 
     if (this.state.status === 'forecast pending') {
-      return this.textElement('Downloading weather forecast...')
+      return this.textElement('Downloading forecast...')
     }
 
-    return <Weather forecast={this.state.forecast} now={this.state.now} />
+    return (
+      <React.Fragment>
+        <Weather forecast={this.state.forecast} now={this.state.now} />
+        {this.renderHands()}
+      </React.Fragment>
+    )
   }
 }
 
