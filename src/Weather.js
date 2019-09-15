@@ -45,7 +45,8 @@ class Weather extends React.Component {
       })
   }
 
-  renderWind = renderUs => {
+  renderWindAndPrecipitation = renderUs => {
+    let precipitation_mm = 0
     let minWind = null
     let maxWind = null
 
@@ -56,41 +57,37 @@ class Weather extends React.Component {
       if (maxWind == null || maxWind < weather.wind_m_s) {
         maxWind = weather.wind_m_s
       }
+      if (weather.precipitation_mm !== undefined) {
+        precipitation_mm += weather.precipitation_mm
+      }
     })
 
     minWind = Math.round(minWind)
     maxWind = Math.round(maxWind)
-
     const windString = minWind === maxWind ? `${minWind} m/s` : `${minWind}-${maxWind} m/s`
     console.log(`Wind: ${windString}`)
 
-    // Where do we draw the wind?
-    const nowCoords = new ClockCoordinates(new Date())
-    const degrees = nowCoords.rankFreeDirections()[0]
-    const coords = new ClockCoordinates((12.0 * degrees) / 360.0)
-
-    return <Display coords={coords}>{windString}</Display>
-  }
-
-  renderPrecipitation = renderUs => {
-    let precipitation_mm = 0
-    renderUs
-      .filter(forecast => forecast.precipitation_mm !== undefined)
-      .forEach(forecast => {
-        precipitation_mm += forecast.precipitation_mm
-      })
-
     precipitation_mm = Math.round(precipitation_mm)
-
     const precipitationString = `${precipitation_mm}mm`
     console.log(`Precipitation: ${precipitationString}`)
 
-    // Where do we draw the precipitation
     const nowCoords = new ClockCoordinates(new Date())
-    const degrees = nowCoords.rankFreeDirections()[1]
-    const coords = new ClockCoordinates((12.0 * degrees) / 360.0)
+    const bestDegrees = nowCoords.rankFreeDirections()
 
-    return <Display coords={coords}>{precipitationString}</Display>
+    // Where do we draw the wind?
+    const windDegrees = bestDegrees[0]
+    const windCoords = new ClockCoordinates((12.0 * windDegrees) / 360.0)
+
+    const precipitationDegrees = bestDegrees[1]
+    const precipitationCoords = new ClockCoordinates((12.0 * precipitationDegrees) / 360.0)
+
+    // FIXME: Render both wind and precipitation in the same display?
+    return (
+      <React.Fragment>
+        <Display coords={windCoords}>{windString}</Display>
+        <Display coords={precipitationCoords}>{precipitationString}</Display>
+      </React.Fragment>
+    )
   }
 
   renderHands = () => {
@@ -148,8 +145,7 @@ class Weather extends React.Component {
       <React.Fragment>
         {this.renderTemperatures(renderUs)}
         {this.renderWeathers(renderUs)}
-        {this.renderWind(renderUs)}
-        {this.renderPrecipitation(renderUs)}
+        {this.renderWindAndPrecipitation(renderUs)}
         {this.renderHands()}
       </React.Fragment>
     )
