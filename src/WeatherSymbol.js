@@ -17,10 +17,6 @@ class WeatherSymbol extends React.Component {
       ';content_type=image/png;is_night=' +
       (this.props.coordinates.isNight() ? 1 : 0)
 
-    // FIXME: The symbol we're getting has a start time and a span.
-    // We should think of how to place it mid-span, rather than just
-    // placing it at the start of the span like we do here.
-
     const x = this.props.coordinates.symbolDx(DISTANCE_FROM_CENTER, SIZE)
     const y = this.props.coordinates.symbolDy(DISTANCE_FROM_CENTER, SIZE)
 
