@@ -1,37 +1,42 @@
-import React from 'react';
-import './App.css';
+import React from 'react'
+import './App.css'
 
-import Clock from './Clock.js';
+import Clock from './Clock.js'
 
 // FIXME: Redirect to https if we're asked for http, this
 // helps with positioning in some circumstances
 
-function App() {
-  return (
-    <div className="App">
-      <Clock></Clock>
+class App extends React.Component {
+  render = () => {
+    return (
+      <div className='App'>
+        <Clock />
 
-      {/*
-      If you add a Weatherclock launcher to your home screen on an iPhone,
-      the page opened will not be in a web-browser (or at least look like
-      it's not).
+        {/*
+        If you add a Weatherclock launcher to your home screen on an iPhone,
+        the page opened will not be in a web-browser (or at least look like
+        it's not).
 
-      So we add a reload button of our own here.
-      */}
-      {/* FIXME: Should be "onClick" not "onclick, then read console messages for further inspiration" */}
-      <button type="button" onclick="location.reload();">Update forecast FIXME: Handler doesnt work</button>
+        So we add a reload button of our own here.
+        */}
+        <button type='button' onClick={window.location.reload}>
+          Update forecast FIXME: Handler doesnt work
+        </button>
 
-      <p>Weather forecast from <a href="yr.no">yr.no</a>, delivered by
-      the <a href="http://met.no/English/">Norwegian Meteorological
-      Institute</a> and the <a href="http://www.nrk.no/">NRK</a>.</p>
+        <p>
+          Weather forecast from <a href='yr.no'>yr.no</a>, delivered by the{' '}
+          <a href='http://met.no/English/'>Norwegian Meteorological Institute</a> and the{' '}
+          <a href='http://www.nrk.no/'>NRK</a>.
+        </p>
 
-      <p>Imagine a share-on-Facebook button here</p>
+        <p>Imagine a share-on-Facebook button here</p>
 
-      <p>
-        <a href="https://github.com/walles/weatherclock">Source code on GitHub</a>
-      </p>
-    </div>
-  );
+        <p>
+          <a href='https://github.com/walles/weatherclock'>Source code on GitHub</a>
+        </p>
+      </div>
+    )
+  }
 }
 
-export default App;
+export default App
