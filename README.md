@@ -26,6 +26,18 @@ To update the favicon:
   * `public/logo512.png`
 * Commit changes to `src/weatherclock.xcf` and the icons in `public/`
 
+## TODO
+
+* Keep the existing forecast if:
+  * It is recent enough
+  * We haven't moved too far
+* Tick the hands automatically
+* If the user hides and re-shows the web page, update it
+* Maybe don't advertise we're downloading new forecasts if we already have them
+* Consider moving some logic from `componentDidMount()` and `componentDidUpdate()`
+  into `render()`, see lifecycle docs for what makes sense:
+  <https://reactjs.org/docs/react-component.html#mounting>
+
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
