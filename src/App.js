@@ -7,10 +7,20 @@ import Clock from './Clock.js'
 // helps with positioning in some circumstances
 
 class App extends React.Component {
+  state = {
+    now: new Date()
+  }
+
+  setTimeToNow = () => {
+    this.setState({
+      now: new Date()
+    })
+  }
+
   render = () => {
     return (
       <div className='App'>
-        <Clock />
+        <Clock now={this.state.now} />
 
         {/*
         If you add a Weatherclock launcher to your home screen on an iPhone,
@@ -19,8 +29,8 @@ class App extends React.Component {
 
         So we add a reload button of our own here.
         */}
-        <button type='button' onClick={window.location.reload}>
-          Update forecast FIXME: Handler doesnt work
+        <button type='button' onClick={this.setTimeToNow}>
+          Update forecast
         </button>
 
         <p>

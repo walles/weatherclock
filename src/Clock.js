@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 import './Clock.css'
 
 import Weather from './Weather.js'
@@ -7,24 +9,41 @@ class Clock extends React.Component {
   constructor (props) {
     super(props)
 
+    this.state = this._getInitialState()
+  }
+
+  _getInitialState = () => {
     if (navigator.geolocation) {
-      this.state = {
+      return {
+        now: this.props.now,
         status: 'pending',
         error_message: null,
         position: null,
         forecast: null
       }
-    } else {
-      this.state = {
-        status: 'geolocation_unsupported',
-        error_message: null,
-        position: null,
-        forecast: null
-      }
+    }
+
+    return {
+      now: this.props.now,
+      status: 'geolocation_unsupported',
+      error_message: null,
+      position: null,
+      forecast: null
     }
   }
 
   componentDidMount = () => {
+    if (this.state.status === 'pending') {
+      console.log('Geolocating...')
+      navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError)
+    }
+  }
+
+  componentDidUpdate = () => {
+    if (this.props.now !== this.state.now) {
+      this.setState(this._getInitialState())
+    }
+
     if (this.state.status === 'pending') {
       console.log('Geolocating...')
       navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError)
@@ -36,6 +55,7 @@ class Clock extends React.Component {
     const longitude = position.coords.longitude
     console.log(`got position: ${latitude} ${longitude}`)
     this.setState({
+      now: this.props.now,
       status: 'forecast pending',
       error_message: null,
       position: position.coords,
@@ -61,6 +81,7 @@ class Clock extends React.Component {
         const forecast = self.parseWeatherXml(weatherXmlString)
 
         self.setState({
+          now: self.props.now,
           status: 'got forecast',
           error_message: null,
           position: self.state.position,
@@ -140,6 +161,7 @@ class Clock extends React.Component {
   geoError = error => {
     console.log('Geolocation failed')
     this.setState({
+      now: this.props.now,
       status: 'geolocation_failed',
       error_message: error.message,
       position: null,
@@ -198,8 +220,12 @@ class Clock extends React.Component {
       return this.textElement('Downloading weather forecast...')
     }
 
-    return <Weather forecast={this.state.forecast} />
+    return <Weather forecast={this.state.forecast} now={this.state.now} />
   }
+}
+
+Clock.propTypes = {
+  now: PropTypes.instanceOf(Date)
 }
 
 export default Clock

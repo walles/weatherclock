@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import Hand from './Hand.js'
 import Temperature from './Temperature.js'
@@ -71,7 +72,7 @@ class Weather extends React.Component {
     const precipitationString = `${precipitation_mm}mm`
     console.log(`Precipitation: ${precipitationString}`)
 
-    const nowCoords = new ClockCoordinates(new Date())
+    const nowCoords = new ClockCoordinates(this.props.now)
     const bestDegrees = nowCoords.rankFreeDirections()
 
     // Where do we draw the wind?
@@ -91,7 +92,7 @@ class Weather extends React.Component {
   }
 
   renderHands = () => {
-    const nowCoords = new ClockCoordinates(new Date())
+    const nowCoords = new ClockCoordinates(this.props.now)
 
     // FIXME: This doubles the center circle shadow, maybe draw
     // the center circle once here to get us only one of those?
@@ -114,7 +115,7 @@ class Weather extends React.Component {
   getForecastsToRender = () => {
     const renderUs = []
 
-    const now_ms = new Date().getTime()
+    const now_ms = this.props.now.getTime()
     const start = new Date(now_ms + 0.75 * 3600 * 1000)
     const end = new Date(now_ms + 11.75 * 3600 * 1000)
 
@@ -150,6 +151,11 @@ class Weather extends React.Component {
       </React.Fragment>
     )
   }
+}
+
+Weather.propTypes = {
+  forecast: PropTypes.object,
+  now: PropTypes.instanceOf(Date)
 }
 
 export default Weather
