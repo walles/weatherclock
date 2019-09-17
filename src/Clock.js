@@ -22,25 +22,36 @@ class Clock extends React.Component {
     if (navigator.geolocation) {
       return {
         now: this.props.now,
-        status: 'pending',
-        error_message: null,
         position: null,
-        forecast: null
+        progress: null,
+        forecast: null,
+        error: null
       }
     }
 
     return {
       now: this.props.now,
-      status: 'geolocation_unsupported',
-      error_message: null,
       position: null,
-      forecast: null
+      progress: null,
+      forecast: null,
+
+      // FIXME: Add a link for contacting me with browser information
+      error: (
+        <Error title='Geolocation unsupported' reload={this.props.reload}>
+          Your browser does not support geolocation. Without knowing your current position, showing
+          your local weather forecast is not possible.
+          <p>Please try another browser.</p>
+        </Error>
+      )
     }
   }
 
   componentDidMount = () => {
-    if (this.state.status === 'pending') {
+    if (!this.state.position && !this.state.progress && !this.state.error) {
       console.log('Geolocating...')
+      this.setState({
+        progress: <text className='progress'>Locating phone...</text>
+      })
       navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError)
     }
   }
@@ -50,8 +61,11 @@ class Clock extends React.Component {
       this.setState(this._getInitialState())
     }
 
-    if (this.state.status === 'pending') {
+    if (!this.state.position && !this.state.progress && !this.state.error) {
       console.log('Geolocating...')
+      this.setState({
+        progress: <text className='progress'>Locating phone...</text>
+      })
       navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError)
     }
   }
@@ -61,11 +75,8 @@ class Clock extends React.Component {
     const longitude = position.coords.longitude
     console.log(`got position: ${latitude} ${longitude}`)
     this.setState({
-      now: this.props.now,
-      status: 'forecast pending',
-      error_message: null,
-      position: position.coords,
-      forecast: null
+      progress: <text className='progress'>Downloading weather...</text>,
+      position: position.coords
     })
 
     this.download_weather(latitude, longitude)
@@ -86,13 +97,7 @@ class Clock extends React.Component {
       .then(function (weatherXmlString) {
         const forecast = self.parseWeatherXml(weatherXmlString)
 
-        self.setState({
-          now: self.props.now,
-          status: 'got forecast',
-          error_message: null,
-          position: self.state.position,
-          forecast: forecast
-        })
+        self.setState({ forecast: forecast })
       })
   }
 
@@ -167,22 +172,16 @@ class Clock extends React.Component {
   geoError = error => {
     console.log('Geolocation failed')
     this.setState({
-      now: this.props.now,
-      status: 'geolocation_failed',
-      error_message: error.message,
-      position: null,
-      forecast: null
+      // FIXME: Add a report-problem link?
+      // FIXME: Make the error message text clickable and link it to a Google search
+      // FIXME: The reload function here must actually reload the page,
+      //        otherwise the browser won't re-request positioning permissions
+      error: (
+        <Error title='Geolocation failed' reload={this.props.reload}>
+          {error.message}
+        </Error>
+      )
     })
-  }
-
-  textElement = text => {
-    console.log(text)
-
-    return (
-      <text x='0' y='0' className='progress'>
-        {text}
-      </text>
-    )
   }
 
   renderHands = () => {
@@ -207,8 +206,6 @@ class Clock extends React.Component {
   }
 
   render = () => {
-    const excuse = this.getExcuse()
-
     return (
       <React.Fragment>
         <svg
@@ -217,63 +214,36 @@ class Clock extends React.Component {
           version='1.1'
           viewBox='-50 -50 100 100'
         >
-          <image
-            id='clock-frame'
-            x='-50'
-            y='-50'
-            width='100'
-            height='100'
-            xlinkHref='clock-frame.png'
-          />
+          <image x='-50' y='-50' width='100' height='100' xlinkHref='clock-frame.png' />
 
           {this.getClockContents()}
         </svg>
-        {excuse}
+        {this.state.error}
       </React.Fragment>
     )
-  }
-
-  getExcuse = () => {
-    if (this.state.error_message !== null) {
-      return (
-        <Error title='Error'>
-          {this.state.error_message} reload={this.props.reload}
-        </Error>
-      )
-    }
-
-    if (this.state.status === 'geolocation_unsupported') {
-      return (
-        <Error title='Geolocation Unsupported' reload={this.props.reload}>
-          Your browser does not support geolocationing.
-        </Error>
-      )
-    }
-
-    return null
   }
 
   getClockContents = () => {
-    const excuses = this.getExcuse()
-    if (excuses != null) {
-      // Excuses schmexcuses, no forecast for you
+    if (this.state.error) {
+      // The hands will show up behind the error dialog
       return this.renderHands()
     }
 
-    if (this.state.status === 'pending') {
-      return this.textElement('Locating phone...')
+    if (this.state.forecast) {
+      return (
+        <React.Fragment>
+          <Weather forecast={this.state.forecast} now={this.state.now} />
+          {this.renderHands()}
+        </React.Fragment>
+      )
     }
 
-    if (this.state.status === 'forecast pending') {
-      return this.textElement('Downloading forecast...')
+    if (this.state.progress) {
+      return this.state.progress
     }
 
-    return (
-      <React.Fragment>
-        <Weather forecast={this.state.forecast} now={this.state.now} />
-        {this.renderHands()}
-      </React.Fragment>
-    )
+    // Most likely the initial state
+    return null
   }
 }
 

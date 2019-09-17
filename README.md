@@ -28,6 +28,8 @@ To update the favicon:
 
 ## TODO
 
+* Test the geolocation-failed dialog, including its Retry button until it works
+  to my satisfaction.
 * Keep the existing forecast if:
   * It is recent enough
   * We haven't moved too far
