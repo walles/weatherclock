@@ -47,13 +47,7 @@ class Clock extends React.Component {
   }
 
   componentDidMount = () => {
-    if (!this.state.position && !this.state.progress && !this.state.error) {
-      console.log('Geolocating...')
-      this.setState({
-        progress: <text className='progress'>Locating phone...</text>
-      })
-      navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError)
-    }
+    this.startGeolocationIfNeeded()
   }
 
   componentDidUpdate = () => {
@@ -61,13 +55,30 @@ class Clock extends React.Component {
       this.setState(this._getInitialState())
     }
 
-    if (!this.state.position && !this.state.progress && !this.state.error) {
-      console.log('Geolocating...')
-      this.setState({
-        progress: <text className='progress'>Locating phone...</text>
-      })
-      navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError)
+    this.startGeolocationIfNeeded()
+  }
+
+  startGeolocationIfNeeded = () => {
+    if (this.state.position) {
+      // Already know where we are, never mind
+      return
     }
+
+    if (this.state.progress) {
+      // Something is already in progress, never mind
+      return
+    }
+
+    if (this.state.error) {
+      // Something has gone wrong, never mind
+      return
+    }
+
+    console.log('Geolocating...')
+    this.setState({
+      progress: <text className='progress'>Locating phone...</text>
+    })
+    navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError)
   }
 
   setPosition = position => {
