@@ -64,8 +64,12 @@ class Weather extends React.Component {
     const windString = minWind === maxWind ? `${minWind} m/s` : `${minWind}-${maxWind} m/s`
     console.log(`Wind: ${windString}`)
 
-    precipitation_mm = Math.round(precipitation_mm)
-    const precipitationString = `${precipitation_mm}mm`
+    const locale = navigator.language || navigator.userLanguage
+    const precipitationNumberString = new Intl.NumberFormat(locale, {
+      minimumSignificantDigits: 2
+    }).format(precipitation_mm)
+
+    const precipitationString = `${precipitationNumberString}mm`
     console.log(`Precipitation: ${precipitationString}`)
 
     const nowCoords = new ClockCoordinates(this.props.now)
