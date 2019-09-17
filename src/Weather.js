@@ -114,8 +114,6 @@ class Weather extends React.Component {
   }
 
   render = () => {
-    // FIXME: After rendering, send stats to Google Analytics
-
     const renderUs = this.getForecastsToRender()
     return (
       <React.Fragment>

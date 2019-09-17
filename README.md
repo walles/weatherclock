@@ -34,6 +34,7 @@ To update the favicon:
 * Tick the hands automatically
 * If the user hides and re-shows the web page, update it
 * Maybe don't advertise we're downloading new forecasts if we already have them
+* Re-add Google Analytics
 
 ### DONE
 
