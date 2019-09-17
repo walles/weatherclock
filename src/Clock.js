@@ -184,10 +184,9 @@ class Clock extends React.Component {
     this.setState({
       // FIXME: Add a report-problem link?
       // FIXME: Make the error message text clickable and link it to a Google search
-      // FIXME: The reload function here must actually reload the page,
-      //        otherwise the browser won't re-request positioning permissions
+      // Reload trickery from: https://stackoverflow.com/a/10840058/473672
       error: (
-        <Error title='Geolocation failed' reload={this.props.reload}>
+        <Error title='Geolocation failed' reload={window.location.reload.bind(window.location)}>
           {error.message}
         </Error>
       )
