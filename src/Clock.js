@@ -185,8 +185,12 @@ class Clock extends React.Component {
       // FIXME: Add a report-problem link?
       // FIXME: Make the error message text clickable and link it to a Google search
       // Reload trickery from: https://stackoverflow.com/a/10840058/473672
+
+      // Note that at least on desktop Firefox 69.0 for Mac, this JS-triggered reload
+      // won't re-ask the positioning question, but if the user manually reloads that
+      // will re-ask the question.
       error: (
-        <Error title={error.message} reload={window.location.reload.bind(window.location)}>
+        <Error title={error.message} reload={window.location.reload.bind(window.location, [true])}>
           If you are asked whether to allow the Weather Clock to know your current location, please
           say "yes".
         </Error>
