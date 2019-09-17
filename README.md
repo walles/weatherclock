@@ -28,17 +28,22 @@ To update the favicon:
 
 ## TODO
 
-* Test the geolocation-failed dialog, including its Retry button until it works
-  to my satisfaction.
 * Keep the existing forecast if:
   * It is recent enough
   * We haven't moved too far
 * Tick the hands automatically
 * If the user hides and re-shows the web page, update it
 * Maybe don't advertise we're downloading new forecasts if we already have them
+
+### DONE
+
+* Test the geolocation-failed dialog, including its Retry button until it works
+  to my satisfaction. To improve it somebody needs to explain to me how.
+
+### NOT DOING
+
 * Consider moving some logic from `componentDidMount()` and `componentDidUpdate()`
-  into `render()`, see lifecycle docs for what makes sense:
-  <https://reactjs.org/docs/react-component.html#mounting>
+  into `render()`. Won't work; `render()` is not allowed to touch `state` or `props`.
 
 ---
 
