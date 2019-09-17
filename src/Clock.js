@@ -11,6 +11,9 @@ import ClockCoordinates from './ClockCoordinates.js'
 const HOUR_HAND_LENGTH = 23
 const MINUTE_HAND_LENGTH = 34
 
+/** Cache positions for this long */
+const POSITION_CACHE_MS = 5 * 60 * 1000
+
 class Clock extends React.Component {
   constructor (props) {
     super(props)
@@ -22,25 +25,19 @@ class Clock extends React.Component {
     if (navigator.geolocation) {
       return {
         now: this.props.now,
-        position: null,
         progress: null,
-        forecast: null,
         error: null
       }
     }
 
     return {
       now: this.props.now,
-      position: null,
       progress: null,
-      forecast: null,
 
       // FIXME: Add a link for contacting me with browser information
       error: (
         <Error title='Geolocation unsupported' reload={this.props.reload}>
-          Your browser does not support geolocation. Without knowing your current position, showing
-          your local weather forecast is not possible.
-          <p>Please try another browser.</p>
+          Please try <a href='https://getfirefox.com'>another browser</a>.
         </Error>
       )
     }
@@ -60,8 +57,13 @@ class Clock extends React.Component {
 
   startGeolocationIfNeeded = () => {
     if (this.state.position) {
-      // Already know where we are, never mind
-      return
+      const position_age_ms = new Date() - this.state.positionTimestamp
+
+      if (position_age_ms < POSITION_CACHE_MS) {
+        // Already know where we are, never mind
+        console.log(`Retaining cached position of ${position_age_ms}ms age`)
+        return
+      }
     }
 
     if (this.state.progress) {
@@ -86,14 +88,18 @@ class Clock extends React.Component {
     const longitude = position.coords.longitude
     console.log(`got position: ${latitude} ${longitude}`)
     this.setState({
-      progress: <text className='progress'>Downloading weather...</text>,
-      position: position.coords
+      position: position.coords,
+      positionTimestamp: new Date()
     })
 
     this.download_weather(latitude, longitude)
   }
 
   download_weather = (latitude, longitude) => {
+    this.setState({
+      progress: <text className='progress'>Downloading weather...</text>
+    })
+
     const url = `https://api-met-no-proxy.appspot.com/weatherapi/locationforecast/1.9/?lat=${latitude};lon=${longitude}`
     console.log('Getting weather from: ' + url)
 
