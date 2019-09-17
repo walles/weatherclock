@@ -20,7 +20,7 @@ class App extends React.Component {
   render = () => {
     return (
       <div className='App'>
-        <Clock now={this.state.now} />
+        <Clock now={this.state.now} reload={this.setTimeToNow} />
 
         {/*
         If you add a Weatherclock launcher to your home screen on an iPhone,

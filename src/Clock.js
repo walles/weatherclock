@@ -5,6 +5,7 @@ import './Clock.css'
 
 import Weather from './Weather.js'
 import Hand from './Hand.js'
+import Error from './Error.js'
 import ClockCoordinates from './ClockCoordinates.js'
 
 const HOUR_HAND_LENGTH = 23
@@ -206,6 +207,8 @@ class Clock extends React.Component {
   }
 
   render = () => {
+    const excuse = this.getExcuse()
+
     return (
       <React.Fragment>
         <svg
@@ -225,27 +228,33 @@ class Clock extends React.Component {
 
           {this.getClockContents()}
         </svg>
-        {this.getExcuses()}
+        {excuse}
       </React.Fragment>
     )
   }
 
-  getExcuses = () => {
+  getExcuse = () => {
     if (this.state.error_message !== null) {
-      // FIXME: Turn this into an error dialog
-      return <p>Error: {this.state.error_message}</p>
+      return (
+        <Error title='Error'>
+          {this.state.error_message} reload={this.props.reload}
+        </Error>
+      )
     }
 
     if (this.state.status === 'geolocation_unsupported') {
-      // FIXME: Turn this into an error dialog
-      return <p>Error: Geolocation not supported</p>
+      return (
+        <Error title='Geolocation Unsupported' reload={this.props.reload}>
+          Your browser does not support geolocationing.
+        </Error>
+      )
     }
 
     return null
   }
 
   getClockContents = () => {
-    const excuses = this.getExcuses()
+    const excuses = this.getExcuse()
     if (excuses != null) {
       // Excuses schmexcuses, no forecast for you
       return this.renderHands()
@@ -269,7 +278,8 @@ class Clock extends React.Component {
 }
 
 Clock.propTypes = {
-  now: PropTypes.instanceOf(Date)
+  now: PropTypes.instanceOf(Date).isRequired,
+  reload: PropTypes.func.isRequired
 }
 
 export default Clock
