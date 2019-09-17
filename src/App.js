@@ -3,9 +3,6 @@ import './App.css'
 
 import Clock from './Clock.js'
 
-// FIXME: Redirect to https if we're asked for http, this
-// helps with positioning in some circumstances
-
 class App extends React.Component {
   state = {
     now: new Date()
@@ -35,8 +32,8 @@ class App extends React.Component {
 
         <p>
           Weather forecast from <a href='yr.no'>yr.no</a>, delivered by the{' '}
-          <a href='http://met.no/English/'>Norwegian Meteorological Institute</a> and the{' '}
-          <a href='http://www.nrk.no/'>NRK</a>.
+          <a href='https://met.no/English/'>Norwegian Meteorological Institute</a> and the{' '}
+          <a href='https://www.nrk.no/'>NRK</a>.
         </p>
 
         <p>Imagine a share-on-Facebook button here</p>
