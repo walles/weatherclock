@@ -88,16 +88,26 @@ class Clock extends React.Component {
 
     const self = this
 
-    // FIXME: Handle fetch() error
-    // FIXME: Handle JSON parsing error
     fetch(url)
-      .then(function (response) {
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Response code from upstream: ${response.status}`)
+        }
         return response.text()
       })
-      .then(function (weatherXmlString) {
+      .then(weatherXmlString => {
         const forecast = self.parseWeatherXml(weatherXmlString)
 
         self.setState({ forecast: forecast })
+      })
+      .catch(error => {
+        this.setState({
+          error: (
+            <Error title='Downloading weather failed' reload={this.props.reload}>
+              {error.message}
+            </Error>
+          )
+        })
       })
   }
 
