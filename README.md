@@ -26,6 +26,14 @@ To update the favicon:
   * `public/logo512.png`
 * Commit changes to `src/weatherclock.xcf` and the icons in `public/`
 
+## Deploy
+
+To deploy updates:
+
+```bash
+npm run deploy
+```
+
 ## TODO
 
 * Keep the existing forecast if:
