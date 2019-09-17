@@ -186,8 +186,9 @@ class Clock extends React.Component {
       // FIXME: Make the error message text clickable and link it to a Google search
       // Reload trickery from: https://stackoverflow.com/a/10840058/473672
       error: (
-        <Error title='Geolocation failed' reload={window.location.reload.bind(window.location)}>
-          {error.message}
+        <Error title={error.message} reload={window.location.reload.bind(window.location)}>
+          If you are asked whether to allow the Weather Clock to know your current location, please
+          say "yes".
         </Error>
       )
     })
