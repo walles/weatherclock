@@ -94,7 +94,7 @@ class Clock extends React.Component {
 
       if (position_age_ms < POSITION_CACHE_MS) {
         // Already know where we are, never mind
-        console.log(`Retaining cached position of ${position_age_ms}ms age`)
+        console.debug(`Retaining cached position of ${position_age_ms}ms age`)
         return false
       }
     }
@@ -167,7 +167,7 @@ class Clock extends React.Component {
       return false
     }
 
-    console.log(`Forecast considered current: ${ageMs}ms old and ${kmDistance}km away`)
+    console.debug(`Forecast considered current: ${ageMs}ms old and ${kmDistance}km away`)
     return true
   }
 
@@ -282,6 +282,7 @@ class Clock extends React.Component {
       forecasts[timestamp] = forecast
     }
 
+    console.log(forecasts)
     return forecasts
   }
 

@@ -17,7 +17,7 @@ class App extends React.Component {
   }
 
   handleVisibilityChange = isVisible => {
-    console.log(`Page visibility changed: ${isVisible}`)
+    console.debug(`Page visibility changed: ${isVisible}`)
     if (isVisible) {
       this.setTimeToNow()
     }
