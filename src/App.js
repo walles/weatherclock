@@ -47,7 +47,11 @@ class App extends React.Component {
           </p>
 
           <p>
-            <a href='https://github.com/walles/weatherclock'>Source code on GitHub</a>
+            <a
+              href={`https://github.com/walles/weatherclock/tree/${process.env.REACT_APP_GIT_SHA}`}
+            >
+              Source code on GitHub
+            </a>
           </p>
         </div>
       </PageVisibility>
