@@ -36,6 +36,8 @@ npm run deploy
 
 ## TODO
 
+* Report a page view each time the page becomes visible. Do we get an initial
+  visibility event on page load?
 * Report geolocation and weather download timings to Google Analytics
 * Tick the hands automatically
 * Remove the Update button since updates should now be automatic
