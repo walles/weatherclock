@@ -125,18 +125,18 @@ class Clock extends React.Component {
 
   // From: https://stackoverflow.com/a/27943/473672
   getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
-    var R = 6371 // Radius of the earth in km
-    var dLat = this.deg2rad(lat2 - lat1)
-    var dLon = this.deg2rad(lon2 - lon1)
-    var a =
+    const EARTH_RADIUS_KM = 6371
+    const dLat = this.deg2rad(lat2 - lat1)
+    const dLon = this.deg2rad(lon2 - lon1)
+    const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.deg2rad(lat1)) *
         Math.cos(this.deg2rad(lat2)) *
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2)
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-    var d = R * c // Distance in km
-    return d
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+    return EARTH_RADIUS_KM * c
   }
 
   deg2rad = deg => {
@@ -233,7 +233,7 @@ class Clock extends React.Component {
     console.log('Parsing ' + allPrognoses.length + ' prognoses...')
 
     const forecasts = {}
-    for (var i = 0; i < allPrognoses.length; i++) {
+    for (let i = 0; i < allPrognoses.length; i++) {
       const prognosis = allPrognoses[i]
 
       const from = new Date(prognosis.attributes.from.value)
@@ -241,7 +241,7 @@ class Clock extends React.Component {
       const dh = (to.getTime() - from.getTime()) / (3600 * 1000)
       const timestamp = new Date((from.getTime() + to.getTime()) / 2)
 
-      var forecast = forecasts[timestamp]
+      let forecast = forecasts[timestamp]
       if (!forecast) {
         forecast = {}
       }

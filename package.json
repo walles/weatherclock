@@ -29,7 +29,9 @@
   "eslintConfig": {
     "extends": "react-app",
     "rules": {
-      "consistent-return": 2
+      "consistent-return": 2,
+      "no-var": 1,
+      "curly": 1
     }
   },
   "browserslist": {
