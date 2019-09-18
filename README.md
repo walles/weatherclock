@@ -36,15 +36,9 @@ npm run deploy
 
 ## TODO
 
+* Report geolocation and weather download timings to Google Analytics
 * Tick the hands automatically
 * Remove the Update button since updates should now be automatic
-* Re-add Google Analytics
-  * <https://stackoverflow.com/a/49279887/473672>
-  * <https://github.com/react-ga/react-ga>
-  * Due to GDPR we must [anonymize
-    IPs](https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#anonymizeIp)
-    by [setting `options.gaOptions` when initializing
-    tracking](https://github.com/react-ga/react-ga#reactgainitializegatrackingid-options)
 * Re-add Facebook Share Button
 
 ### DONE
@@ -56,6 +50,7 @@ npm run deploy
   * It is recent enough
   * We haven't moved too far
 * If the user hides and re-shows the web page, update it
+* Re-add Google Analytics
 
 ### NOT DOING
 

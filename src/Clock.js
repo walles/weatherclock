@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ReactGA from 'react-ga'
+
 import './Clock.css'
 
 import Weather from './Weather.js'
@@ -36,6 +38,11 @@ class Clock extends React.Component {
         error: null
       }
     }
+
+    ReactGA.exception({
+      description: 'Geolocation unsupported',
+      fatal: true
+    })
 
     return {
       now: this.props.now,
@@ -207,6 +214,11 @@ class Clock extends React.Component {
         })
       })
       .catch(error => {
+        ReactGA.exception({
+          description: `Downloading weather failed: ${error.message}`,
+          fatal: !this.state.forecast
+        })
+
         this.setState({
           error: (
             <Error title='Downloading weather failed' reload={this.props.reload}>
@@ -288,6 +300,10 @@ class Clock extends React.Component {
 
   geoError = error => {
     console.log('Geolocation failed')
+    ReactGA.exception({
+      description: `Geolocation failed: ${error.message}`,
+      fatal: !this.state.forecast
+    })
     this.setState({
       // FIXME: Add a report-problem link?
       // FIXME: Make the error message text clickable and link it to a Google search
