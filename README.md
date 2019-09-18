@@ -37,9 +37,9 @@ npm run deploy
 ## TODO
 
 * Tick the hands automatically
-* If the user hides and re-shows the web page, update it, probably using
-  `Document.onvisibilitychange`
+* Remove the Update button since updates should now be automatic
 * Re-add Google Analytics
+* Re-add Facebook Share Button
 
 ### DONE
 
@@ -49,6 +49,7 @@ npm run deploy
 * Keep the existing forecast if:
   * It is recent enough
   * We haven't moved too far
+* If the user hides and re-shows the web page, update it
 
 ### NOT DOING
 
