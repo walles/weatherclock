@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "87c1666491aecef433ff75b5d1ca3b93",
+    "revision": "6780d2d5d766621c8f7f1f0e3e33b02f",
     "url": "/weatherclock/index.html"
   },
   {
-    "revision": "dafd90a469432877826a",
+    "revision": "31c46188d8da9ceb3fb3",
     "url": "/weatherclock/static/css/main.b8352cf3.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/weatherclock/static/js/2.e4b27ac8.chunk.js"
   },
   {
-    "revision": "dafd90a469432877826a",
-    "url": "/weatherclock/static/js/main.2e37c044.chunk.js"
+    "revision": "31c46188d8da9ceb3fb3",
+    "url": "/weatherclock/static/js/main.a2652d27.chunk.js"
   },
   {
     "revision": "f483ed314d0e8c767566",
