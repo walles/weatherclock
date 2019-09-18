@@ -3,7 +3,7 @@ class ClockCoordinates {
     if (typeof time === 'number') {
       this.decimalHour = time
     } else if (typeof time === 'object' && time.constructor.name === 'Date') {
-      this.decimalHour = time.getHours() + time.getMinutes() / 60.0
+      this.decimalHour = time.getHours() + time.getMinutes() / 60.0 + time.getSeconds() / 3600.0
     } else {
       throw new TypeError('Expected number (decimal hours) or Date')
     }
