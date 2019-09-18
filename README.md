@@ -36,9 +36,6 @@ npm run deploy
 
 ## TODO
 
-* Keep the existing forecast if:
-  * It is recent enough
-  * We haven't moved too far
 * Tick the hands automatically
 * If the user hides and re-shows the web page, update it, probably using
   `Document.onvisibilitychange`
@@ -49,6 +46,9 @@ npm run deploy
 * Test the geolocation-failed dialog, including its Retry button until it works
   to my satisfaction. To improve it somebody needs to explain to me how.
 * Don't advertise we're downloading new forecasts if we already have them
+* Keep the existing forecast if:
+  * It is recent enough
+  * We haven't moved too far
 
 ### NOT DOING
 

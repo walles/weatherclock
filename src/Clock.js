@@ -14,6 +14,12 @@ const MINUTE_HAND_LENGTH = 34
 /** Cache positions for this long */
 const POSITION_CACHE_MS = 5 * 60 * 1000
 
+/** Cache forecasts for this long */
+const FORECAST_CACHE_MS = 2 * 60 * 60 * 1000
+
+/** If we move less than this, assume forecast is still valid */
+const FORECAST_CACHE_KM = 5
+
 class Clock extends React.Component {
   constructor (props) {
     super(props)
@@ -53,18 +59,34 @@ class Clock extends React.Component {
       this.setState(this._getInitialState())
     }
 
-    this.startGeolocationIfNeeded()
+    if (this.startGeolocationIfNeeded()) {
+      // If / when we get the new position, that will in turn trigger a forecast
+      // update, so our work here is done.
+      return
+    }
+
+    if (this.state.progress) {
+      // Something is already happening, don't interrupt it by getting a new forecast
+      return
+    }
+
+    if (this.forecastIsCurrent()) {
+      // Forecast already current, never mind
+      return
+    }
+
+    this.download_weather()
   }
 
   startGeolocationIfNeeded = () => {
     if (this.state.progress) {
       // Something is already in progress, never mind
-      return
+      return false
     }
 
     if (this.state.error) {
       // Something has gone wrong, never mind
-      return
+      return false
     }
 
     if (this.state.position) {
@@ -73,7 +95,7 @@ class Clock extends React.Component {
       if (position_age_ms < POSITION_CACHE_MS) {
         // Already know where we are, never mind
         console.log(`Retaining cached position of ${position_age_ms}ms age`)
-        return
+        return false
       }
     }
 
@@ -82,21 +104,77 @@ class Clock extends React.Component {
       progress: <text className='progress'>Locating phone...</text>
     })
     navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError)
+
+    return true
   }
 
   setPosition = position => {
     const latitude = position.coords.latitude
     const longitude = position.coords.longitude
     console.log(`got position: ${latitude} ${longitude}`)
+
     this.setState({
       position: position.coords,
       positionTimestamp: new Date()
     })
 
-    this.download_weather(latitude, longitude)
+    if (!this.forecastIsCurrent()) {
+      this.download_weather()
+    }
   }
 
-  download_weather = (latitude, longitude) => {
+  // From: https://stackoverflow.com/a/27943/473672
+  getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
+    var R = 6371 // Radius of the earth in km
+    var dLat = this.deg2rad(lat2 - lat1)
+    var dLon = this.deg2rad(lon2 - lon1)
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) *
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2)
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    var d = R * c // Distance in km
+    return d
+  }
+
+  deg2rad = deg => {
+    return deg * (Math.PI / 180)
+  }
+
+  forecastIsCurrent = () => {
+    if (!this.state.forecast) {
+      // No forecast at all, that's not current
+      return false
+    }
+
+    const metadata = this.state.forecastMetadata
+    const ageMs = new Date() - metadata.timestamp
+    if (ageMs > FORECAST_CACHE_MS) {
+      // Forecast too old, that's not current
+      return false
+    }
+
+    const kmDistance = this.getDistanceFromLatLonInKm(
+      metadata.latitude,
+      metadata.longitude,
+      this.state.position.latitude,
+      this.state.position.longitude
+    )
+    if (kmDistance > FORECAST_CACHE_KM) {
+      // Forecast from too far away, that's not current
+      return false
+    }
+
+    console.log(`Forecast considered current: ${ageMs}ms old and ${kmDistance}km away`)
+    return true
+  }
+
+  download_weather = () => {
+    const latitude = this.state.position.latitude
+    const longitude = this.state.position.longitude
+
     this.setState({
       progress: <text className='progress'>Downloading weather...</text>
     })
