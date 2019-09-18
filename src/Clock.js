@@ -23,6 +23,7 @@ class Clock extends React.Component {
 
   _getInitialState = () => {
     if (navigator.geolocation) {
+      // FIXME: Invalidate forecast if it's too old (and decide what "too old" means)
       return {
         now: this.props.now,
         progress: null,
@@ -56,16 +57,6 @@ class Clock extends React.Component {
   }
 
   startGeolocationIfNeeded = () => {
-    if (this.state.position) {
-      const position_age_ms = new Date() - this.state.positionTimestamp
-
-      if (position_age_ms < POSITION_CACHE_MS) {
-        // Already know where we are, never mind
-        console.log(`Retaining cached position of ${position_age_ms}ms age`)
-        return
-      }
-    }
-
     if (this.state.progress) {
       // Something is already in progress, never mind
       return
@@ -74,6 +65,16 @@ class Clock extends React.Component {
     if (this.state.error) {
       // Something has gone wrong, never mind
       return
+    }
+
+    if (this.state.position) {
+      const position_age_ms = new Date() - this.state.positionTimestamp
+
+      if (position_age_ms < POSITION_CACHE_MS) {
+        // Already know where we are, never mind
+        console.log(`Retaining cached position of ${position_age_ms}ms age`)
+        return
+      }
     }
 
     console.log('Geolocating...')
@@ -115,7 +116,17 @@ class Clock extends React.Component {
       .then(weatherXmlString => {
         const forecast = self.parseWeatherXml(weatherXmlString)
 
-        self.setState({ forecast: forecast })
+        self.setState({
+          forecast: forecast,
+          forecastMetadata: {
+            // FIXME: Rather than the current timestamp, maybe track when yr.no
+            // thinks the next forecast will be available? That information is
+            // available in the XML.
+            timestamp: new Date(),
+            latitude: latitude,
+            longitude: longitude
+          }
+        })
       })
       .catch(error => {
         this.setState({
@@ -255,11 +266,6 @@ class Clock extends React.Component {
   }
 
   getClockContents = () => {
-    if (this.state.error) {
-      // The hands will show up behind the error dialog
-      return this.renderHands()
-    }
-
     if (this.state.forecast) {
       return (
         <React.Fragment>
@@ -267,6 +273,11 @@ class Clock extends React.Component {
           {this.renderHands()}
         </React.Fragment>
       )
+    }
+
+    if (this.state.error) {
+      // These hands will show up behind the error dialog
+      return this.renderHands()
     }
 
     if (this.state.progress) {
