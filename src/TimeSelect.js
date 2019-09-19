@@ -1,11 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import NativeSelect from '@material-ui/core/NativeSelect'
+
 class TimeSelect extends React.Component {
   render = () => {
-    // FIXME: Do a Simple Select here:
-    // https://material-ui.com/components/selects/#simple-select
-    return <p>Imagine a dropdown here</p>
+    // Inspired by: https://material-ui.com/components/selects/#native-select
+    return (
+      <NativeSelect value={'now'}>
+        <option value={'now'}>Now</option>
+        <option value={'tomorrow'}>Tomorrow</option>
+      </NativeSelect>
+    )
   }
 }
 
