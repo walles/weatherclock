@@ -36,6 +36,9 @@ npm run deploy
 
 ## TODO
 
+* Add a "Now" vs "Tomorrow" dropdown in the top right corner. Should reset  to
+  "Now" automatically after a while. Cover clock with a "Tomorrow" text when it
+  shows tomorrow's weather.
 * Report a page view each time the page becomes visible. Do we get an initial
   visibility event on page load?
 * Report geolocation and weather download timings to Google Analytics
