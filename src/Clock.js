@@ -9,6 +9,7 @@ import Weather from './Weather.js'
 import Hand from './Hand.js'
 import Error from './Error.js'
 import ClockCoordinates from './ClockCoordinates.js'
+import TimeSelect from './TimeSelect'
 
 const HOUR_HAND_LENGTH = 23
 const MINUTE_HAND_LENGTH = 34
@@ -356,6 +357,7 @@ class Clock extends React.Component {
           {this.getClockContents()}
         </svg>
         {this.state.error}
+        {this.state.forecast ? <TimeSelect /> : null}
       </React.Fragment>
     )
   }
