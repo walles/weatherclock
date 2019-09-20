@@ -66,7 +66,8 @@ class Weather extends React.Component {
 
     const locale = navigator.language || navigator.userLanguage
     const precipitationNumberString = new Intl.NumberFormat(locale, {
-      minimumSignificantDigits: 2
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
     }).format(precipitation_mm)
 
     const precipitationString = `${precipitationNumberString}mm`
