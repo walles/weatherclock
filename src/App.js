@@ -21,10 +21,12 @@ ReactGA.pageview(window.location.pathname + window.location.search)
 
 class App extends React.Component {
   state = {
-    now: new Date()
+    now: new Date(),
+    nowOrTomorrow: 'now'
   }
 
   setTimeToNow = () => {
+    // FIXME: Reset this.state.nowOrTomorrow to "now" here?
     this.setState({
       now: new Date()
     })
@@ -37,11 +39,24 @@ class App extends React.Component {
     }
   }
 
+  onSetTimespan = timespan => {
+    // FIXME: Change state.now to whatever makes sense
+
+    this.setState({
+      nowOrTomorrow: timespan
+    })
+  }
+
   render = () => {
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
         <div className='App'>
-          <Clock now={this.state.now} reload={this.setTimeToNow} />
+          <Clock
+            now={this.state.now}
+            reload={this.setTimeToNow}
+            onSetTimespan={this.onSetTimespan}
+            nowOrTomorrow={this.state.nowOrTomorrow}
+          />
 
           {/*
           If you add a Weatherclock launcher to your home screen on an iPhone,

@@ -357,13 +357,11 @@ class Clock extends React.Component {
           {this.getClockContents()}
         </svg>
         {this.state.error}
-        {this.state.forecast ? <TimeSelect onSelect={this.onSetTimespan} /> : null}
+        {this.state.forecast ? (
+          <TimeSelect value={this.props.nowOrTomorrow} onSetTimespan={this.props.onSetTimespan} />
+        ) : null}
       </React.Fragment>
     )
-  }
-
-  onSetTimespan = timespan => {
-    console.log(`Timespan change requested by user: ${timespan}`)
   }
 
   getClockContents = () => {
@@ -392,7 +390,9 @@ class Clock extends React.Component {
 
 Clock.propTypes = {
   now: PropTypes.instanceOf(Date).isRequired,
-  reload: PropTypes.func.isRequired
+  reload: PropTypes.func.isRequired,
+  nowOrTomorrow: PropTypes.string.isRequired,
+  onSetTimespan: PropTypes.func.isRequired
 }
 
 export default Clock
