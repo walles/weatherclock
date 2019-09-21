@@ -26,9 +26,9 @@ class App extends React.Component {
   }
 
   setTimeToNow = () => {
-    // FIXME: Reset this.state.nowOrTomorrow to "now" here?
     this.setState({
-      now: new Date()
+      now: new Date(),
+      nowOrTomorrow: 'now'
     })
   }
 
@@ -40,11 +40,24 @@ class App extends React.Component {
   }
 
   onSetTimespan = timespan => {
-    // FIXME: Change state.now to whatever makes sense
+    if (timespan === 'now') {
+      this.setState({
+        nowOrTomorrow: 'now',
+        now: new Date()
+      })
+    } else {
+      let tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1 /* days */)
+      tomorrow.setHours(8)
+      tomorrow.setMinutes(0)
+      tomorrow.setSeconds(0)
+      tomorrow.setMilliseconds(0)
 
-    this.setState({
-      nowOrTomorrow: timespan
-    })
+      this.setState({
+        nowOrTomorrow: 'tomorrow',
+        now: tomorrow
+      })
+    }
   }
 
   render = () => {
