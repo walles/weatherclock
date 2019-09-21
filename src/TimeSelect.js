@@ -25,9 +25,10 @@ class TimeSelect extends React.Component {
   }
 
   onChange = event => {
-    this.setState({ value: event.target.value })
+    const newTimespan = event.target.value
+    this.setState({ value: newTimespan })
 
-    // FIXME: Report to this.props.onSelect!
+    this.props.onSelect(newTimespan)
   }
 }
 

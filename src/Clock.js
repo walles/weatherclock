@@ -357,9 +357,13 @@ class Clock extends React.Component {
           {this.getClockContents()}
         </svg>
         {this.state.error}
-        {this.state.forecast ? <TimeSelect /> : null}
+        {this.state.forecast ? <TimeSelect onSelect={this.onSetTimespan} /> : null}
       </React.Fragment>
     )
+  }
+
+  onSetTimespan = timespan => {
+    console.log(`Timespan change requested by user: ${timespan}`)
   }
 
   getClockContents = () => {
