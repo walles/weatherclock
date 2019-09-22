@@ -358,7 +358,20 @@ class Clock extends React.Component {
         </svg>
         {this.state.error}
         {this.state.forecast ? (
-          <TimeSelect value={this.props.nowOrTomorrow} onSetTimespan={this.props.onSetTimespan} />
+          <div>
+            {/*
+            If you add a Weatherclock launcher to your home screen on an iPhone,
+            the page opened will not be in a web-browser (or at least look like
+            it's not).
+
+            So we add a reload button of our own here.
+            */}
+            <button type='button' onClick={this.setTimeToNow}>
+              Update forecast
+            </button>
+
+            <TimeSelect value={this.props.nowOrTomorrow} onSetTimespan={this.props.onSetTimespan} />
+          </div>
         ) : null}
       </React.Fragment>
     )
