@@ -366,12 +366,22 @@ class Clock extends React.Component {
 
   getClockContents = () => {
     if (this.state.forecast) {
-      return (
-        <React.Fragment>
-          <Weather forecast={this.state.forecast} now={this.state.now} />
-          {this.renderHands()}
-        </React.Fragment>
-      )
+      if (this.props.nowOrTomorrow === 'tomorrow') {
+        return (
+          <React.Fragment>
+            <Weather forecast={this.state.forecast} now={this.state.now} />
+            <text className='tomorrow'>Tomorrow</text>
+          </React.Fragment>
+        )
+      } else {
+        // Now
+        return (
+          <React.Fragment>
+            <Weather forecast={this.state.forecast} now={this.state.now} />
+            {this.renderHands()}
+          </React.Fragment>
+        )
+      }
     }
 
     if (this.state.error) {
