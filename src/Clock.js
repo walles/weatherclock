@@ -359,6 +359,12 @@ class Clock extends React.Component {
         {this.state.error}
         {this.state.forecast ? (
           <div className='controlsContainer'>
+            <TimeSelect
+              className='control'
+              value={this.props.nowOrTomorrow}
+              onSetTimespan={this.props.onSetTimespan}
+            />
+
             {/*
             If you add a Weatherclock launcher to your home screen on an iPhone,
             the page opened will not be in a web-browser (or at least look like
@@ -369,12 +375,6 @@ class Clock extends React.Component {
             <button className='control' type='button' onClick={this.setTimeToNow}>
               Update forecast
             </button>
-
-            <TimeSelect
-              className='control'
-              value={this.props.nowOrTomorrow}
-              onSetTimespan={this.props.onSetTimespan}
-            />
           </div>
         ) : null}
       </React.Fragment>

@@ -30,13 +30,29 @@ body {
     margin: 8px
 }
 
-div.controlsContainer {
-    background: lightblue;
-    display: flex;
-    flex-direction: row;
-    padding: .2em;
+@media (orientation: portrait) {
+    div.controlsContainer {
+        background: lightblue;
+        display: flex;
+        flex-direction: row;
+        padding: .2em;
+        justify-content: right;
+    }
+
+    .control {
+        margin: 0em 1em;
+    }
 }
 
-.control {
-    margin: 0em 1em;
+@media (orientation: landscape) {
+    div.controlsContainer {
+        background: lightblue;
+        display: flex;
+        flex-direction: column;
+        padding: .2em;
+    }
+
+    .control {
+        margin: 1em 0em;
+    }
 }
