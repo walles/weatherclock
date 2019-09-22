@@ -36,13 +36,11 @@ npm run deploy
 
 ## TODO
 
-* Add a "Now" vs "Tomorrow" dropdown in the top right corner. Should reset  to
-  "Now" automatically after a while. Cover clock with a "Tomorrow" text when it
-  shows tomorrow's weather.
+* Make the now-vs-tomorrow dropdown more visible?
+* Tick the hands automatically
 * Report a page view each time the page becomes visible. Do we get an initial
   visibility event on page load?
 * Report geolocation and weather download timings to Google Analytics
-* Tick the hands automatically
 * Remove the Update button since updates should now be automatic
 * Re-add Facebook Share Button
 
@@ -56,6 +54,7 @@ npm run deploy
   * We haven't moved too far
 * If the user hides and re-shows the web page, update it
 * Re-add Google Analytics
+* Add a "Now" vs "Tomorrow" dropdown in the top right corner.
 
 ### NOT DOING
 

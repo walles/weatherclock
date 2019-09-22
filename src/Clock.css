@@ -13,7 +13,7 @@ text.progress {
     dominant-baseline: central;
 }
 
-/* FIXME: Maybe something like this? https://codepen.io/555/pen/pdwvBP */
+/* FIXME: Maybe a rubberstamp effect like this one? https://codepen.io/555/pen/pdwvBP */
 text.tomorrow {
     text-anchor: middle;
     alignment-baseline: central;
