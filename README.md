@@ -36,6 +36,8 @@ npm run deploy
 
 ## TODO
 
+* Consider now-vs-tomorrow dropdown placement on both narrow and tall screen
+  layouts.
 * Make the now-vs-tomorrow dropdown more visible?
 * Tick the hands automatically
 * Report a page view each time the page becomes visible. Do we get an initial
