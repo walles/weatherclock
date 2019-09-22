@@ -9,6 +9,7 @@ import Weather from './Weather.js'
 import Hand from './Hand.js'
 import Error from './Error.js'
 import ClockCoordinates from './ClockCoordinates.js'
+import TimeSelect from './TimeSelect'
 
 const HOUR_HAND_LENGTH = 23
 const MINUTE_HAND_LENGTH = 34
@@ -356,18 +357,31 @@ class Clock extends React.Component {
           {this.getClockContents()}
         </svg>
         {this.state.error}
+        {this.state.forecast ? (
+          <TimeSelect value={this.props.nowOrTomorrow} onSetTimespan={this.props.onSetTimespan} />
+        ) : null}
       </React.Fragment>
     )
   }
 
   getClockContents = () => {
     if (this.state.forecast) {
-      return (
-        <React.Fragment>
-          <Weather forecast={this.state.forecast} now={this.state.now} />
-          {this.renderHands()}
-        </React.Fragment>
-      )
+      if (this.props.nowOrTomorrow === 'tomorrow') {
+        return (
+          <React.Fragment>
+            <Weather forecast={this.state.forecast} now={this.state.now} />
+            <text className='tomorrow'>Tomorrow</text>
+          </React.Fragment>
+        )
+      } else {
+        // Now
+        return (
+          <React.Fragment>
+            <Weather forecast={this.state.forecast} now={this.state.now} />
+            {this.renderHands()}
+          </React.Fragment>
+        )
+      }
     }
 
     if (this.state.error) {
@@ -386,7 +400,9 @@ class Clock extends React.Component {
 
 Clock.propTypes = {
   now: PropTypes.instanceOf(Date).isRequired,
-  reload: PropTypes.func.isRequired
+  reload: PropTypes.func.isRequired,
+  nowOrTomorrow: PropTypes.string.isRequired,
+  onSetTimespan: PropTypes.func.isRequired
 }
 
 export default Clock

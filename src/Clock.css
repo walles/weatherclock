@@ -13,6 +13,19 @@ text.progress {
     dominant-baseline: central;
 }
 
+/* FIXME: Maybe a rubberstamp effect like this one? https://codepen.io/555/pen/pdwvBP */
+text.tomorrow {
+    text-anchor: middle;
+    alignment-baseline: central;
+    dominant-baseline: central;
+
+    fill: darkred;  /* This is the text color in SVG */
+    font-family: serif;
+
+    transform: translate(0px, -5px) rotate(-30deg) scale(1.55);
+    opacity: 0.2;
+}
+
 body {
     margin: 8px
 }
