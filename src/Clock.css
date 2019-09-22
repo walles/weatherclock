@@ -30,6 +30,10 @@ body {
     margin: 8px
 }
 
-div.buttonsContainer {
+div.controlsContainer {
     background: lightblue;
+}
+
+.control {
+    margin: 1em;
 }
