@@ -22,7 +22,7 @@ text.tomorrow {
     fill: darkred;  /* This is the text color in SVG */
     font-family: serif;
 
-    transform: translate(0px, -5px) rotate(-30deg) scale(1.55);
+    transform: rotate(-60deg) scale(1.55);
     opacity: 0.2;
 }
 

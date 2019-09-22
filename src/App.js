@@ -48,7 +48,7 @@ class App extends React.Component {
     } else {
       let tomorrow = new Date()
       tomorrow.setDate(tomorrow.getDate() + 1 /* days */)
-      tomorrow.setHours(8)
+      tomorrow.setHours(7)
       tomorrow.setMinutes(0)
       tomorrow.setSeconds(0)
       tomorrow.setMilliseconds(0)
