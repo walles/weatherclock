@@ -29,3 +29,7 @@ text.tomorrow {
 body {
     margin: 8px
 }
+
+div.buttonsContainer {
+    background: lightblue;
+}

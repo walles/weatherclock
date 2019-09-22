@@ -7,7 +7,11 @@ class TimeSelect extends React.Component {
   render = () => {
     // Inspired by: https://material-ui.com/components/selects/#native-select
     return (
-      <NativeSelect value={this.props.value} onChange={this.onChange}>
+      <NativeSelect
+        style={{ background: 'white' }}
+        value={this.props.value}
+        onChange={this.onChange}
+      >
         <option value={'now'}>Now</option>
         <option value={'tomorrow'}>Tomorrow</option>
       </NativeSelect>

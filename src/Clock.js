@@ -358,7 +358,7 @@ class Clock extends React.Component {
         </svg>
         {this.state.error}
         {this.state.forecast ? (
-          <div>
+          <div className='buttonsContainer'>
             {/*
             If you add a Weatherclock launcher to your home screen on an iPhone,
             the page opened will not be in a web-browser (or at least look like
