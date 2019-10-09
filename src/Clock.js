@@ -288,7 +288,9 @@ class Clock extends React.Component {
 
       const precipitationNodes = prognosis.getElementsByTagName('precipitation')
       if (precipitationNodes && precipitationNodes.length > 0) {
-        const precipitationValue = precipitationNodes[0].attributes.value.value
+        const maxAttribute = precipitationNodes[0].attributes.maxvalue
+        const expectedAttribute = precipitationNodes[0].attributes.value
+        const precipitationValue = (maxAttribute === undefined) ? expectedAttribute.value : maxAttribute.value
         forecast.precipitation_mm = parseFloat(precipitationValue)
       }
 
