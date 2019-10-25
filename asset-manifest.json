@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/weatherclock/static/css/main.4338cf49.chunk.css",
-    "main.js": "/weatherclock/static/js/main.98cb024e.chunk.js",
-    "main.js.map": "/weatherclock/static/js/main.98cb024e.chunk.js.map",
+    "main.js": "/weatherclock/static/js/main.c010301e.chunk.js",
+    "main.js.map": "/weatherclock/static/js/main.c010301e.chunk.js.map",
     "runtime~main.js": "/weatherclock/static/js/runtime~main.c47a92ec.js",
     "runtime~main.js.map": "/weatherclock/static/js/runtime~main.c47a92ec.js.map",
     "static/js/2.e9aadd9d.chunk.js": "/weatherclock/static/js/2.e9aadd9d.chunk.js",
     "static/js/2.e9aadd9d.chunk.js.map": "/weatherclock/static/js/2.e9aadd9d.chunk.js.map",
     "index.html": "/weatherclock/index.html",
-    "precache-manifest.a92f1dbe66524ab7fb441d84b6a090d5.js": "/weatherclock/precache-manifest.a92f1dbe66524ab7fb441d84b6a090d5.js",
+    "precache-manifest.9debebc57c0c40293fb56217869e41cd.js": "/weatherclock/precache-manifest.9debebc57c0c40293fb56217869e41cd.js",
     "service-worker.js": "/weatherclock/service-worker.js",
     "static/css/main.4338cf49.chunk.css.map": "/weatherclock/static/css/main.4338cf49.chunk.css.map"
   }
