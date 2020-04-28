@@ -175,7 +175,9 @@ class Clock extends React.Component {
       return false
     }
 
-    console.debug(`Forecast considered current: ${ageMs}ms old and ${kmDistance}km away`)
+    console.debug(
+      `Forecast considered current: ${ageMs}ms old and ${kmDistance}km away`
+    )
     return true
   }
 
@@ -222,7 +224,10 @@ class Clock extends React.Component {
 
         this.setState({
           error: (
-            <Error title='Downloading weather failed' reload={this.props.reload}>
+            <Error
+              title='Downloading weather failed'
+              reload={this.props.reload}
+            >
               {error.message}
             </Error>
           )
@@ -241,7 +246,10 @@ class Clock extends React.Component {
    *         https://api.yr.no/weatherapi/weathericon
    */
   parseWeatherXml = weatherXmlString => {
-    const weatherXml = new window.DOMParser().parseFromString(weatherXmlString, 'text/xml')
+    const weatherXml = new window.DOMParser().parseFromString(
+      weatherXmlString,
+      'text/xml'
+    )
     const allPrognoses = weatherXml.getElementsByTagName('time')
     console.log('Parsing ' + allPrognoses.length + ' prognoses...')
 
@@ -290,7 +298,10 @@ class Clock extends React.Component {
       if (precipitationNodes && precipitationNodes.length > 0) {
         const maxAttribute = precipitationNodes[0].attributes.maxvalue
         const expectedAttribute = precipitationNodes[0].attributes.value
-        const precipitationValue = (maxAttribute === undefined) ? expectedAttribute.value : maxAttribute.value
+        const precipitationValue =
+          maxAttribute === undefined
+            ? expectedAttribute.value
+            : maxAttribute.value
         forecast.precipitation_mm = parseFloat(precipitationValue)
       }
 
@@ -316,9 +327,12 @@ class Clock extends React.Component {
       // won't re-ask the positioning question, but if the user manually reloads that
       // will re-ask the question.
       error: (
-        <Error title={error.message} reload={window.location.reload.bind(window.location, [true])}>
-          If you are asked whether to allow the Weather Clock to know your current location, please
-          say "yes".
+        <Error
+          title={error.message}
+          reload={window.location.reload.bind(window.location, [true])}
+        >
+          If you are asked whether to allow the Weather Clock to know your
+          current location, please say "yes".
         </Error>
       )
     })
@@ -354,13 +368,22 @@ class Clock extends React.Component {
           version='1.1'
           viewBox='-50 -50 100 100'
         >
-          <image x='-50' y='-50' width='100' height='100' xlinkHref='clock-frame.png' />
+          <image
+            x='-50'
+            y='-50'
+            width='100'
+            height='100'
+            xlinkHref={process.env.PUBLIC_URL + '/clock-frame.png'}
+          />
 
           {this.getClockContents()}
         </svg>
         {this.state.error}
         {this.state.forecast ? (
-          <TimeSelect value={this.props.nowOrTomorrow} onSetTimespan={this.props.onSetTimespan} />
+          <TimeSelect
+            value={this.props.nowOrTomorrow}
+            onSetTimespan={this.props.onSetTimespan}
+          />
         ) : null}
       </React.Fragment>
     )
