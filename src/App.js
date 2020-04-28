@@ -4,6 +4,7 @@ import './App.css'
 import Clock from './Clock.js'
 
 import PageVisibility from 'react-page-visibility'
+import { slide as BurgerMenu } from 'react-burger-menu'
 
 import ReactGA from 'react-ga'
 if (process.env.NODE_ENV === 'production') {
@@ -64,6 +65,18 @@ class App extends React.Component {
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
         <div className='App'>
+          <BurgerMenu>
+            {/* FIXME: What we really want here is an update button */}
+            <a id='home' className='menu-item' href='/'>
+              Home
+            </a>
+            <a id='about' className='menu-item' href='/about'>
+              About
+            </a>
+            <a id='contact' className='menu-item' href='/contact'>
+              Contact
+            </a>
+          </BurgerMenu>
           <Clock
             now={this.state.now}
             reload={this.setTimeToNow}
@@ -84,8 +97,10 @@ class App extends React.Component {
 
           <p>
             Weather forecast from <a href='yr.no'>yr.no</a>, delivered by the{' '}
-            <a href='https://met.no/English/'>Norwegian Meteorological Institute</a> and the{' '}
-            <a href='https://www.nrk.no/'>NRK</a>.
+            <a href='https://met.no/English/'>
+              Norwegian Meteorological Institute
+            </a>{' '}
+            and the <a href='https://www.nrk.no/'>NRK</a>.
           </p>
 
           <p>
