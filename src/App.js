@@ -5,6 +5,7 @@ import Clock from './Clock.js'
 
 import PageVisibility from 'react-page-visibility'
 import { slide as BurgerMenu } from 'react-burger-menu'
+import { MenuItem } from '@material-ui/core'
 
 import ReactGA from 'react-ga'
 if (process.env.NODE_ENV === 'production') {
@@ -67,15 +68,9 @@ class App extends React.Component {
         <div className='App'>
           <BurgerMenu>
             {/* FIXME: What we really want here is an update button */}
-            <a id='home' className='menu-item' href='/'>
-              Home
-            </a>
-            <a id='about' className='menu-item' href='/about'>
-              About
-            </a>
-            <a id='contact' className='menu-item' href='/contact'>
-              Contact
-            </a>
+            <MenuItem id='home'>Home</MenuItem>
+            <MenuItem id='about'>About</MenuItem>
+            <MenuItem id='contact'>Contact</MenuItem>
           </BurgerMenu>
           <Clock
             now={this.state.now}
