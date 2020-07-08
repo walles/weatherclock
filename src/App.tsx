@@ -23,21 +23,21 @@ class App extends React.Component {
     nowOrTomorrow: 'now'
   }
 
-  setTimeToNow () {
+  setTimeToNow = () => {
     this.setState({
       now: new Date(),
       nowOrTomorrow: 'now'
     })
   }
 
-  handleVisibilityChange (isVisible: boolean) {
+  handleVisibilityChange = (isVisible: boolean) => {
     console.debug(`Page visibility changed: ${isVisible}`)
     if (isVisible) {
       this.setTimeToNow()
     }
   }
 
-  onSetTimespan (timespan: string) {
+  onSetTimespan = (timespan: string) => {
     if (timespan === 'now') {
       this.setState({
         nowOrTomorrow: 'now',
@@ -58,7 +58,7 @@ class App extends React.Component {
     }
   }
 
-  render () {
+  render = () => {
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
         <div className='App'>
