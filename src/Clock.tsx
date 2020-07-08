@@ -23,20 +23,38 @@ const FORECAST_CACHE_MS = 2 * 60 * 60 * 1000
 /** If we move less than this, assume forecast is still valid */
 const FORECAST_CACHE_KM = 5
 
-class Clock extends React.Component {
-  constructor (props) {
+type ClockProps = {
+  now: Date
+  nowOrTomorrow: string
+}
+type ClockState = {
+  now: Date
+
+  error?: JSX.Element
+  progress?: JSX.Element
+
+  position?: {
+    latitude: number
+    longitude: number
+  }
+  positionTimestamp?: Date
+
+  forecast?: any // FIXME: What we return from parseWeatherXML()
+}
+class Clock extends React.Component<ClockProps, ClockState> {
+  constructor (props: ClockProps) {
     super(props)
 
     this.state = this._getInitialState()
   }
 
-  _getInitialState = () => {
+  _getInitialState = (): ClockState => {
     if (navigator.geolocation) {
       // FIXME: Invalidate forecast if it's too old (and decide what "too old" means)
       return {
         now: this.props.now,
-        progress: null,
-        error: null
+        progress: undefined,
+        error: undefined
       }
     }
 
@@ -47,7 +65,7 @@ class Clock extends React.Component {
 
     return {
       now: this.props.now,
-      progress: null,
+      progress: undefined,
 
       // FIXME: Add a link for contacting me with browser information
       error: (
@@ -132,7 +150,12 @@ class Clock extends React.Component {
   }
 
   // From: https://stackoverflow.com/a/27943/473672
-  getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
+  getDistanceFromLatLonInKm = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) => {
     const EARTH_RADIUS_KM = 6371
     const dLat = this.deg2rad(lat2 - lat1)
     const dLon = this.deg2rad(lon2 - lon1)
@@ -147,7 +170,7 @@ class Clock extends React.Component {
     return EARTH_RADIUS_KM * c
   }
 
-  deg2rad = deg => {
+  deg2rad = (deg: number) => {
     return deg * (Math.PI / 180)
   }
 
@@ -245,7 +268,7 @@ class Clock extends React.Component {
    * .symbol: The weather symbol index. Resolve using
    *         https://api.yr.no/weatherapi/weathericon
    */
-  parseWeatherXml = weatherXmlString => {
+  parseWeatherXml = (weatherXmlString: string) => {
     const weatherXml = new window.DOMParser().parseFromString(
       weatherXmlString,
       'text/xml'
