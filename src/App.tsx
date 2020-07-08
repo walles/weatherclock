@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 
-import Clock from './Clock.js'
+import Clock from './Clock'
 
 import PageVisibility from 'react-page-visibility'
 
