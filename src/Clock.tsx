@@ -26,6 +26,8 @@ const FORECAST_CACHE_KM = 5
 type ClockProps = {
   now: Date
   nowOrTomorrow: string
+  reload: () => void
+  onSetTimespan: (timespan: string) => void
 }
 type ClockState = {
   now: Date
@@ -116,7 +118,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
 
     if (this.state.position) {
-      const position_age_ms = new Date() - this.state.positionTimestamp
+      const position_age_ms =
+        Date.now() - this.state.positionTimestamp!.getTime()
 
       if (position_age_ms < POSITION_CACHE_MS) {
         // Already know where we are, never mind
