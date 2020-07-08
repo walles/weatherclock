@@ -9,13 +9,11 @@ import ReactGA from 'react-ga'
 if (process.env.NODE_ENV === 'production') {
   // To prevent bad data from dev and test runs we only enable Google Analytics
   // in production
-  ReactGA.initialize('UA-59702036-2', {
-    gaOptions: {
-      // IPs are personally identifiable according to GDPR:
-      // https://eugdprcompliant.com/personal-data/
-      anonymizeIp: true
-    }
-  })
+  ReactGA.initialize('UA-59702036-2')
+
+  // IPs are personally identifiable according to GDPR:
+  // https://eugdprcompliant.com/personal-data/
+  ReactGA.set({ anonymizeIp: true })
 }
 ReactGA.pageview(window.location.pathname + window.location.search)
 
@@ -84,8 +82,10 @@ class App extends React.Component {
 
           <p>
             Weather forecast from <a href='yr.no'>yr.no</a>, delivered by the{' '}
-            <a href='https://met.no/English/'>Norwegian Meteorological Institute</a> and the{' '}
-            <a href='https://www.nrk.no/'>NRK</a>.
+            <a href='https://met.no/English/'>
+              Norwegian Meteorological Institute
+            </a>{' '}
+            and the <a href='https://www.nrk.no/'>NRK</a>.
           </p>
 
           <p>
