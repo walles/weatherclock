@@ -17,7 +17,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 ReactGA.pageview(window.location.pathname + window.location.search)
 
-class App extends React.Component {
+type AppState = {
+  now: Date
+  nowOrTomorrow: string
+}
+
+class App extends React.Component<{}, AppState> {
   state = {
     now: new Date(),
     nowOrTomorrow: 'now'
