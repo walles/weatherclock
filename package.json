@@ -18,7 +18,8 @@
     "react-dom": "^16.9.0",
     "react-ga": "^2.6.0",
     "react-page-visibility": "^4.1.1",
-    "react-scripts": "^3.4.1"
+    "react-scripts": "^3.4.1",
+    "typescript": "^3.9.6"
   },
   "scripts": {
     "start": "REACT_APP_GIT_SHA=`git rev-parse HEAD` react-scripts start",

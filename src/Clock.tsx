@@ -23,20 +23,66 @@ const FORECAST_CACHE_MS = 2 * 60 * 60 * 1000
 /** If we move less than this, assume forecast is still valid */
 const FORECAST_CACHE_KM = 5
 
-class Clock extends React.Component {
-  constructor (props) {
+type ClockProps = {
+  now: Date
+  nowOrTomorrow: string
+  reload: () => void
+  onSetTimespan: (timespan: string) => void
+}
+
+type ClockState = {
+  now: Date
+
+  error?: JSX.Element
+  progress?: JSX.Element
+
+  position?: {
+    latitude: number
+    longitude: number
+  }
+  positionTimestamp?: Date
+
+  forecast?: Map<number, Forecast>
+  forecastMetadata?: {
+    // FIXME: Rather than the current timestamp, maybe track when yr.no
+    // thinks the next forecast will be available? That information is
+    // available in the XML.
+    timestamp: Date
+    latitude: number
+    longitude: number
+  }
+}
+
+type Forecast = {
+  timestamp: Date // Middle of the span
+  span_h: number // Width of the span in hours
+  celsius?: number // The forecasted temperatures in centigrades
+  wind_m_s?: number // The forecasted wind speed in m/s
+  symbol?: string // The weather symbol index. Resolve using <https://api.yr.no/weatherapi/weathericon>.
+  precipitation_mm?: number
+}
+
+class Clock extends React.Component<ClockProps, ClockState> {
+  static propTypes = {
+    now: PropTypes.instanceOf(Date).isRequired,
+    reload: PropTypes.func.isRequired,
+    nowOrTomorrow: PropTypes.string.isRequired,
+    onSetTimespan: PropTypes.func.isRequired
+  }
+
+  constructor (props: ClockProps) {
     super(props)
 
     this.state = this._getInitialState()
   }
 
-  _getInitialState = () => {
+  _getInitialState = (): ClockState => {
     if (navigator.geolocation) {
       // FIXME: Invalidate forecast if it's too old (and decide what "too old" means)
       return {
         now: this.props.now,
-        progress: null,
-        error: null
+        progress: undefined,
+        error: undefined
       }
     }
 
@@ -47,7 +93,7 @@ class Clock extends React.Component {
 
     return {
       now: this.props.now,
-      progress: null,
+      progress: undefined,
 
       // FIXME: Add a link for contacting me with browser information
       error: (
@@ -98,7 +144,8 @@ class Clock extends React.Component {
     }
 
     if (this.state.position) {
-      const position_age_ms = new Date() - this.state.positionTimestamp
+      const position_age_ms =
+        Date.now() - this.state.positionTimestamp!.getTime()
 
       if (position_age_ms < POSITION_CACHE_MS) {
         // Already know where we are, never mind
@@ -116,7 +163,7 @@ class Clock extends React.Component {
     return true
   }
 
-  setPosition = position => {
+  setPosition = (position: Position) => {
     const latitude = position.coords.latitude
     const longitude = position.coords.longitude
     console.log(`got position: ${latitude} ${longitude}`)
@@ -132,7 +179,12 @@ class Clock extends React.Component {
   }
 
   // From: https://stackoverflow.com/a/27943/473672
-  getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
+  getDistanceFromLatLonInKm = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) => {
     const EARTH_RADIUS_KM = 6371
     const dLat = this.deg2rad(lat2 - lat1)
     const dLon = this.deg2rad(lon2 - lon1)
@@ -147,7 +199,7 @@ class Clock extends React.Component {
     return EARTH_RADIUS_KM * c
   }
 
-  deg2rad = deg => {
+  deg2rad = (deg: number) => {
     return deg * (Math.PI / 180)
   }
 
@@ -157,8 +209,8 @@ class Clock extends React.Component {
       return false
     }
 
-    const metadata = this.state.forecastMetadata
-    const ageMs = new Date() - metadata.timestamp
+    const metadata = this.state.forecastMetadata!
+    const ageMs = Date.now() - metadata.timestamp.getTime()
     if (ageMs > FORECAST_CACHE_MS) {
       // Forecast too old, that's not current
       return false
@@ -167,8 +219,8 @@ class Clock extends React.Component {
     const kmDistance = this.getDistanceFromLatLonInKm(
       metadata.latitude,
       metadata.longitude,
-      this.state.position.latitude,
-      this.state.position.longitude
+      this.state.position!.latitude,
+      this.state.position!.longitude
     )
     if (kmDistance > FORECAST_CACHE_KM) {
       // Forecast from too far away, that's not current
@@ -182,8 +234,8 @@ class Clock extends React.Component {
   }
 
   download_weather = () => {
-    const latitude = this.state.position.latitude
-    const longitude = this.state.position.longitude
+    const latitude = this.state.position!.latitude
+    const longitude = this.state.position!.longitude
 
     this.setState({
       progress: <text className='progress'>Downloading weather...</text>
@@ -207,9 +259,6 @@ class Clock extends React.Component {
         self.setState({
           forecast: forecast,
           forecastMetadata: {
-            // FIXME: Rather than the current timestamp, maybe track when yr.no
-            // thinks the next forecast will be available? That information is
-            // available in the XML.
             timestamp: new Date(),
             latitude: latitude,
             longitude: longitude
@@ -217,6 +266,8 @@ class Clock extends React.Component {
         })
       })
       .catch(error => {
+        console.error(error)
+
         ReactGA.exception({
           description: `Downloading weather failed: ${error.message}`,
           fatal: !this.state.forecast
@@ -236,16 +287,8 @@ class Clock extends React.Component {
   }
 
   /* Parses weather XML from yr.no into a weather object that maps timestamps (in
-   * seconds since the epoch) to forecasts. A forecast has these fields:
-   *
-   * .celsius: The forecasted temperatures in centigrades
-   *
-   * .wind_m_s: The forecasted wind speed
-   *
-   * .symbol: The weather symbol index. Resolve using
-   *         https://api.yr.no/weatherapi/weathericon
-   */
-  parseWeatherXml = weatherXmlString => {
+   * milliseconds since the epoch) to forecasts. */
+  parseWeatherXml = (weatherXmlString: string): Map<number, Forecast> => {
     const weatherXml = new window.DOMParser().parseFromString(
       weatherXmlString,
       'text/xml'
@@ -253,51 +296,56 @@ class Clock extends React.Component {
     const allPrognoses = weatherXml.getElementsByTagName('time')
     console.log('Parsing ' + allPrognoses.length + ' prognoses...')
 
-    const forecasts = {}
+    const forecasts: Map<number, Forecast> = new Map()
     for (let i = 0; i < allPrognoses.length; i++) {
       const prognosis = allPrognoses[i]
 
-      const from = new Date(prognosis.attributes.from.value)
-      const to = new Date(prognosis.attributes.to.value)
+      const from = new Date(prognosis.attributes.getNamedItem('from')!.value)
+      const to = new Date(prognosis.attributes.getNamedItem('to')!.value)
       const dh = (to.getTime() - from.getTime()) / (3600 * 1000)
       const timestamp = new Date((from.getTime() + to.getTime()) / 2)
 
-      let forecast = forecasts[timestamp]
-      if (!forecast) {
-        forecast = {}
-      }
-
-      forecast.timestamp = timestamp
-
-      if (forecast.span_h !== undefined && forecast.span_h <= dh) {
-        // There's already better data here
+      let forecast = forecasts.get(timestamp.getTime())
+      if (forecast !== undefined && forecast.span_h <= dh) {
+        // There's already higher resolution data here
         continue
       }
 
-      forecast.span_h = dh
+      if (!forecast) {
+        forecast = {
+          timestamp: timestamp,
+          span_h: dh
+        }
+      }
 
       const symbolNodes = prognosis.getElementsByTagName('symbol')
       if (symbolNodes && symbolNodes.length > 0) {
-        const symbolNumber = symbolNodes[0].attributes.number.value
+        const symbolNumber = symbolNodes[0].attributes.getNamedItem('number')!
+          .value
         forecast.symbol = symbolNumber
       }
 
       const celsiusNodes = prognosis.getElementsByTagName('temperature')
       if (celsiusNodes && celsiusNodes.length > 0) {
-        const celsiusValue = celsiusNodes[0].attributes.value.value
+        const celsiusValue = celsiusNodes[0].attributes.getNamedItem('value')!
+          .value
         forecast.celsius = parseFloat(celsiusValue)
       }
 
       const windNodes = prognosis.getElementsByTagName('windSpeed')
       if (windNodes && windNodes.length > 0) {
-        const windValue = windNodes[0].attributes.mps.value
+        const windValue = windNodes[0].attributes.getNamedItem('mps')!.value
         forecast.wind_m_s = parseFloat(windValue)
       }
 
       const precipitationNodes = prognosis.getElementsByTagName('precipitation')
       if (precipitationNodes && precipitationNodes.length > 0) {
-        const maxAttribute = precipitationNodes[0].attributes.maxvalue
-        const expectedAttribute = precipitationNodes[0].attributes.value
+        const maxAttribute = precipitationNodes[0].attributes.getNamedItem(
+          'maxvalue'
+        )!
+        const expectedAttribute = precipitationNodes[0].attributes.getNamedItem(
+          'value'
+        )!
         const precipitationValue =
           maxAttribute === undefined
             ? expectedAttribute.value
@@ -305,14 +353,14 @@ class Clock extends React.Component {
         forecast.precipitation_mm = parseFloat(precipitationValue)
       }
 
-      forecasts[timestamp] = forecast
+      forecasts.set(timestamp.getTime(), forecast)
     }
 
     console.log(forecasts)
     return forecasts
   }
 
-  geoError = error => {
+  geoError = (error: PositionError) => {
     console.log('Geolocation failed')
     ReactGA.exception({
       description: `Geolocation failed: ${error.message}`,
@@ -329,7 +377,7 @@ class Clock extends React.Component {
       error: (
         <Error
           title={error.message}
-          reload={window.location.reload.bind(window.location, [true])}
+          reload={window.location.reload.bind(window.location, true)}
         >
           If you are asked whether to allow the Weather Clock to know your
           current location, please say "yes".
@@ -421,13 +469,6 @@ class Clock extends React.Component {
     // Most likely the initial state
     return null
   }
-}
-
-Clock.propTypes = {
-  now: PropTypes.instanceOf(Date).isRequired,
-  reload: PropTypes.func.isRequired,
-  nowOrTomorrow: PropTypes.string.isRequired,
-  onSetTimespan: PropTypes.func.isRequired
 }
 
 export default Clock

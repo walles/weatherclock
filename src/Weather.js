@@ -61,7 +61,8 @@ class Weather extends React.Component {
 
     minWind = Math.round(minWind)
     maxWind = Math.round(maxWind)
-    const windString = minWind === maxWind ? `${minWind} m/s` : `${minWind}-${maxWind} m/s`
+    const windString =
+      minWind === maxWind ? `${minWind} m/s` : `${minWind}-${maxWind} m/s`
     console.debug(`Wind: ${windString}`)
 
     const locale = navigator.language || navigator.userLanguage
@@ -81,7 +82,9 @@ class Weather extends React.Component {
     const windCoords = new ClockCoordinates((12.0 * windDegrees) / 360.0)
 
     const precipitationDegrees = bestDegrees[1]
-    const precipitationCoords = new ClockCoordinates((12.0 * precipitationDegrees) / 360.0)
+    const precipitationCoords = new ClockCoordinates(
+      (12.0 * precipitationDegrees) / 360.0
+    )
 
     // FIXME: Render both wind and precipitation in the same display?
     return (
@@ -99,8 +102,7 @@ class Weather extends React.Component {
     const start = new Date(now_ms + 0.75 * 3600 * 1000)
     const end = new Date(now_ms + 11.75 * 3600 * 1000)
 
-    // eslint-disable-next-line
-    for (const [timestamp_ms, forecast] of Object.entries(this.props.forecast)) {
+    for (const [timestamp_ms, forecast] of this.props.forecast.entries()) {
       const timestamp_date = new Date(timestamp_ms)
 
       if (timestamp_date < start) {

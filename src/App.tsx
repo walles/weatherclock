@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 
-import Clock from './Clock.js'
+import Clock from './Clock'
 
 import PageVisibility from 'react-page-visibility'
 
@@ -30,14 +30,14 @@ class App extends React.Component {
     })
   }
 
-  handleVisibilityChange = isVisible => {
+  handleVisibilityChange = (isVisible: boolean) => {
     console.debug(`Page visibility changed: ${isVisible}`)
     if (isVisible) {
       this.setTimeToNow()
     }
   }
 
-  onSetTimespan = timespan => {
+  onSetTimespan = (timespan: string) => {
     if (timespan === 'now') {
       this.setState({
         nowOrTomorrow: 'now',
