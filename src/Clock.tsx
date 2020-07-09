@@ -60,6 +60,13 @@ type Forecast = {
 }
 
 class Clock extends React.Component<ClockProps, ClockState> {
+  static propTypes = {
+    now: PropTypes.instanceOf(Date).isRequired,
+    reload: PropTypes.func.isRequired,
+    nowOrTomorrow: PropTypes.string.isRequired,
+    onSetTimespan: PropTypes.func.isRequired
+  }
+
   constructor (props: ClockProps) {
     super(props)
 
@@ -459,13 +466,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
     // Most likely the initial state
     return null
   }
-}
-
-Clock.propTypes = {
-  now: PropTypes.instanceOf(Date).isRequired,
-  reload: PropTypes.func.isRequired,
-  nowOrTomorrow: PropTypes.string.isRequired,
-  onSetTimespan: PropTypes.func.isRequired
 }
 
 export default Clock
