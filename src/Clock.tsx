@@ -54,9 +54,12 @@ type ClockState = {
 }
 
 type Forecast = {
-  celsius: number // The forecasted temperatures in centigrades
-  wind_m_s: number // The forecasted wind speed in m/s
-  symbol: number // The weather symbol index. Resolve using <https://api.yr.no/weatherapi/weathericon>.
+  timestamp: Date // Middle of the span
+  span_h: number // Width of the span in hours
+  celsius?: number // The forecasted temperatures in centigrades
+  wind_m_s?: number // The forecasted wind speed in m/s
+  symbol?: string // The weather symbol index. Resolve using <https://api.yr.no/weatherapi/weathericon>.
+  precipitation_mm?: number
 }
 
 class Clock extends React.Component<ClockProps, ClockState> {
@@ -263,6 +266,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
         })
       })
       .catch(error => {
+        console.error(error)
+
         ReactGA.exception({
           description: `Downloading weather failed: ${error.message}`,
           fatal: !this.state.forecast
@@ -291,28 +296,27 @@ class Clock extends React.Component<ClockProps, ClockState> {
     const allPrognoses = weatherXml.getElementsByTagName('time')
     console.log('Parsing ' + allPrognoses.length + ' prognoses...')
 
-    const forecasts = new Map()
+    const forecasts: Map<number, Forecast> = new Map()
     for (let i = 0; i < allPrognoses.length; i++) {
       const prognosis = allPrognoses[i]
 
       const from = new Date(prognosis.attributes.getNamedItem('from')!.value)
       const to = new Date(prognosis.attributes.getNamedItem('to')!.value)
       const dh = (to.getTime() - from.getTime()) / (3600 * 1000)
-      const timestamp_ms = (from.getTime() + to.getTime()) / 2
+      const timestamp = new Date((from.getTime() + to.getTime()) / 2)
 
-      let forecast = forecasts.get(timestamp_ms)
-      if (!forecast) {
-        forecast = {}
-      }
-
-      forecast.timestamp = timestamp_ms
-
-      if (forecast.span_h !== undefined && forecast.span_h <= dh) {
-        // There's already better data here
+      let forecast = forecasts.get(timestamp.getTime())
+      if (forecast !== undefined && forecast.span_h <= dh) {
+        // There's already higher resolution data here
         continue
       }
 
-      forecast.span_h = dh
+      if (!forecast) {
+        forecast = {
+          timestamp: timestamp,
+          span_h: dh
+        }
+      }
 
       const symbolNodes = prognosis.getElementsByTagName('symbol')
       if (symbolNodes && symbolNodes.length > 0) {
@@ -330,8 +334,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
       const windNodes = prognosis.getElementsByTagName('windSpeed')
       if (windNodes && windNodes.length > 0) {
-        const windValue = windNodes[0].attributes.getNamedItem('mps.value')!
-          .value
+        const windValue = windNodes[0].attributes.getNamedItem('mps')!.value
         forecast.wind_m_s = parseFloat(windValue)
       }
 
@@ -350,7 +353,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         forecast.precipitation_mm = parseFloat(precipitationValue)
       }
 
-      forecasts.set(timestamp_ms, forecast)
+      forecasts.set(timestamp.getTime(), forecast)
     }
 
     console.log(forecasts)
