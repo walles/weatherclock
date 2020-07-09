@@ -29,6 +29,7 @@ type ClockProps = {
   reload: () => void
   onSetTimespan: (timespan: string) => void
 }
+
 type ClockState = {
   now: Date
 
@@ -41,7 +42,7 @@ type ClockState = {
   }
   positionTimestamp?: Date
 
-  forecast?: any // FIXME: What we return from parseWeatherXML()
+  forecast?: Map<number, Forecast>
   forecastMetadata?: {
     // FIXME: Rather than the current timestamp, maybe track when yr.no
     // thinks the next forecast will be available? That information is
@@ -51,6 +52,13 @@ type ClockState = {
     longitude: number
   }
 }
+
+type Forecast = {
+  celsius: number // The forecasted temperatures in centigrades
+  wind_m_s: number // The forecasted wind speed in m/s
+  symbol: number // The weather symbol index. Resolve using <https://api.yr.no/weatherapi/weathericon>.
+}
+
 class Clock extends React.Component<ClockProps, ClockState> {
   constructor (props: ClockProps) {
     super(props)
@@ -267,16 +275,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   /* Parses weather XML from yr.no into a weather object that maps timestamps (in
-   * seconds since the epoch) to forecasts. A forecast has these fields:
-   *
-   * .celsius: The forecasted temperatures in centigrades
-   *
-   * .wind_m_s: The forecasted wind speed
-   *
-   * .symbol: The weather symbol index. Resolve using
-   *         https://api.yr.no/weatherapi/weathericon
-   */
-  parseWeatherXml = (weatherXmlString: string) => {
+   * milliseconds since the epoch) to forecasts. */
+  parseWeatherXml = (weatherXmlString: string): Map<number, Forecast> => {
     const weatherXml = new window.DOMParser().parseFromString(
       weatherXmlString,
       'text/xml'
@@ -284,21 +284,21 @@ class Clock extends React.Component<ClockProps, ClockState> {
     const allPrognoses = weatherXml.getElementsByTagName('time')
     console.log('Parsing ' + allPrognoses.length + ' prognoses...')
 
-    const forecasts = {}
+    const forecasts = new Map()
     for (let i = 0; i < allPrognoses.length; i++) {
       const prognosis = allPrognoses[i]
 
-      const from = new Date(prognosis.attributes.from.value)
-      const to = new Date(prognosis.attributes.to.value)
+      const from = new Date(prognosis.attributes.getNamedItem('from')!.value)
+      const to = new Date(prognosis.attributes.getNamedItem('to')!.value)
       const dh = (to.getTime() - from.getTime()) / (3600 * 1000)
-      const timestamp = new Date((from.getTime() + to.getTime()) / 2)
+      const timestamp_ms = (from.getTime() + to.getTime()) / 2
 
-      let forecast = forecasts[timestamp]
+      let forecast = forecasts.get(timestamp_ms)
       if (!forecast) {
         forecast = {}
       }
 
-      forecast.timestamp = timestamp
+      forecast.timestamp = timestamp_ms
 
       if (forecast.span_h !== undefined && forecast.span_h <= dh) {
         // There's already better data here
@@ -309,26 +309,33 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
       const symbolNodes = prognosis.getElementsByTagName('symbol')
       if (symbolNodes && symbolNodes.length > 0) {
-        const symbolNumber = symbolNodes[0].attributes.number.value
+        const symbolNumber = symbolNodes[0].attributes.getNamedItem('number')!
+          .value
         forecast.symbol = symbolNumber
       }
 
       const celsiusNodes = prognosis.getElementsByTagName('temperature')
       if (celsiusNodes && celsiusNodes.length > 0) {
-        const celsiusValue = celsiusNodes[0].attributes.value.value
+        const celsiusValue = celsiusNodes[0].attributes.getNamedItem('value')!
+          .value
         forecast.celsius = parseFloat(celsiusValue)
       }
 
       const windNodes = prognosis.getElementsByTagName('windSpeed')
       if (windNodes && windNodes.length > 0) {
-        const windValue = windNodes[0].attributes.mps.value
+        const windValue = windNodes[0].attributes.getNamedItem('mps.value')!
+          .value
         forecast.wind_m_s = parseFloat(windValue)
       }
 
       const precipitationNodes = prognosis.getElementsByTagName('precipitation')
       if (precipitationNodes && precipitationNodes.length > 0) {
-        const maxAttribute = precipitationNodes[0].attributes.maxvalue
-        const expectedAttribute = precipitationNodes[0].attributes.value
+        const maxAttribute = precipitationNodes[0].attributes.getNamedItem(
+          'maxvalue'
+        )!
+        const expectedAttribute = precipitationNodes[0].attributes.getNamedItem(
+          'value'
+        )!
         const precipitationValue =
           maxAttribute === undefined
             ? expectedAttribute.value
@@ -336,7 +343,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         forecast.precipitation_mm = parseFloat(precipitationValue)
       }
 
-      forecasts[timestamp] = forecast
+      forecasts.set(timestamp_ms, forecast)
     }
 
     console.log(forecasts)
