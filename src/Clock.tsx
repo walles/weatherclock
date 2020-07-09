@@ -42,6 +42,14 @@ type ClockState = {
   positionTimestamp?: Date
 
   forecast?: any // FIXME: What we return from parseWeatherXML()
+  forecastMetadata?: {
+    // FIXME: Rather than the current timestamp, maybe track when yr.no
+    // thinks the next forecast will be available? That information is
+    // available in the XML.
+    timestamp: Date
+    latitude: number
+    longitude: number
+  }
 }
 class Clock extends React.Component<ClockProps, ClockState> {
   constructor (props: ClockProps) {
@@ -137,7 +145,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     return true
   }
 
-  setPosition = position => {
+  setPosition = (position: Position) => {
     const latitude = position.coords.latitude
     const longitude = position.coords.longitude
     console.log(`got position: ${latitude} ${longitude}`)
@@ -183,8 +191,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return false
     }
 
-    const metadata = this.state.forecastMetadata
-    const ageMs = new Date() - metadata.timestamp
+    const metadata = this.state.forecastMetadata!
+    const ageMs = Date.now() - metadata.timestamp.getTime()
     if (ageMs > FORECAST_CACHE_MS) {
       // Forecast too old, that's not current
       return false
@@ -193,8 +201,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
     const kmDistance = this.getDistanceFromLatLonInKm(
       metadata.latitude,
       metadata.longitude,
-      this.state.position.latitude,
-      this.state.position.longitude
+      this.state.position!.latitude,
+      this.state.position!.longitude
     )
     if (kmDistance > FORECAST_CACHE_KM) {
       // Forecast from too far away, that's not current
@@ -208,8 +216,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   download_weather = () => {
-    const latitude = this.state.position.latitude
-    const longitude = this.state.position.longitude
+    const latitude = this.state.position!.latitude
+    const longitude = this.state.position!.longitude
 
     this.setState({
       progress: <text className='progress'>Downloading weather...</text>
@@ -233,9 +241,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
         self.setState({
           forecast: forecast,
           forecastMetadata: {
-            // FIXME: Rather than the current timestamp, maybe track when yr.no
-            // thinks the next forecast will be available? That information is
-            // available in the XML.
             timestamp: new Date(),
             latitude: latitude,
             longitude: longitude
@@ -338,7 +343,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     return forecasts
   }
 
-  geoError = error => {
+  geoError = (error: PositionError) => {
     console.log('Geolocation failed')
     ReactGA.exception({
       description: `Geolocation failed: ${error.message}`,
@@ -355,7 +360,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       error: (
         <Error
           title={error.message}
-          reload={window.location.reload.bind(window.location, [true])}
+          reload={window.location.reload.bind(window.location, true)}
         >
           If you are asked whether to allow the Weather Clock to know your
           current location, please say "yes".
