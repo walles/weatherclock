@@ -2,6 +2,7 @@ import React from 'react'
 import './App.css'
 
 import Clock from './Clock'
+import { NamedStartTime } from './TimeSelect'
 
 import PageVisibility from 'react-page-visibility'
 
@@ -18,20 +19,17 @@ if (process.env.NODE_ENV === 'production') {
 ReactGA.pageview(window.location.pathname + window.location.search)
 
 type AppState = {
-  now: Date
-  nowOrTomorrow: string
+  startTime: NamedStartTime
 }
 
 class App extends React.Component<{}, AppState> {
   state = {
-    now: new Date(),
-    nowOrTomorrow: 'now'
+    startTime: new NamedStartTime(0)
   }
 
   setTimeToNow = () => {
     this.setState({
-      now: new Date(),
-      nowOrTomorrow: 'now'
+      startTime: new NamedStartTime(0)
     })
   }
 
@@ -42,25 +40,10 @@ class App extends React.Component<{}, AppState> {
     }
   }
 
-  onSetTimespan = (timespan: string) => {
-    if (timespan === 'now') {
-      this.setState({
-        nowOrTomorrow: 'now',
-        now: new Date()
-      })
-    } else {
-      let tomorrow = new Date()
-      tomorrow.setDate(tomorrow.getDate() + 1 /* days */)
-      tomorrow.setHours(7)
-      tomorrow.setMinutes(0)
-      tomorrow.setSeconds(0)
-      tomorrow.setMilliseconds(0)
-
-      this.setState({
-        nowOrTomorrow: 'tomorrow',
-        now: tomorrow
-      })
-    }
+  onSetStartTime = (startTime: NamedStartTime) => {
+    this.setState({
+      startTime: startTime
+    })
   }
 
   render = () => {
@@ -68,10 +51,9 @@ class App extends React.Component<{}, AppState> {
       <PageVisibility onChange={this.handleVisibilityChange}>
         <div className='App'>
           <Clock
-            now={this.state.now}
+            startTime={this.state.startTime}
             reload={this.setTimeToNow}
-            onSetTimespan={this.onSetTimespan}
-            nowOrTomorrow={this.state.nowOrTomorrow}
+            onSetStartTime={this.onSetStartTime}
           />
 
           {/*
