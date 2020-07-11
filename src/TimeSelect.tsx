@@ -10,28 +10,19 @@ type TimeSelectProps = {
 }
 
 export class NamedStartTime {
-  private _daysFromNow: number
+  private _startTime: Date
+  private _name: string
+  private _isNow: boolean
+
   constructor (daysFromNow: number) {
-    this._daysFromNow = daysFromNow
-  }
-
-  get name (): string {
-    if (this._daysFromNow === 0) {
-      return 'Now'
+    if (daysFromNow === 0) {
+      this._startTime = new Date()
+      this._name = 'Now'
+      this._isNow = true
+      return
     }
 
-    if (this._daysFromNow === 1) {
-      return 'Tomorrow'
-    }
-
-    const when = this.startTime
-    return when.toLocaleDateString(navigator.language, { weekday: 'long' })
-  }
-
-  get startTime (): Date {
-    if (this._daysFromNow === 0) {
-      return new Date()
-    }
+    this._isNow = false
 
     let otherDay = new Date()
     otherDay.setDate(otherDay.getDate() + 1 /* days */)
@@ -39,11 +30,30 @@ export class NamedStartTime {
     otherDay.setMinutes(0)
     otherDay.setSeconds(0)
     otherDay.setMilliseconds(0)
-    return otherDay
+    this._startTime = otherDay
+
+    if (daysFromNow === 1) {
+      this._name = 'Tomorrow'
+      return
+    }
+
+    this._name = otherDay.toLocaleDateString(navigator.language, {
+      weekday: 'long'
+    })
+  }
+
+  get name (): string {
+    return this._name
+  }
+
+  get startTime (): Date {
+    return this._startTime
+  }
+
+  get isNow (): boolean {
+    return this._isNow
   }
 }
-
-export const NOW = new NamedStartTime(0)
 
 class TimeSelect extends React.Component<TimeSelectProps, {}> {
   static propTypes = {
@@ -52,7 +62,7 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
   }
 
   namedStartTimes: NamedStartTime[] = [
-    NOW,
+    new NamedStartTime(0),
     new NamedStartTime(1),
     new NamedStartTime(2)
   ]
@@ -71,9 +81,15 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
         value={this.props.value}
         onChange={this.onChange}
       >
-        <option value={'0'}>namedStartTimes[0].name</option>
-        <option value={'1'}>namedStartTimes[1].name</option>
-        <option value={'2'}>namedStartTimes[2].name</option>
+        <option value={this.namedStartTimes[0].name}>
+          {this.namedStartTimes[0].name}
+        </option>
+        <option value={this.namedStartTimes[1].name}>
+          {this.namedStartTimes[1].name}
+        </option>
+        <option value={this.namedStartTimes[2].name}>
+          {this.namedStartTimes[2].name}
+        </option>
       </NativeSelect>
     )
   }
