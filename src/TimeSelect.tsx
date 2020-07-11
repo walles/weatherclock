@@ -9,28 +9,17 @@ type TimeSelectProps = {
   onSetStartTime: (startTime: NamedStartTime) => void
 }
 
-interface NamedStartTime {
-  readonly name: string
-  readonly startTime: Date
-}
-
-class Now implements NamedStartTime {
-  get name (): string {
-    return 'Now'
-  }
-
-  get startTime (): Date {
-    return new Date()
-  }
-}
-
-class InDaysFromNow implements NamedStartTime {
+class NamedStartTime {
   private _daysFromNow: number
   constructor (daysFromNow: number) {
     this._daysFromNow = daysFromNow
   }
 
   get name (): string {
+    if (this._daysFromNow === 0) {
+      return 'Now'
+    }
+
     if (this._daysFromNow === 1) {
       return 'Tomorrow'
     }
@@ -40,6 +29,10 @@ class InDaysFromNow implements NamedStartTime {
   }
 
   get startTime (): Date {
+    if (this._daysFromNow === 0) {
+      return new Date()
+    }
+
     let otherDay = new Date()
     otherDay.setDate(otherDay.getDate() + 1 /* days */)
     otherDay.setHours(7)
@@ -50,6 +43,8 @@ class InDaysFromNow implements NamedStartTime {
   }
 }
 
+const NOW = new NamedStartTime(0)
+
 class TimeSelect extends React.Component<TimeSelectProps, {}> {
   static propTypes = {
     onSetStartTime: PropTypes.func.isRequired,
@@ -57,9 +52,9 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
   }
 
   namedStartTimes: NamedStartTime[] = [
-    new Now(),
-    new InDaysFromNow(1),
-    new InDaysFromNow(2)
+    NOW,
+    new NamedStartTime(1),
+    new NamedStartTime(2)
   ]
 
   render = () => {
