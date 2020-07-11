@@ -9,7 +9,7 @@ type TimeSelectProps = {
   onSetStartTime: (startTime: NamedStartTime) => void
 }
 
-class NamedStartTime {
+export class NamedStartTime {
   private _daysFromNow: number
   constructor (daysFromNow: number) {
     this._daysFromNow = daysFromNow
@@ -43,7 +43,7 @@ class NamedStartTime {
   }
 }
 
-const NOW = new NamedStartTime(0)
+export const NOW = new NamedStartTime(0)
 
 class TimeSelect extends React.Component<TimeSelectProps, {}> {
   static propTypes = {
