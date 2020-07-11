@@ -9,7 +9,7 @@ import Weather from './Weather.js'
 import Hand from './Hand.js'
 import Error from './Error.js'
 import ClockCoordinates from './ClockCoordinates.js'
-import TimeSelect from './TimeSelect'
+import TimeSelect, { NamedStartTime } from './TimeSelect'
 
 const HOUR_HAND_LENGTH = 23
 const MINUTE_HAND_LENGTH = 34
@@ -24,14 +24,13 @@ const FORECAST_CACHE_MS = 2 * 60 * 60 * 1000
 const FORECAST_CACHE_KM = 5
 
 type ClockProps = {
-  now: Date
-  nowOrTomorrow: string
+  startTime: NamedStartTime
   reload: () => void
-  onSetTimespan: (timespan: string) => void
+  onSetStartTime: (startTime: NamedStartTime) => void
 }
 
 type ClockState = {
-  now: Date
+  startTime: NamedStartTime
 
   error?: JSX.Element
   progress?: JSX.Element
@@ -64,10 +63,9 @@ type Forecast = {
 
 class Clock extends React.Component<ClockProps, ClockState> {
   static propTypes = {
-    now: PropTypes.instanceOf(Date).isRequired,
+    startTime: PropTypes.instanceOf(NamedStartTime).isRequired,
     reload: PropTypes.func.isRequired,
-    nowOrTomorrow: PropTypes.string.isRequired,
-    onSetTimespan: PropTypes.func.isRequired
+    onSetStartTime: PropTypes.func.isRequired
   }
 
   constructor (props: ClockProps) {
