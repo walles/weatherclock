@@ -427,7 +427,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         {this.state.error}
         {this.state.forecast ? (
           <TimeSelect
-            value={this.props.startTime.name}
+            daysFromNow={this.props.startTime.daysFromNow}
             onSetStartTime={this.props.onSetStartTime}
           />
         ) : null}
@@ -437,7 +437,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
   getClockContents = () => {
     if (this.state.forecast) {
-      if (!this.props.startTime.isNow) {
+      if (this.props.startTime.daysFromNow !== 0) {
         return (
           <React.Fragment>
             <Weather

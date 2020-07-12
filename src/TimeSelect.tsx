@@ -5,24 +5,23 @@ import CSS from 'csstype'
 import NativeSelect from '@material-ui/core/NativeSelect'
 
 type TimeSelectProps = {
-  value: string
+  daysFromNow: number // "0", "1" or "2" for how many days out we want
   onSetStartTime: (startTime: NamedStartTime) => void
 }
 
 export class NamedStartTime {
   private _startTime: Date
   private _name: string
-  private _isNow: boolean
+  private _daysFromNow: number
 
   constructor (daysFromNow: number) {
+    this._daysFromNow = daysFromNow
+
     if (daysFromNow === 0) {
       this._startTime = new Date()
       this._name = 'Now'
-      this._isNow = true
       return
     }
-
-    this._isNow = false
 
     let otherDay = new Date()
     otherDay.setDate(otherDay.getDate() + daysFromNow /* days */)
@@ -50,15 +49,15 @@ export class NamedStartTime {
     return this._startTime
   }
 
-  get isNow (): boolean {
-    return this._isNow
+  get daysFromNow (): number {
+    return this._daysFromNow
   }
 }
 
 class TimeSelect extends React.Component<TimeSelectProps, {}> {
   static propTypes = {
     onSetStartTime: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired
+    daysFromNow: PropTypes.number.isRequired
   }
 
   namedStartTimes: NamedStartTime[] = [
@@ -74,11 +73,13 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
       top: '0px'
     }
 
+    // Populate select
     let options = []
     for (let i = 0; i < 3; i++) {
+      const name = this.namedStartTimes[i].name
       options.push(
-        <option value={this.namedStartTimes[i].name}>
-          {this.namedStartTimes[i].name}
+        <option key={name} value={String(i)}>
+          {name}
         </option>
       )
     }
@@ -87,7 +88,7 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
     return (
       <NativeSelect
         style={topRight}
-        value={this.props.value}
+        value={this.props.daysFromNow}
         onChange={this.onChange}
       >
         {options}
