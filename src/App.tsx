@@ -1,3 +1,5 @@
+import assert from 'assert'
+
 import React from 'react'
 import './App.css'
 
@@ -41,6 +43,7 @@ class App extends React.Component<{}, AppState> {
   }
 
   onSetStartTime = (startTime: NamedStartTime) => {
+    assert(startTime)
     this.setState({
       startTime: startTime
     })
