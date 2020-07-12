@@ -9,6 +9,17 @@ type TimeSelectProps = {
   onSetStartTime: (startTime: NamedStartTime) => void
 }
 
+// From: https://stackoverflow.com/a/53930826/473672
+function capitalizeFirstLetter (s: string) {
+  const firstCodeUnit = s[0]
+
+  if (firstCodeUnit < '\uD800' || firstCodeUnit > '\uDFFF') {
+    return s[0].toUpperCase() + s.slice(1)
+  }
+
+  return s.slice(0, 2).toUpperCase() + s.slice(2)
+}
+
 export class NamedStartTime {
   private _startTime: Date
   private _name: string
@@ -36,9 +47,11 @@ export class NamedStartTime {
       return
     }
 
-    this._name = otherDay.toLocaleDateString(navigator.language, {
+    const dayname = otherDay.toLocaleDateString(navigator.language, {
       weekday: 'long'
     })
+
+    this._name = capitalizeFirstLetter(dayname)
   }
 
   get name (): string {
