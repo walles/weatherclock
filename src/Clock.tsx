@@ -78,7 +78,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     if (navigator.geolocation) {
       // FIXME: Invalidate forecast if it's too old (and decide what "too old" means)
       return {
-        now: this.props.now,
+        startTime: this.props.startTime,
         progress: undefined,
         error: undefined
       }
@@ -90,7 +90,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     })
 
     return {
-      now: this.props.now,
+      startTime: this.props.startTime,
       progress: undefined,
 
       // FIXME: Add a link for contacting me with browser information
@@ -107,7 +107,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   componentDidUpdate = () => {
-    if (this.props.now !== this.state.now) {
+    if (this.props.startTime !== this.state.startTime) {
       this.setState(this._getInitialState())
     }
 
@@ -385,7 +385,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   renderHands = () => {
-    const nowCoords = new ClockCoordinates(this.state.now)
+    const nowCoords = new ClockCoordinates(this.state.startTime.startTime)
 
     // FIXME: This doubles the center circle shadow, maybe draw
     // the center circle once here to get us only one of those?
@@ -427,8 +427,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
         {this.state.error}
         {this.state.forecast ? (
           <TimeSelect
-            value={this.props.nowOrTomorrow}
-            onSetTimespan={this.props.onSetTimespan}
+            value={this.props.startTime.name}
+            onSetStartTime={this.props.onSetStartTime}
           />
         ) : null}
       </React.Fragment>
@@ -437,18 +437,24 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
   getClockContents = () => {
     if (this.state.forecast) {
-      if (this.props.nowOrTomorrow === 'tomorrow') {
+      if (!this.props.startTime.isNow) {
         return (
           <React.Fragment>
-            <Weather forecast={this.state.forecast} now={this.state.now} />
-            <text className='tomorrow'>Tomorrow</text>
+            <Weather
+              forecast={this.state.forecast}
+              now={this.state.startTime.startTime}
+            />
+            <text className='tomorrow'>{this.state.startTime.name}</text>
           </React.Fragment>
         )
       } else {
         // Now
         return (
           <React.Fragment>
-            <Weather forecast={this.state.forecast} now={this.state.now} />
+            <Weather
+              forecast={this.state.forecast}
+              now={this.state.startTime.startTime}
+            />
             {this.renderHands()}
           </React.Fragment>
         )
