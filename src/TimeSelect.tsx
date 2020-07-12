@@ -25,7 +25,7 @@ export class NamedStartTime {
     this._isNow = false
 
     let otherDay = new Date()
-    otherDay.setDate(otherDay.getDate() + 1 /* days */)
+    otherDay.setDate(otherDay.getDate() + daysFromNow /* days */)
     otherDay.setHours(7)
     otherDay.setMinutes(0)
     otherDay.setSeconds(0)
