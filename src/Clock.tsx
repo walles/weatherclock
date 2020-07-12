@@ -107,7 +107,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   componentDidUpdate = () => {
-    if (this.props.startTime !== this.state.startTime) {
+    if (this.props.startTime.startTime !== this.state.startTime.startTime) {
       this.setState(this._getInitialState())
     }
 

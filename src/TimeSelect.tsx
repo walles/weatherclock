@@ -5,7 +5,7 @@ import CSS from 'csstype'
 import NativeSelect from '@material-ui/core/NativeSelect'
 
 type TimeSelectProps = {
-  daysFromNow: number // "0", "1" or "2" for how many days out we want
+  daysFromNow: number // 0, 1 or 2 for how many days out we want
   onSetStartTime: (startTime: NamedStartTime) => void
 }
 
@@ -73,12 +73,6 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
     daysFromNow: PropTypes.number.isRequired
   }
 
-  namedStartTimes: NamedStartTime[] = [
-    new NamedStartTime(0),
-    new NamedStartTime(1),
-    new NamedStartTime(2)
-  ]
-
   render = () => {
     const topRight: CSS.Properties = {
       position: 'absolute',
@@ -89,7 +83,8 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
     // Populate select
     let options = []
     for (let i = 0; i < 3; i++) {
-      const name = this.namedStartTimes[i].name
+      const namedStartTime = new NamedStartTime(i)
+      const name = namedStartTime.name
       options.push(
         <option key={name} value={String(i)}>
           {name}
@@ -110,9 +105,7 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
   }
 
   onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.props.onSetStartTime(
-      this.namedStartTimes[parseInt(event.target.value)]
-    )
+    this.props.onSetStartTime(new NamedStartTime(parseInt(event.target.value)))
   }
 }
 
