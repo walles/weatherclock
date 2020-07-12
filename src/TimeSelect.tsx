@@ -74,6 +74,15 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
       top: '0px'
     }
 
+    let options = []
+    for (let i = 0; i < 3; i++) {
+      options.push(
+        <option value={this.namedStartTimes[i].name}>
+          {this.namedStartTimes[i].name}
+        </option>
+      )
+    }
+
     // Inspired by: https://material-ui.com/components/selects/#native-select
     return (
       <NativeSelect
@@ -81,15 +90,7 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
         value={this.props.value}
         onChange={this.onChange}
       >
-        <option value={this.namedStartTimes[0].name}>
-          {this.namedStartTimes[0].name}
-        </option>
-        <option value={this.namedStartTimes[1].name}>
-          {this.namedStartTimes[1].name}
-        </option>
-        <option value={this.namedStartTimes[2].name}>
-          {this.namedStartTimes[2].name}
-        </option>
+        {options}
       </NativeSelect>
     )
   }
