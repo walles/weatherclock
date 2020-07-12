@@ -9,7 +9,7 @@ import Weather from './Weather.js'
 import Hand from './Hand.js'
 import Error from './Error.js'
 import ClockCoordinates from './ClockCoordinates.js'
-import TimeSelect from './TimeSelect'
+import TimeSelect, { NamedStartTime } from './TimeSelect'
 
 const HOUR_HAND_LENGTH = 23
 const MINUTE_HAND_LENGTH = 34
@@ -24,14 +24,13 @@ const FORECAST_CACHE_MS = 2 * 60 * 60 * 1000
 const FORECAST_CACHE_KM = 5
 
 type ClockProps = {
-  now: Date
-  nowOrTomorrow: string
+  startTime: NamedStartTime
   reload: () => void
-  onSetTimespan: (timespan: string) => void
+  onSetStartTime: (startTime: NamedStartTime) => void
 }
 
 type ClockState = {
-  now: Date
+  startTime: NamedStartTime
 
   error?: JSX.Element
   progress?: JSX.Element
@@ -64,10 +63,9 @@ type Forecast = {
 
 class Clock extends React.Component<ClockProps, ClockState> {
   static propTypes = {
-    now: PropTypes.instanceOf(Date).isRequired,
+    startTime: PropTypes.instanceOf(NamedStartTime).isRequired,
     reload: PropTypes.func.isRequired,
-    nowOrTomorrow: PropTypes.string.isRequired,
-    onSetTimespan: PropTypes.func.isRequired
+    onSetStartTime: PropTypes.func.isRequired
   }
 
   constructor (props: ClockProps) {
@@ -80,7 +78,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     if (navigator.geolocation) {
       // FIXME: Invalidate forecast if it's too old (and decide what "too old" means)
       return {
-        now: this.props.now,
+        startTime: this.props.startTime,
         progress: undefined,
         error: undefined
       }
@@ -92,7 +90,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     })
 
     return {
-      now: this.props.now,
+      startTime: this.props.startTime,
       progress: undefined,
 
       // FIXME: Add a link for contacting me with browser information
@@ -109,7 +107,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   componentDidUpdate = () => {
-    if (this.props.now !== this.state.now) {
+    if (this.props.startTime.startTime !== this.state.startTime.startTime) {
       this.setState(this._getInitialState())
     }
 
@@ -387,7 +385,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   renderHands = () => {
-    const nowCoords = new ClockCoordinates(this.state.now)
+    const nowCoords = new ClockCoordinates(this.state.startTime.startTime)
 
     // FIXME: This doubles the center circle shadow, maybe draw
     // the center circle once here to get us only one of those?
@@ -429,8 +427,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
         {this.state.error}
         {this.state.forecast ? (
           <TimeSelect
-            value={this.props.nowOrTomorrow}
-            onSetTimespan={this.props.onSetTimespan}
+            daysFromNow={this.props.startTime.daysFromNow}
+            onSetStartTime={this.props.onSetStartTime}
           />
         ) : null}
       </React.Fragment>
@@ -439,18 +437,24 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
   getClockContents = () => {
     if (this.state.forecast) {
-      if (this.props.nowOrTomorrow === 'tomorrow') {
+      if (this.props.startTime.daysFromNow !== 0) {
         return (
           <React.Fragment>
-            <Weather forecast={this.state.forecast} now={this.state.now} />
-            <text className='tomorrow'>Tomorrow</text>
+            <Weather
+              forecast={this.state.forecast}
+              now={this.state.startTime.startTime}
+            />
+            <text className='tomorrow'>{this.state.startTime.name}</text>
           </React.Fragment>
         )
       } else {
         // Now
         return (
           <React.Fragment>
-            <Weather forecast={this.state.forecast} now={this.state.now} />
+            <Weather
+              forecast={this.state.forecast}
+              now={this.state.startTime.startTime}
+            />
             {this.renderHands()}
           </React.Fragment>
         )
