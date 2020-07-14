@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "81a46ef619b55b1e3e2454d9ffd5d6d2",
+    "revision": "f21a947620256469b0d2e68a7711ef11",
     "url": "/weatherclock/index.html"
   },
   {
-    "revision": "081f84020fbfcd72509d",
+    "revision": "966249e2b3ad35669e8e",
     "url": "/weatherclock/static/css/main.4338cf49.chunk.css"
   },
   {
-    "revision": "bd5d18b1576c7b8dcaba",
-    "url": "/weatherclock/static/js/2.9d862399.chunk.js"
+    "revision": "170b57afdd67312909b4",
+    "url": "/weatherclock/static/js/2.affca5ba.chunk.js"
   },
   {
     "revision": "49d2b2180b2c5e36ddff7b869fbbc560",
-    "url": "/weatherclock/static/js/2.9d862399.chunk.js.LICENSE.txt"
+    "url": "/weatherclock/static/js/2.affca5ba.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "081f84020fbfcd72509d",
-    "url": "/weatherclock/static/js/main.92b1165d.chunk.js"
+    "revision": "966249e2b3ad35669e8e",
+    "url": "/weatherclock/static/js/main.e9c58875.chunk.js"
   },
   {
     "revision": "ac4baf5f160f86dedcf2",
