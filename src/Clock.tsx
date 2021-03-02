@@ -239,7 +239,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       progress: <text className='progress'>Downloading weather...</text>
     })
 
-    const url = `https://europe-west2-api-met-no-proxy.cloudfunctions.net/api-met-no-proxy/locationforecast/1.9/?lat=${latitude};lon=${longitude}`
+    const url = `https://europe-west2-api-met-no-proxy.cloudfunctions.net/api-met-no-proxy/locationforecast/2.0/classic?lat=${latitude};lon=${longitude}`
     console.log('Getting weather from: ' + url)
 
     const self = this
