@@ -57,7 +57,7 @@ type Forecast = {
   span_h: number // Width of the span in hours
   celsius?: number // The forecasted temperatures in centigrades
   wind_m_s?: number // The forecasted wind speed in m/s
-  symbol?: string // The weather symbol index. Resolve using <https://api.yr.no/weatherapi/weathericon>.
+  symbol_code?: string // The weather symbol code. Resolve using public/api-met-no-weathericons/png/SYMBOL_CODE.png
   precipitation_mm?: number
 }
 
@@ -318,9 +318,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
       const symbolNodes = prognosis.getElementsByTagName('symbol')
       if (symbolNodes && symbolNodes.length > 0) {
-        const symbolNumber = symbolNodes[0].attributes.getNamedItem('number')!
-          .value
-        forecast.symbol = symbolNumber
+        const symbol_code = symbolNodes[0].attributes.getNamedItem('code')!.value
+        forecast.symbol_code = symbol_code
       }
 
       const celsiusNodes = prognosis.getElementsByTagName('temperature')

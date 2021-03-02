@@ -28,7 +28,7 @@ class Weather extends React.Component {
 
   renderWeathers = renderUs => {
     return renderUs
-      .filter(forecast => forecast.symbol !== undefined)
+      .filter(forecast => forecast.symbol_code !== undefined)
       .map(forecast => {
         const coords = new ClockCoordinates(forecast.timestamp)
 
@@ -36,7 +36,7 @@ class Weather extends React.Component {
           <WeatherSymbol
             key={`weather-${coords.decimalHour}`}
             coordinates={coords}
-            symbol={forecast.symbol}
+            symbol_code={forecast.symbol_code}
           />
         )
       })
