@@ -344,7 +344,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
           'value'
         )!
         const precipitationValue =
-          maxAttribute === undefined
+          maxAttribute === null
             ? expectedAttribute.value
             : maxAttribute.value
         forecast.precipitation_mm = parseFloat(precipitationValue)
