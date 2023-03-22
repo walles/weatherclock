@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Build, lint and test
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
