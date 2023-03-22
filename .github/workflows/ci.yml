@@ -1,4 +1,4 @@
-name: Build, lint and test
+name: CI
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-lint-test:
     runs-on: ubuntu-latest
 
     steps:
