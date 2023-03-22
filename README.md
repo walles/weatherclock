@@ -2,6 +2,8 @@
 
 Try it here: <https://walles.github.io/weatherclock/>
 
+[![Screenshot](weatherclock-screenshot.webp)](https://walles.github.io/weatherclock/)
+
 Displays the weather forecast for the upcoming 11 hours for the current
 location on a clock face.
 
