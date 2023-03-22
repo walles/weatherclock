@@ -1,5 +1,3 @@
-import assert from 'assert'
-
 import React from 'react'
 import './App.css'
 
@@ -43,7 +41,9 @@ class App extends React.Component<{}, AppState> {
   }
 
   onSetStartTime = (startTime: NamedStartTime) => {
-    assert(startTime)
+    if (!startTime) {
+      throw new Error(`Start time not set: ${startTime}`)
+    }
     this.setState({
       startTime: startTime
     })
