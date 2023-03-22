@@ -24,6 +24,7 @@
   "scripts": {
     "start": "REACT_APP_GIT_SHA=`git rev-parse HEAD` react-scripts start",
     "build": "REACT_APP_GIT_SHA=`git rev-parse HEAD` react-scripts build",
+    "lint": "eslint src/*.js* && eslint src/*.ts*",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
