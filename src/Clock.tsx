@@ -6,7 +6,7 @@ import ReactGA from 'react-ga'
 import './Clock.css'
 
 import Weather from './Weather'
-import Hand from './Hand.js'
+import Hand from './Hand'
 import Error from './Error.js'
 import ClockCoordinates from './ClockCoordinates'
 import TimeSelect, { NamedStartTime } from './TimeSelect'

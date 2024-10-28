@@ -1,9 +1,14 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import './Hand.css'
 
-class Hand extends React.Component {
+interface HandProps {
+  width: number
+  dx: number
+  dy: number
+}
+
+class Hand extends React.Component<HandProps> {
   // FIXME: Hands should protrude 2 units in the wrong direction as well
   render = () => {
     return (
@@ -30,12 +35,6 @@ class Hand extends React.Component {
       </React.Fragment>
     )
   }
-}
-
-Hand.propTypes = {
-  width: PropTypes.number,
-  dx: PropTypes.number,
-  dy: PropTypes.number
 }
 
 export default Hand
