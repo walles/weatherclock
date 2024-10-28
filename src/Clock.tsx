@@ -8,7 +8,7 @@ import './Clock.css'
 import Weather from './Weather'
 import Hand from './Hand.js'
 import Error from './Error.js'
-import ClockCoordinates from './ClockCoordinates.js'
+import ClockCoordinates from './ClockCoordinates'
 import TimeSelect, { NamedStartTime } from './TimeSelect'
 import { Forecast } from './Forecast'
 
