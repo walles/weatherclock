@@ -1,17 +1,22 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import Temperature from './Temperature.js'
 import WeatherSymbol from './WeatherSymbol.js'
 import Display from './Display.js'
 import ClockCoordinates from './ClockCoordinates.js'
+import { Forecast } from './Forecast.js'
+
+interface WeatherProps {
+  forecast: Map<number, Forecast>;
+  now: Date;
+}
 
 /**
  * This is what the clock shows after forecasts have been downloaded,
  * up to and including the hour and minute hands.
  */
-class Weather extends React.Component {
-  renderTemperatures = renderUs => {
+class Weather extends React.Component<WeatherProps> {
+  renderTemperatures = (renderUs: Forecast[]) => {
     return renderUs
       .filter(forecast => forecast.celsius !== undefined)
       .map(forecast => {
@@ -26,7 +31,7 @@ class Weather extends React.Component {
       })
   }
 
-  renderWeathers = renderUs => {
+  renderWeathers = (renderUs: Forecast[]) => {
     return renderUs
       .filter(forecast => forecast.symbol_code !== undefined)
       .map(forecast => {
@@ -42,22 +47,22 @@ class Weather extends React.Component {
       })
   }
 
-  renderWindAndPrecipitation = renderUs => {
-    let precipitation_mm = 0
-    let minWind = null
-    let maxWind = null
+  toWindString = (observations: Forecast[]): string => {
+    let minWind: (number | undefined) = undefined
+    let maxWind: (number | undefined) = undefined
 
-    renderUs.forEach(weather => {
-      if (minWind == null || minWind > weather.wind_m_s) {
+    observations.forEach(weather => {
+      if (minWind === undefined || (weather.wind_m_s !== undefined && minWind > weather.wind_m_s)) {
         minWind = weather.wind_m_s
       }
-      if (maxWind == null || maxWind < weather.wind_m_s) {
+      if (maxWind === undefined || (weather.wind_m_s !== undefined && maxWind < weather.wind_m_s)) {
         maxWind = weather.wind_m_s
       }
-      if (weather.precipitation_mm !== undefined) {
-        precipitation_mm += weather.precipitation_mm
-      }
     })
+
+    if (minWind === undefined || maxWind === undefined) {
+      return ''
+    }
 
     minWind = Math.round(minWind)
     maxWind = Math.round(maxWind)
@@ -65,8 +70,19 @@ class Weather extends React.Component {
       minWind === maxWind ? `${minWind} m/s` : `${minWind}-${maxWind} m/s`
     console.debug(`Wind: ${windString}`)
 
-    const locale = navigator.language || navigator.userLanguage
-    const precipitationNumberString = new Intl.NumberFormat(locale, {
+    return windString
+  }
+
+  renderWindAndPrecipitation = (renderUs: Forecast[]) => {
+    let precipitation_mm = 0
+
+    renderUs.forEach(weather => {
+      if (weather.precipitation_mm !== undefined) {
+        precipitation_mm += weather.precipitation_mm
+      }
+    })
+
+    const precipitationNumberString = new Intl.NumberFormat(navigator.language, {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1
     }).format(precipitation_mm)
@@ -86,7 +102,8 @@ class Weather extends React.Component {
       (12.0 * precipitationDegrees) / 360.0
     )
 
-    // FIXME: Render both wind and precipitation in the same display?
+    const windString = this.toWindString(renderUs)
+
     return (
       <React.Fragment>
         <Display coords={windCoords}>{windString}</Display>
@@ -95,7 +112,7 @@ class Weather extends React.Component {
     )
   }
 
-  getForecastsToRender = () => {
+  getForecastsToRender = (): Forecast[] => {
     const renderUs = []
 
     const now_ms = this.props.now.getTime()
@@ -130,11 +147,6 @@ class Weather extends React.Component {
       </React.Fragment>
     )
   }
-}
-
-Weather.propTypes = {
-  forecast: PropTypes.object,
-  now: PropTypes.instanceOf(Date)
 }
 
 export default Weather

@@ -5,11 +5,12 @@ import ReactGA from 'react-ga'
 
 import './Clock.css'
 
-import Weather from './Weather.js'
+import Weather from './Weather'
 import Hand from './Hand.js'
 import Error from './Error.js'
 import ClockCoordinates from './ClockCoordinates.js'
 import TimeSelect, { NamedStartTime } from './TimeSelect'
+import { Forecast } from './Forecast'
 
 const HOUR_HAND_LENGTH = 23
 const MINUTE_HAND_LENGTH = 34
@@ -50,15 +51,6 @@ type ClockState = {
     latitude: number
     longitude: number
   }
-}
-
-type Forecast = {
-  timestamp: Date // Middle of the span
-  span_h: number // Width of the span in hours
-  celsius?: number // The forecasted temperatures in centigrades
-  wind_m_s?: number // The forecasted wind speed in m/s
-  symbol_code?: string // The weather symbol code. Resolve using public/api-met-no-weathericons/png/SYMBOL_CODE.png
-  precipitation_mm?: number
 }
 
 class Clock extends React.Component<ClockProps, ClockState> {
