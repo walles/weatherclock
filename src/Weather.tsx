@@ -2,7 +2,7 @@ import React from 'react'
 
 import Temperature from './Temperature.js'
 import WeatherSymbol from './WeatherSymbol.js'
-import Display from './Display.js'
+import Display from './Display'
 import ClockCoordinates from './ClockCoordinates'
 import { Forecast } from './Forecast.js'
 
