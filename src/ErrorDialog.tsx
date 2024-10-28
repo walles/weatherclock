@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -8,7 +7,12 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogActions from '@material-ui/core/DialogActions'
 import Button from '@material-ui/core/Button'
 
-class Error extends React.Component {
+interface ErrorProps {
+  title: string
+  reload: () => void
+}
+
+class ErrorDialog extends React.Component<ErrorProps> {
   render = () => {
     // Inspired by: https://material-ui.com/components/dialogs/#alerts
     return (
@@ -33,9 +37,4 @@ class Error extends React.Component {
   }
 }
 
-Error.propTypes = {
-  title: PropTypes.string.isRequired,
-  reload: PropTypes.func.isRequired
-}
-
-export default Error
+export default ErrorDialog

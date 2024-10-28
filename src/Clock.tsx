@@ -7,7 +7,7 @@ import './Clock.css'
 
 import Weather from './Weather'
 import Hand from './Hand'
-import Error from './Error.js'
+import ErrorDialog from './ErrorDialog'
 import ClockCoordinates from './ClockCoordinates'
 import TimeSelect, { NamedStartTime } from './TimeSelect'
 import { Forecast } from './Forecast'
@@ -87,9 +87,9 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
       // FIXME: Add a link for contacting me with browser information
       error: (
-        <Error title='Geolocation unsupported' reload={this.props.reload}>
+        <ErrorDialog title='Geolocation unsupported' reload={this.props.reload}>
           Please try <a href='https://getfirefox.com'>another browser</a>.
-        </Error>
+        </ErrorDialog>
       )
     }
   }
@@ -265,12 +265,12 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
         this.setState({
           error: (
-            <Error
+            <ErrorDialog
               title='Downloading weather failed'
               reload={this.props.reload}
             >
               {error.message}
-            </Error>
+            </ErrorDialog>
           )
         })
       })
@@ -364,13 +364,13 @@ class Clock extends React.Component<ClockProps, ClockState> {
       // won't re-ask the positioning question, but if the user manually reloads that
       // will re-ask the question.
       error: (
-        <Error
+        <ErrorDialog
           title={error.message}
           reload={window.location.reload.bind(window.location, true)}
         >
           If you are asked whether to allow the Weather Clock to know your
           current location, please say "yes".
-        </Error>
+        </ErrorDialog>
       )
     })
   }
