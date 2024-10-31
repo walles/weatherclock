@@ -112,11 +112,11 @@ export class AuroraForecast {
     const kpValue = this.getAdjustedKpValue(time, latitude);
 
     if (kpValue >= 4) {
-      return "aurora_high";
+      return "../../aurora-high";
     }
 
     if (kpValue >= 1) {
-      return "aurora_low";
+      return "../../aurora-low";
     }
 
     return null;
