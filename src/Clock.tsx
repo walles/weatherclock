@@ -503,6 +503,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
           <React.Fragment>
             <Weather
               weatherForecast={this.state.weatherForecast}
+              auroraForecast={this.state.auroraForecast}
+              latitude={this.state.position!.latitude}
               now={this.state.startTime.startTime}
             />
             <text className='tomorrow'>{this.state.startTime.name}</text>
@@ -514,6 +516,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
           <React.Fragment>
             <Weather
               weatherForecast={this.state.weatherForecast}
+              auroraForecast={this.state.auroraForecast}
+              latitude={this.state.position!.latitude}
               now={this.state.startTime.startTime}
             />
             {this.renderHands()}

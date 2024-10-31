@@ -4,10 +4,13 @@ import Temperature from './Temperature.js'
 import WeatherSymbol from './WeatherSymbol.js'
 import Display from './Display'
 import ClockCoordinates from './ClockCoordinates'
-import { Forecast } from './Forecast.js'
+import { Forecast } from './Forecast'
+import { AuroraForecast } from './AuroraForecast'
 
 interface WeatherProps {
   weatherForecast: Map<number, Forecast>;
+  auroraForecast?: AuroraForecast;
+  latitude: number;
   now: Date;
 }
 
@@ -37,11 +40,20 @@ class Weather extends React.Component<WeatherProps> {
       .map(forecast => {
         const coords = new ClockCoordinates(forecast.timestamp)
 
+        let symbol_code = forecast.symbol_code
+        if (symbol_code === 'clearsky_night' && !!this.props.auroraForecast) {
+          // It's night and the sky is clear. Will there be any northern lights?
+          const auroraSymbol = this.props.auroraForecast.getAuroraSymbol(forecast.timestamp, this.props.latitude)
+          if (auroraSymbol !== null) {
+            symbol_code = auroraSymbol
+          }
+        }
+
         return (
           <WeatherSymbol
             key={`weather-${coords.decimalHour}`}
             coordinates={coords}
-            symbol_code={forecast.symbol_code}
+            symbol_code={symbol_code}
           />
         )
       })
