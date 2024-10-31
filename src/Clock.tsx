@@ -11,6 +11,7 @@ import ErrorDialog from './ErrorDialog'
 import ClockCoordinates from './ClockCoordinates'
 import TimeSelect, { NamedStartTime } from './TimeSelect'
 import { Forecast } from './Forecast'
+import { AuroraForecast } from './AuroraForecast'
 
 const HOUR_HAND_LENGTH = 23
 const MINUTE_HAND_LENGTH = 34
@@ -18,8 +19,14 @@ const MINUTE_HAND_LENGTH = 34
 /** Cache positions for this long */
 const POSITION_CACHE_MS = 5 * 60 * 1000
 
-/** Cache forecasts for this long */
-const FORECAST_CACHE_MS = 2 * 60 * 60 * 1000
+const HOUR_MS = 60 * 60 * 1000
+
+/** Cache weather forecasts for two hours */
+const FORECAST_CACHE_MS = 2 * HOUR_MS
+
+/** Cache aurora forecasts for seven hours. The resolution is 3h over a couple
+ * of days, so we won't win much from fetching it more often. */
+const AURORA_FORECAST_CACHE_MS = 7 * HOUR_MS
 
 /** If we move less than this, assume forecast is still valid */
 const FORECAST_CACHE_KM = 5
@@ -50,6 +57,11 @@ type ClockState = {
     timestamp: Date
     latitude: number
     longitude: number
+  }
+
+  auroraForecast?: AuroraForecast
+  auroraForecastMetadata?: {
+    timestamp: Date
   }
 }
 
@@ -114,12 +126,13 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return
     }
 
-    if (this.forecastIsCurrent()) {
-      // Forecast already current, never mind
-      return
+    if (!this.forecastIsCurrent()) {
+      this.download_weather()
     }
 
-    this.download_weather()
+    if (!this.auroraForecastIsCurrent()) {
+      this.bump_aurora_forecast()
+    }
   }
 
   startGeolocationIfNeeded = () => {
@@ -163,6 +176,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
       positionTimestamp: new Date()
     })
 
+    if (!this.auroraForecastIsCurrent()) {
+      this.bump_aurora_forecast()
+    }
+
     if (!this.forecastIsCurrent()) {
       this.download_weather()
     }
@@ -193,6 +210,9 @@ class Clock extends React.Component<ClockProps, ClockState> {
     return deg * (Math.PI / 180)
   }
 
+  /**
+   * Relates to the weather forecast, not any other forecast.
+   */
   forecastIsCurrent = () => {
     if (!this.state.forecast) {
       // No forecast at all, that's not current
@@ -218,8 +238,24 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
 
     console.debug(
-      `Forecast considered current: ${ageMs}ms old and ${kmDistance}km away`
+      `Forecast considered current: ${ageMs / 1000.0}s old and ${kmDistance}km away`
     )
+    return true
+  }
+
+  auroraForecastIsCurrent = () => {
+    if (!this.state.auroraForecast) {
+      // No forecast at all, that's not current
+      return false
+    }
+
+    const metadata = this.state.auroraForecastMetadata!
+    const ageMs = Date.now() - metadata.timestamp.getTime()
+    if (ageMs > AURORA_FORECAST_CACHE_MS) {
+      // Forecast too old, that's not current
+      return false
+    }
+
     return true
   }
 
@@ -273,6 +309,40 @@ class Clock extends React.Component<ClockProps, ClockState> {
             </ErrorDialog>
           )
         })
+      })
+  }
+
+  bump_aurora_forecast = () => {
+    const url = 'https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json'
+    console.log('Getting aurora forecast from: ' + url)
+
+    const self = this
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Response code from aurora upstream: ${response.status}`)
+        }
+        return response.json()
+      })
+      .then(data => {
+        const forecast = new AuroraForecast(data)
+
+        self.setState({
+          auroraForecast: forecast,
+          auroraForecastMetadata: {
+            timestamp: new Date()
+          }
+        })
+      })
+      .catch(error => {
+        console.error(error)
+
+        ReactGA.exception({
+          description: `Downloading aurora forecast failed: ${error.message}`,
+          fatal: !this.state.auroraForecast
+        })
+
+        // Let's not tell the user, aurora forecasts not showing is a corner case
       })
   }
 
