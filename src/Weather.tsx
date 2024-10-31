@@ -7,7 +7,7 @@ import ClockCoordinates from './ClockCoordinates'
 import { Forecast } from './Forecast.js'
 
 interface WeatherProps {
-  forecast: Map<number, Forecast>;
+  weatherForecast: Map<number, Forecast>;
   now: Date;
 }
 
@@ -119,7 +119,7 @@ class Weather extends React.Component<WeatherProps> {
     const start = new Date(now_ms + 0.75 * 3600 * 1000)
     const end = new Date(now_ms + 11.75 * 3600 * 1000)
 
-    for (const [timestamp_ms, forecast] of this.props.forecast.entries()) {
+    for (const [timestamp_ms, forecast] of this.props.weatherForecast.entries()) {
       const timestamp_date = new Date(timestamp_ms)
 
       if (timestamp_date < start) {

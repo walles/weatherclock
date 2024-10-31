@@ -49,8 +49,8 @@ type ClockState = {
   }
   positionTimestamp?: Date
 
-  forecast?: Map<number, Forecast>
-  forecastMetadata?: {
+  weatherForecast?: Map<number, Forecast>
+  weatherForecastMetadata?: {
     // FIXME: Rather than the current timestamp, maybe track when yr.no
     // thinks the next forecast will be available? That information is
     // available in the XML.
@@ -214,12 +214,12 @@ class Clock extends React.Component<ClockProps, ClockState> {
    * Relates to the weather forecast, not any other forecast.
    */
   forecastIsCurrent = () => {
-    if (!this.state.forecast) {
+    if (!this.state.weatherForecast) {
       // No forecast at all, that's not current
       return false
     }
 
-    const metadata = this.state.forecastMetadata!
+    const metadata = this.state.weatherForecastMetadata!
     const ageMs = Date.now() - metadata.timestamp.getTime()
     if (ageMs > FORECAST_CACHE_MS) {
       // Forecast too old, that's not current
@@ -283,8 +283,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
         const forecast = self.parseWeatherXml(weatherXmlString)
 
         self.setState({
-          forecast: forecast,
-          forecastMetadata: {
+          weatherForecast: forecast,
+          weatherForecastMetadata: {
             timestamp: new Date(),
             latitude: latitude,
             longitude: longitude
@@ -296,7 +296,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
         ReactGA.exception({
           description: `Downloading weather failed: ${error.message}`,
-          fatal: !this.state.forecast
+          fatal: !this.state.weatherForecast
         })
 
         this.setState({
@@ -423,7 +423,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     console.log('Geolocation failed')
     ReactGA.exception({
       description: `Geolocation failed: ${error.message}`,
-      fatal: !this.state.forecast
+      fatal: !this.state.weatherForecast
     })
     this.setState({
       // FIXME: Add a report-problem link?
@@ -486,7 +486,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
           {this.getClockContents()}
         </svg>
         {this.state.error}
-        {this.state.forecast ? (
+        {this.state.weatherForecast ? (
           <TimeSelect
             daysFromNow={this.props.startTime.daysFromNow}
             onSetStartTime={this.props.onSetStartTime}
@@ -497,12 +497,12 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   getClockContents = () => {
-    if (this.state.forecast) {
+    if (this.state.weatherForecast) {
       if (this.props.startTime.daysFromNow !== 0) {
         return (
           <React.Fragment>
             <Weather
-              forecast={this.state.forecast}
+              weatherForecast={this.state.weatherForecast}
               now={this.state.startTime.startTime}
             />
             <text className='tomorrow'>{this.state.startTime.name}</text>
@@ -513,7 +513,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         return (
           <React.Fragment>
             <Weather
-              forecast={this.state.forecast}
+              weatherForecast={this.state.weatherForecast}
               now={this.state.startTime.startTime}
             />
             {this.renderHands()}
