@@ -75,7 +75,11 @@ class App extends React.Component<{}, AppState> {
             <a href='https://met.no/English/'>
               Norwegian Meteorological Institute
             </a>{' '}
-            and the <a href='https://www.nrk.no/'>NRK</a>.
+            and the <a href='https://www.nrk.no/'>NRK</a>. Northern lights forecasts based on{' '}
+            <a href="https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json">NOAA's
+            Planetary K Index forecast</a> together with{' '}
+            <a href="https://hjelp.yr.no/hc/en-us/articles/4411702484754-Aurora-forecast-on-Yr">YR's{' '}
+            interpretation thereof</a>.
           </p>
 
           <p>
