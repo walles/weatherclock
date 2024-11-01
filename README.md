@@ -4,8 +4,8 @@ Try it here: <https://walles.github.io/weatherclock/>
 
 [![Screenshot](weatherclock-screenshot.webp)](https://walles.github.io/weatherclock/)
 
-Displays the weather forecast for the upcoming 11 hours for the current
-location on a clock face.
+Displays the weather forecast for the upcoming 11 hours for the current location
+on a clock face. On clear nights it shows northern ligths forecasts.
 
 It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
@@ -27,6 +27,13 @@ To update the favicon:
   - `public/logo192.png`
   - `public/logo512.png`
 - Commit changes to `src/weatherclock.xcf` and the icons in `public/`
+
+## Northern Lights Icons
+
+To update the northern lights icons:
+
+- Edit `src/images/aurora-icon.blend` using [Blender](https://blender.org)
+- Render icons into `public/aurora-high.png` and `public/aurora-low.png`
 
 ## Deploy
 
