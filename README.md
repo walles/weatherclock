@@ -51,15 +51,14 @@ the [proxy](proxy) directory.
 
 ## TODO
 
+- Tick the hands automatically
 - Consider now-vs-tomorrow dropdown placement on both narrow and tall screen
   layouts.
 - Make the now-vs-tomorrow dropdown more visible?
-- Tick the hands automatically
 - Report a page view each time the page becomes visible. Do we get an initial
   visibility event on page load?
 - Report geolocation and weather download timings to Google Analytics
 - Remove the Update button since updates should now be automatic
-- Re-add Facebook Share Button
 
 ### DONE
 
@@ -77,6 +76,7 @@ the [proxy](proxy) directory.
 
 - Consider moving some logic from `componentDidMount()` and `componentDidUpdate()`
   into `render()`. Won't work; `render()` is not allowed to touch `state` or `props`.
+- Re-add Facebook Share Button.
 
 ---
 
