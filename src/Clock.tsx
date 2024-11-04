@@ -37,16 +37,18 @@ type ClockProps = {
   onSetStartTime: (startTime: NamedStartTime) => void
 }
 
+type WeatherLocation = {
+  latitude: number
+  longitude: number
+}
+
 type ClockState = {
   startTime: NamedStartTime
 
   error?: JSX.Element
   progress?: JSX.Element
 
-  position?: {
-    latitude: number
-    longitude: number
-  }
+  position?: WeatherLocation
   positionTimestamp?: Date
 
   weatherForecast?: Map<number, Forecast>
@@ -116,8 +118,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
 
     if (this.startGeolocationIfNeeded()) {
-      // If / when we get the new position, that will in turn trigger a forecast
-      // update, so our work here is done.
+      // Wait for a new location to show up in our state
       return
     }
 
@@ -135,7 +136,40 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
   }
 
-  startGeolocationIfNeeded = () => {
+  getFixedPosition = (): WeatherLocation | null => {
+    const params = new URLSearchParams(window.location.search);
+    const latitude = params.get('latitude');
+    const longitude = params.get('longitude');
+
+    if (!latitude && !longitude) {
+      console.log('Set fixed position with query parameters ?latitude=...&longitude=...')
+      return null;
+    }
+
+    if (!(latitude && longitude)) {
+      console.error(`Fixed position is missing one number: latitude=${latitude}, longitude=${longitude}`)
+      return null
+    }
+
+    const latitudeNumber = parseFloat(latitude)
+    const longitudeNumber = parseFloat(longitude)
+    if (isNaN(latitudeNumber) || isNaN(longitudeNumber)) {
+      console.error(`Fixed position must get two numbers, not this: latitude=${latitude}, longitude=${longitude}`)
+      return null
+    }
+
+    console.log(`Using fixed position: latitude=${latitudeNumber}, longitude=${longitudeNumber}`)
+
+    return {
+      latitude: latitudeNumber,
+      longitude: longitudeNumber
+    }
+  }
+
+  /**
+   * Returns true if a new geolocation request was made, false otherwise.
+   */
+  startGeolocationIfNeeded = (): boolean => {
     if (this.state.progress) {
       // Something is already in progress, never mind
       return false
@@ -157,6 +191,16 @@ class Clock extends React.Component<ClockProps, ClockState> {
       }
     }
 
+    const fixedPosition = this.getFixedPosition()
+    if (fixedPosition != null) {
+      this.setState({
+        progress: undefined,
+        position: fixedPosition,
+        positionTimestamp: new Date()
+      })
+      return true
+    }
+
     console.log('Geolocating...')
     this.setState({
       progress: <text className='progress'>Locating phone...</text>
@@ -167,22 +211,14 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   setPosition = (position: Position) => {
-    const latitude = position.coords.latitude
-    const longitude = position.coords.longitude
-    console.log(`got position: ${latitude} ${longitude}`)
+    const weatherLocation = position.coords
+    console.log(`got position: latitude=${weatherLocation.latitude}, longitude=${weatherLocation.longitude}`)
 
     this.setState({
-      position: position.coords,
+      progress: undefined,
+      position: weatherLocation,
       positionTimestamp: new Date()
     })
-
-    if (!this.auroraForecastIsCurrent()) {
-      this.bump_aurora_forecast()
-    }
-
-    if (!this.forecastIsCurrent()) {
-      this.download_weather()
-    }
   }
 
   // From: https://stackoverflow.com/a/27943/473672

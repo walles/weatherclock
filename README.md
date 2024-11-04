@@ -10,6 +10,8 @@ on a clock face. On clear nights it shows northern ligths forecasts.
 It shows temperature where ordinary clocks show hour numbers, and weather
 symbols for each hour.
 
+You can force a position using query parameters `?latitude=...&longitude=...`.
+
 ## Clock Face Graphics
 
 To update the clock face graphics:
