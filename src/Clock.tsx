@@ -516,7 +516,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
             y='-50'
             width='100'
             height='100'
-            xlinkHref={process.env.PUBLIC_URL + '/clock-frame.png'}
+            xlinkHref={process.env.PUBLIC_URL + '/clock-frame.webp'}
           />
 
           {this.getClockContents()}
