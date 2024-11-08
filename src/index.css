@@ -5,6 +5,32 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  @media (prefers-color-scheme: dark) {
+    background: black;
+    color: lightgray;
+
+    /* Color the dropdown in the top right corner */
+    .MuiInputBase-root {
+      background: lightgray;
+    }
+
+    a {
+      color: lightsteelblue;
+    }
+
+    a:visited {
+      color: lightcoral;
+    }
+
+    a:hover {
+      color: lightseagreen;
+    }
+
+    a:visited:hover {
+      color: lightpink;
+    }
+  }
 }
 
 code {
