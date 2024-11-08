@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/weatherclock/static/css/main.8b4597ae.css",
-    "main.js": "/weatherclock/static/js/main.8d9ffcee.js",
+    "main.css": "/weatherclock/static/css/main.2c281488.css",
+    "main.js": "/weatherclock/static/js/main.ede3d88d.js",
     "index.html": "/weatherclock/index.html",
-    "main.8b4597ae.css.map": "/weatherclock/static/css/main.8b4597ae.css.map",
-    "main.8d9ffcee.js.map": "/weatherclock/static/js/main.8d9ffcee.js.map"
+    "main.2c281488.css.map": "/weatherclock/static/css/main.2c281488.css.map",
+    "main.ede3d88d.js.map": "/weatherclock/static/js/main.ede3d88d.js.map"
   },
   "entrypoints": [
-    "static/css/main.8b4597ae.css",
-    "static/js/main.8d9ffcee.js"
+    "static/css/main.2c281488.css",
+    "static/js/main.ede3d88d.js"
   ]
 }
