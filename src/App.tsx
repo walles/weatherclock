@@ -53,11 +53,13 @@ class App extends React.Component<{}, AppState> {
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
         <div className='App'>
-          <Clock
-            startTime={this.state.startTime}
-            reload={this.setTimeToNow}
-            onSetStartTime={this.onSetStartTime}
-          />
+          <div className='Clock'>
+            <Clock
+              startTime={this.state.startTime}
+              reload={this.setTimeToNow}
+              onSetStartTime={this.onSetStartTime}
+            />
+          </div>
 
           {/*
           If you add a Weatherclock launcher to your home screen on an iPhone,
@@ -66,7 +68,7 @@ class App extends React.Component<{}, AppState> {
 
           So we add a reload button of our own here.
           */}
-          <button type='button' onClick={this.setTimeToNow}>
+          <button type='button' onClick={this.setTimeToNow} className='bottomLeft'>
             Update forecast
           </button>
 

@@ -1,6 +1,6 @@
 svg {
-    width: 95vmin;
-    height: 95vmin;
+    width: 99dvmin;
+    height: 99dvmin;
 
     display: block;
     margin: auto;
@@ -24,8 +24,4 @@ text.tomorrow {
 
     transform: rotate(-60deg) scale(1.55);
     opacity: 0.2;
-}
-
-body {
-    margin: 8px
 }
