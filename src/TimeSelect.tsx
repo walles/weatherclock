@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import NativeSelect from '@material-ui/core/NativeSelect'
-
 type TimeSelectProps = {
   daysFromNow: number // 0, 1 or 2 for how many days out we want
   onSetStartTime: (startTime: NamedStartTime) => void
@@ -87,12 +85,12 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
 
     // Inspired by: https://material-ui.com/components/selects/#native-select
     return (
-      <NativeSelect
+      <select
         value={this.props.daysFromNow}
         onChange={this.onChange}
       >
         {options}
-      </NativeSelect>
+      </select>
     )
   }
 
