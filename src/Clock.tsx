@@ -503,7 +503,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
   render = () => {
     return (
       <React.Fragment>
-        <svg
+        <svg className='clockSvg'
           id='weatherclock'
           xmlns='http://www.w3.org/2000/svg'
           version='1.1'

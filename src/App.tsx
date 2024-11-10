@@ -71,7 +71,7 @@ class App extends React.Component<{}, AppState> {
 
             So we add a reload button of our own here.
             */}
-            <button type='button' className='buttons' onClick={this.setTimeToNow}>
+            <button type='button' className='updateButton' onClick={this.setTimeToNow}>
               Update forecast
             </button>
           </div>

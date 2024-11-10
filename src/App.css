@@ -12,8 +12,26 @@
     flex-direction: row;
   }
 
-  .buttons, .timeSelect {
+  .updateButton, .timeSelect {
     height: fit-content;
+  }
+
+  .updateButton {
+    order: 1;
+
+    position: absolute;
+    bottom: 0px;
+  }
+
+  .clockSvg {
+    order: 2;
+  }
+
+  .timeSelect {
+    order: 3;
+
+    position: absolute;
+    right: 0px;
   }
 }
 
@@ -22,7 +40,7 @@
     flex-direction: column;
   }
 
-  .buttons, .timeSelect {
+  .updateButton, .timeSelect {
     width: fit-content;
   }
 
