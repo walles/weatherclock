@@ -6,7 +6,6 @@
   margin: auto;
 }
 
-/* Media query for landscape mode */
 @media (orientation: landscape) {
   .ClockAndButtons {
     flex-direction: row;
