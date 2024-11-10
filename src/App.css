@@ -3,6 +3,18 @@
   height: 100dvh;
 
   display: flex;
-  flex-direction: column;
   margin: auto;
+}
+
+/* Media query for landscape mode */
+@media (orientation: landscape) {
+  .ClockAndButtons {
+    flex-direction: row;
+  }
+}
+
+@media (orientation: portrait) {
+  .ClockAndButtons {
+    flex-direction: column;
+  }
 }
