@@ -85,7 +85,7 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
 
     // Inspired by: https://material-ui.com/components/selects/#native-select
     return (
-      <select
+      <select className='timeSelect'
         value={this.props.daysFromNow}
         onChange={this.onChange}
       >

@@ -11,10 +11,23 @@
   .ClockAndButtons {
     flex-direction: row;
   }
+
+  .buttons, .timeSelect {
+    height: fit-content;
+  }
 }
 
 @media (orientation: portrait) {
   .ClockAndButtons {
     flex-direction: column;
+  }
+
+  .buttons, .timeSelect {
+    width: fit-content;
+  }
+
+  .timeSelect {
+    position: absolute;
+    right: 0px;
   }
 }
