@@ -1,17 +1,8 @@
-.App {
-  /* text-align: center; */
-}
-
-.Clock {
+.ClockAndButtons {
   width: 100dvw;
   height: 100dvh;
 
-  display: block;
+  display: flex;
+  flex-direction: column;
   margin: auto;
-}
-
-.bottomLeft {
-  position: absolute;
-  bottom: 0;
-  left: 0;
 }

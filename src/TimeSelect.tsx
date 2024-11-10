@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import CSS from 'csstype'
 
 import NativeSelect from '@material-ui/core/NativeSelect'
 
@@ -74,12 +73,6 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
   }
 
   render = () => {
-    const topRight: CSS.Properties = {
-      position: 'absolute',
-      right: '0px',
-      top: '0px'
-    }
-
     // Populate select
     let options = []
     for (let i = 0; i < 3; i++) {
@@ -95,7 +88,6 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
     // Inspired by: https://material-ui.com/components/selects/#native-select
     return (
       <NativeSelect
-        style={topRight}
         value={this.props.daysFromNow}
         onChange={this.onChange}
       >
