@@ -53,28 +53,28 @@ class App extends React.Component<{}, AppState> {
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
         <div className='App'>
-          <TimeSelect
-            daysFromNow={this.state.startTime.daysFromNow}
-            onSetStartTime={this.onSetStartTime}
-          />
+          <div className='ClockAndButtons'>
+            <TimeSelect
+              daysFromNow={this.state.startTime.daysFromNow}
+              onSetStartTime={this.onSetStartTime}
+            />
 
-          <div className='Clock'>
             <Clock
               startTime={this.state.startTime}
               reload={this.setTimeToNow}
             />
+
+            {/*
+            If you add a Weatherclock launcher to your home screen on an iPhone,
+            the page opened will not be in a web-browser (or at least look like
+            it's not).
+
+            So we add a reload button of our own here.
+            */}
+            <button type='button' className='updateButton' onClick={this.setTimeToNow}>
+              Update forecast
+            </button>
           </div>
-
-          {/*
-          If you add a Weatherclock launcher to your home screen on an iPhone,
-          the page opened will not be in a web-browser (or at least look like
-          it's not).
-
-          So we add a reload button of our own here.
-          */}
-          <button type='button' onClick={this.setTimeToNow} className='bottomLeft'>
-            Update forecast
-          </button>
 
           <p>
             Weather forecast from <a href='yr.no'>yr.no</a>, delivered by the{' '}
