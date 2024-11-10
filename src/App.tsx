@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css'
 
 import Clock from './Clock'
-import { NamedStartTime } from './TimeSelect'
+import TimeSelect, { NamedStartTime } from './TimeSelect'
 
 import PageVisibility from 'react-page-visibility'
 
@@ -53,11 +53,15 @@ class App extends React.Component<{}, AppState> {
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
         <div className='App'>
+          <TimeSelect
+            daysFromNow={this.state.startTime.daysFromNow}
+            onSetStartTime={this.onSetStartTime}
+          />
+
           <div className='Clock'>
             <Clock
               startTime={this.state.startTime}
               reload={this.setTimeToNow}
-              onSetStartTime={this.onSetStartTime}
             />
           </div>
 

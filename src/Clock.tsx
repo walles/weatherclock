@@ -9,7 +9,7 @@ import Weather from './Weather'
 import Hand from './Hand'
 import ErrorDialog from './ErrorDialog'
 import ClockCoordinates from './ClockCoordinates'
-import TimeSelect, { NamedStartTime } from './TimeSelect'
+import { NamedStartTime } from './TimeSelect'
 import { Forecast } from './Forecast'
 import { AuroraForecast } from './AuroraForecast'
 
@@ -34,7 +34,6 @@ const FORECAST_CACHE_KM = 5
 type ClockProps = {
   startTime: NamedStartTime
   reload: () => void
-  onSetStartTime: (startTime: NamedStartTime) => void
 }
 
 type WeatherLocation = {
@@ -71,7 +70,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
   static propTypes = {
     startTime: PropTypes.instanceOf(NamedStartTime).isRequired,
     reload: PropTypes.func.isRequired,
-    onSetStartTime: PropTypes.func.isRequired
   }
 
   constructor (props: ClockProps) {
@@ -522,12 +520,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
           {this.getClockContents()}
         </svg>
         {this.state.error}
-        {this.state.weatherForecast ? (
-          <TimeSelect
-            daysFromNow={this.props.startTime.daysFromNow}
-            onSetStartTime={this.props.onSetStartTime}
-          />
-        ) : null}
       </React.Fragment>
     )
   }
