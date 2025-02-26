@@ -107,6 +107,23 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   componentDidMount = () => {
+    const forecastString = localStorage.getItem('forecast')
+    const metadataString = localStorage.getItem('metadata')
+    if (forecastString && metadataString) {
+      // Recreate the map from our pair wise JSON representation
+      const forecastArray = JSON.parse(forecastString)
+      const forecast = new Map<number, Forecast>(forecastArray)
+
+      const metadata = JSON.parse(metadataString)
+
+      this.setState({
+        weatherForecast: forecast,
+        weatherForecastMetadata: metadata
+      })
+    } else {
+      console.log('No cached forecast')
+    }
+
     this.startGeolocationIfNeeded()
   }
 
@@ -260,11 +277,16 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return false
     }
 
+    if (!this.state.position) {
+      // No position, can't check distance
+      return false
+    }
+
     const kmDistance = this.getDistanceFromLatLonInKm(
       metadata.latitude,
       metadata.longitude,
-      this.state.position!.latitude,
-      this.state.position!.longitude
+      this.state.position.latitude,
+      this.state.position.longitude
     )
     if (kmDistance > FORECAST_CACHE_KM) {
       // Forecast from too far away, that's not current
