@@ -315,14 +315,18 @@ class Clock extends React.Component<ClockProps, ClockState> {
       })
       .then(weatherXmlString => {
         const forecast = self.parseWeatherXml(weatherXmlString)
+        const metadata = {
+          timestamp: new Date(),
+          latitude: latitude,
+          longitude: longitude
+        }
+
+        localStorage.setItem('forecast', JSON.stringify(Array.from(forecast)))
+        localStorage.setItem('metadata', JSON.stringify(metadata))
 
         self.setState({
           weatherForecast: forecast,
-          weatherForecastMetadata: {
-            timestamp: new Date(),
-            latitude: latitude,
-            longitude: longitude
-          }
+          weatherForecastMetadata: metadata
         })
       })
       .catch(error => {
