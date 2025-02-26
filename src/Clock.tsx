@@ -109,19 +109,38 @@ class Clock extends React.Component<ClockProps, ClockState> {
   componentDidMount = () => {
     const forecastString = localStorage.getItem('forecast')
     const metadataString = localStorage.getItem('metadata')
-    if (forecastString && metadataString) {
+    const positionString = localStorage.getItem('position')
+    if (forecastString && metadataString && positionString) {
       // Recreate the map from our pair wise JSON representation
       const forecastArray = JSON.parse(forecastString)
-      const forecast = new Map<number, Forecast>(forecastArray)
+      const forecast = new Map<number, Forecast>()
+      forecastArray.forEach((pair: [number, Forecast]) => {
+        const key = pair[0]
+        const value = pair[1]
+        const timestamp = new Date(value.timestamp)
+        value.timestamp = timestamp
 
-      const metadata = JSON.parse(metadataString)
+        forecast.set(key, value)
+      })
+
+      const metadataFromJson = JSON.parse(metadataString)
+      const metadata = {
+        timestamp: new Date(metadataFromJson.timestamp),
+        latitude: metadataFromJson.latitude,
+        longitude: metadataFromJson.longitude
+      }
+
+      const position = JSON.parse(positionString)
+
+      console.log("Restoring data from local storage:", forecast, metadata, position)
 
       this.setState({
         weatherForecast: forecast,
-        weatherForecastMetadata: metadata
+        weatherForecastMetadata: metadata,
+        position: position,
       })
     } else {
-      console.log('No cached forecast')
+      console.log('No forecast found in local storage')
     }
 
     this.startGeolocationIfNeeded()
@@ -343,8 +362,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
           longitude: longitude
         }
 
+        console.log("Writing data to local storage:", forecast, metadata, self.state.position)
         localStorage.setItem('forecast', JSON.stringify(Array.from(forecast)))
         localStorage.setItem('metadata', JSON.stringify(metadata))
+        localStorage.setItem('position', JSON.stringify(self.state.position))
 
         self.setState({
           weatherForecast: forecast,
