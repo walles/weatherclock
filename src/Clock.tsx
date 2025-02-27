@@ -16,10 +16,12 @@ import { AuroraForecast } from './AuroraForecast'
 const HOUR_HAND_LENGTH = 23
 const MINUTE_HAND_LENGTH = 34
 
-/** Cache positions for this long */
-const POSITION_CACHE_MS = 5 * 60 * 1000
+const MINUTE_MS = 60 * 1000
 
-const HOUR_MS = 60 * 60 * 1000
+/** Cache positions for this long */
+const POSITION_CACHE_MS = 5 * MINUTE_MS
+
+const HOUR_MS = 60 * MINUTE_MS
 
 /** Cache weather forecasts for two hours */
 const FORECAST_CACHE_MS = 2 * HOUR_MS
@@ -214,7 +216,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return false
     }
 
-    if (this.state.position) {
+    if (this.state.position && this.state.positionTimestamp) {
       const position_age_ms =
         Date.now() - this.state.positionTimestamp!.getTime()
 
