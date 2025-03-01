@@ -10,6 +10,7 @@ import http.client
 import urllib.request
 
 import flask
+import functions_framework
 import werkzeug.datastructures
 
 UPSTREAM_TIMEOUT_SECONDS = 5
@@ -94,11 +95,13 @@ def _proxy_request(request: flask.Request):
     return response
 
 
+@functions_framework.http
 def proxy_request(request: flask.Request):
     try:
         return _proxy_request(request)
-    except Exception:  # pylint: disable=broad-except
+    except Exception:
+        print(f"ERROR: Handling request failed: {request}")
         details = traceback.format_exc()
         print(details)
 
-        return flask.Response(traceback.format_exc(), status=500, mimetype="text/plain")
+        return flask.Response("Request handling failed, ask johan.walles@gmail.com for details", status=500, mimetype="text/plain")
