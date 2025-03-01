@@ -9,6 +9,8 @@ import traceback
 import http.client
 import urllib.request
 
+from enum import Enum
+
 import flask
 import functions_framework
 import werkzeug.datastructures
@@ -24,6 +26,29 @@ HOP_BY_HOP_HEADERS = [
     "transfer-encoding",
     "upgrade",
 ]
+
+
+class Severity(Enum):
+    """
+    Ref: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#LogSeverity
+    """
+
+    INFO = "INFO"
+    ERROR = "ERROR"
+
+
+def log(severity: Severity, message: str):
+    """
+    Ref: https://cloud.google.com/run/docs/logging#run_manual_logging-python
+    """
+    print(
+        json.dumps(
+            {
+                "severity": severity.value,
+                "message": message,
+            }
+        )
+    )
 
 
 def to_upstream_request(incoming: flask.Request) -> urllib.request.Request:
@@ -77,20 +102,20 @@ def to_downstream_response(
 
 
 def _proxy_request(request: flask.Request):
-    print(f"Incoming request: {request}")
-    print(f"  Incoming headers: {json.dumps(dict(request.headers))}")
+    log(Severity.INFO, f"Incoming request: {request}")
+    log(Severity.INFO, f"  Incoming headers: {json.dumps(dict(request.headers))}")
     if request.method != "GET":
         raise Exception(f"Method must be GET: <{request.method}>")
 
     upstream_request = to_upstream_request(request)
-    print(f"Request to upstream: {vars(upstream_request)}")
+    log(Severity.INFO, f"Request to upstream: {vars(upstream_request)}")
 
     upstream_response = get_upstream_response(upstream_request)
-    print(f"Response from upstream: {vars(upstream_response)}")
+    log(Severity.INFO, f"Response from upstream: {vars(upstream_response)}")
 
     response = to_downstream_response(upstream_response)
-    print(f"Responding with: {response}")
-    print(f"  Response headers: {json.dumps(dict(response.headers))}")
+    log(Severity.INFO, f"Responding with: {response}")
+    log(Severity.INFO, f"  Response headers: {json.dumps(dict(response.headers))}")
 
     return response
 
@@ -100,8 +125,11 @@ def proxy_request(request: flask.Request):
     try:
         return _proxy_request(request)
     except Exception:
-        print(f"ERROR: Handling request failed: {request}")
         details = traceback.format_exc()
-        print(details)
+        log(Severity.ERROR, f"Handling request failed: {request}\n{details}")
 
-        return flask.Response("Request handling failed, ask johan.walles@gmail.com for details", status=500, mimetype="text/plain")
+        return flask.Response(
+            "Request handling failed, ask johan.walles@gmail.com for details",
+            status=500,
+            mimetype="text/plain",
+        )
