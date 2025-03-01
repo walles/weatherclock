@@ -16,6 +16,8 @@ import flask
 import functions_framework
 import werkzeug.datastructures
 
+from werkzeug.exceptions import MethodNotAllowed
+
 UPSTREAM_TIMEOUT_SECONDS = 5
 
 # From: https://www.freesoft.org/CIE/RFC/2068/143.htm
@@ -106,7 +108,7 @@ def _proxy_request(request: flask.Request):
     log(Severity.INFO, f"Incoming request: {request}")
     log(Severity.INFO, f"  Incoming headers: {json.dumps(dict(request.headers))}")
     if request.method != "GET":
-        raise Exception(f"Method must be GET: <{request.method}>")
+        raise MethodNotAllowed(f"Method must be GET: <{request.method}>")
 
     upstream_request = to_upstream_request(request)
     log(Severity.INFO, f"Request to upstream: {vars(upstream_request)}")
@@ -125,7 +127,7 @@ def _proxy_request(request: flask.Request):
 def proxy_request(request: flask.Request):
     try:
         return _proxy_request(request)
-    except Exception:
+    except Exception:  # pylint: disable=broad-except
         details = traceback.format_exc()
         log(Severity.ERROR, f"Handling request failed: {request}\n{details}")
 
