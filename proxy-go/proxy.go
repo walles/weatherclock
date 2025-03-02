@@ -13,20 +13,22 @@ import (
 	"time"
 )
 
-const yrNoAPIURL = "https://api.met.no/weatherapi"
-
 var httpClient = &http.Client{
 	Timeout: 10 * time.Second,
 }
 
 func ProxyRequest(w http.ResponseWriter, r *http.Request) {
+	proxyRequest("https://api.met.no/weatherapi", w, r)
+}
+
+func proxyRequest(yrNoAPIBaseURL string, w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	// Create a new request to the API
-	req, err := http.NewRequest(r.Method, yrNoAPIURL+"/"+r.URL.Path, r.Body)
+	req, err := http.NewRequest(r.Method, yrNoAPIBaseURL+r.URL.Path, r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
