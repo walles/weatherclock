@@ -2,7 +2,7 @@
 Proxy requests to api.yr.no so that they can be accessed from web pages.
 
 To deploy, upload the contents of this file to Google Cloud Run:
-https://console.cloud.google.com/run/detail/europe-north1/api-met-no-proxy/source?inv=1&invt=Abq2CA&project=api-met-no-proxy
+https://console.cloud.google.com/run/detail/europe-north1/api-met-no-proxy-go/source?inv=1&invt=Abq9XQ&project=api-met-no-proxy
 */
 
 package proxy
