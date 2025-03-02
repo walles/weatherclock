@@ -8,6 +8,7 @@ https://console.cloud.google.com/run/detail/europe-north1/api-met-no-proxy-go/so
 package proxy
 
 import (
+	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
@@ -99,7 +100,8 @@ func proxyRequest(yrNoAPIBaseURL string, w http.ResponseWriter, r *http.Request)
 	}
 
 	// Create a new request to the API
-	yrRequest, err := http.NewRequest(r.Method, yrNoAPIBaseURL+r.URL.Path, r.Body)
+	yrURL := yrNoAPIBaseURL + r.URL.Path
+	yrRequest, err := http.NewRequest(r.Method, yrURL, r.Body)
 	if err != nil {
 		log.Error("Failed to create upstream request from incoming", "error", err, "httpRequest", r)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -112,6 +114,8 @@ func proxyRequest(yrNoAPIBaseURL string, w http.ResponseWriter, r *http.Request)
 	// Copy the headers from the original request
 	yrRequest.Header = r.Header.Clone()
 	dropHopByHopHeaders(yrRequest.Header)
+
+	t0 := time.Now()
 
 	// Send the request to the API
 	yrResponse, err := httpClient.Do(yrRequest)
@@ -148,5 +152,10 @@ func proxyRequest(yrNoAPIBaseURL string, w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	log.Info("Request handled", "httpRequest", r, "yrResponse", yrResponse)
+	dt := time.Since(t0)
+
+	log.Info(fmt.Sprintf(
+		"Got %d bytes of weather data in %s from %s", yrResponse.ContentLength, dt.String(), yrURL+"?"+r.URL.RawQuery),
+		"httpRequest", r,
+		"yrResponse", yrResponse)
 }
