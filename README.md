@@ -49,7 +49,7 @@ npm run deploy
 
 Since <yr.no>'s REST API doesn't (or didn't) support being run from browsers,
 there's a Google Cloud Function proxying the requests. Source code lives in
-the [proxy-go](proxy-go) directory.
+the [proxy](proxy) directory.
 
 ## TODO
 
