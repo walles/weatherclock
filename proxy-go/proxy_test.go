@@ -9,18 +9,16 @@ import (
 func TestHappyPath(t *testing.T) {
 	const requestPath = "/weatherapi/locationforecast/2.0/compact"
 	const responseBody = "Imagine weather data here"
-
-	// Create a new request
-	req, err := http.NewRequest(http.MethodGet, requestPath+"?lat=60.10&lon=9.58", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+	const shouldBeDroppedHeader = "Transfer-Encoding"
 
 	// Set up a mock yr.no API endpoint
 	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		// Check the request
 		if req.URL.Path != requestPath {
 			t.Errorf("expected path %s, got %s", requestPath, req.URL.Path)
+		}
+		if req.Header.Get(shouldBeDroppedHeader) != "" {
+			t.Errorf("expected no %s header, got %s", shouldBeDroppedHeader, req.Header.Get(shouldBeDroppedHeader))
 		}
 
 		// Write the response
@@ -31,6 +29,13 @@ func TestHappyPath(t *testing.T) {
 		}
 	}))
 	defer func() { testServer.Close() }()
+
+	// Create a new request
+	req, err := http.NewRequest(http.MethodGet, requestPath+"?lat=60.10&lon=9.58", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set(shouldBeDroppedHeader, "this header should be dropped")
 
 	// Send the request to the proxy
 	rr := httptest.NewRecorder()
