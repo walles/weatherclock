@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import ReactGA from 'react-ga'
-
 import './Clock.css'
 
 import Weather from './Weather'
@@ -89,11 +87,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
         error: undefined
       }
     }
-
-    ReactGA.exception({
-      description: 'Geolocation unsupported',
-      fatal: true
-    })
 
     return {
       startTime: this.props.startTime,
@@ -377,11 +370,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
       .catch(error => {
         console.error(error)
 
-        ReactGA.exception({
-          description: `Downloading weather failed: ${error.message}`,
-          fatal: !this.state.weatherForecast
-        })
-
         this.setState({
           error: (
             <ErrorDialog
@@ -419,11 +407,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
       })
       .catch(error => {
         console.error(error)
-
-        ReactGA.exception({
-          description: `Downloading aurora forecast failed: ${error.message}`,
-          fatal: !this.state.auroraForecast
-        })
 
         // Let's not tell the user, aurora forecasts not showing is a corner case
       })
@@ -504,10 +487,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
   geoError = (error: PositionError) => {
     console.log('Geolocation failed')
-    ReactGA.exception({
-      description: `Geolocation failed: ${error.message}`,
-      fatal: !this.state.weatherForecast
-    })
     this.setState({
       // FIXME: Add a report-problem link?
       // FIXME: Make the error message text clickable and link it to a Google search

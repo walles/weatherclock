@@ -6,18 +6,6 @@ import TimeSelect, { NamedStartTime } from './TimeSelect'
 
 import PageVisibility from 'react-page-visibility'
 
-import ReactGA from 'react-ga'
-if (process.env.NODE_ENV === 'production') {
-  // To prevent bad data from dev and test runs we only enable Google Analytics
-  // in production
-  ReactGA.initialize('UA-59702036-2')
-
-  // IPs are personally identifiable according to GDPR:
-  // https://eugdprcompliant.com/personal-data/
-  ReactGA.set({ anonymizeIp: true })
-}
-ReactGA.pageview(window.location.pathname + window.location.search)
-
 type AppState = {
   startTime: NamedStartTime
 }
