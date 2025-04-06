@@ -35,7 +35,8 @@ To update the favicon:
 To update the northern lights icons:
 
 - Edit `src/images/aurora-icon.blend` using [Blender](https://blender.org)
-- Render icons into `public/aurora-high.png` and `public/aurora-low.png`
+- Set Aurora Borealis Curve Geometry Extrude to 0.6m and Render into `public/aurora-high.png`
+- Set Aurora Borealis Curve Geometry Extrude to 0.3m and Render into `public/aurora-low.png`
 
 ## Deploy
 
