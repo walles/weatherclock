@@ -14,10 +14,9 @@
   "dependencies": {
     "@material-ui/core": "4.4.2",
     "gh-pages": "^5.0.0",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-page-visibility": "^4.1.1",
-    "react-scripts": "^5.0.1",
     "typescript": "^3.9.6"
   },
   "scripts": {
@@ -48,5 +47,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
   }
 }
