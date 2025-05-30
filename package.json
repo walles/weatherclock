@@ -20,11 +20,11 @@
     "typescript": "^3.9.6"
   },
   "scripts": {
-    "start": "REACT_APP_GIT_SHA=`git rev-parse HEAD` react-scripts start",
-    "build": "REACT_APP_GIT_SHA=`git rev-parse HEAD` react-scripts build",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "lint": "eslint src/*.js* && eslint src/*.ts*",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "test": "echo 'No test runner configured'",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
