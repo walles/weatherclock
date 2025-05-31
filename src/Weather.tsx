@@ -123,25 +123,25 @@ class Weather extends React.Component<WeatherProps> {
 
   getForecastsToRender = (): Forecast[] => {
     const { now, weatherForecast } = this.props;
-    const renderUs = [];
+    const renderUs: Forecast[] = [];
 
     const now_ms = now.getTime();
     const start = new Date(now_ms + 0.75 * 3600 * 1000);
     const end = new Date(now_ms + 11.75 * 3600 * 1000);
 
-    for (const [timestamp_ms, forecast] of weatherForecast.entries()) {
+    weatherForecast.forEach((forecast, timestamp_ms) => {
       const timestamp_date = new Date(timestamp_ms);
 
       if (timestamp_date < start) {
-        continue;
+        return;
       }
 
       if (timestamp_date > end) {
-        continue;
+        return;
       }
 
       renderUs.push(forecast);
-    }
+    });
 
     console.debug(renderUs);
     return renderUs;
