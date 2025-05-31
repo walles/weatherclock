@@ -15,9 +15,7 @@ interface DisplayProps {
 /**
  * This is supposed to mimic a display on the clock face.
  */
-class Display extends React.Component<DisplayProps> {
-  state: { textWidth: number; textHeight: number };
-
+class Display extends React.Component<DisplayProps, { textWidth: number; textHeight: number }> {
   textRef: React.RefObject<SVGTextElement>;
 
   constructor(props: DisplayProps) {
