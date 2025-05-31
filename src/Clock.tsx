@@ -10,6 +10,7 @@ import ClockCoordinates from './ClockCoordinates'
 import { NamedStartTime } from './TimeSelect'
 import { Forecast } from './Forecast'
 import { AuroraForecast } from './AuroraForecast'
+import Temperature from './Temperature.jsx'
 
 const HOUR_HAND_LENGTH = 23
 const MINUTE_HAND_LENGTH = 34

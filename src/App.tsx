@@ -3,6 +3,8 @@ import './App.css'
 
 import Clock from './Clock'
 import TimeSelect, { NamedStartTime } from './TimeSelect'
+import Temperature from './Temperature.jsx'
+import WeatherSymbol from './WeatherSymbol.jsx'
 
 import PageVisibility from 'react-page-visibility'
 

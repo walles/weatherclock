@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
+import Temperature from './Temperature.jsx'
+import WeatherSymbol from './WeatherSymbol.jsx'
 
 // Redirect to https, this helps with positioning in some circumstances
 const protocol = window.location.protocol
