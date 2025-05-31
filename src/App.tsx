@@ -4,8 +4,6 @@ import './App.css';
 import PageVisibility from 'react-page-visibility';
 import Clock from './Clock';
 import TimeSelect, { NamedStartTime } from './TimeSelect';
-import Temperature from './Temperature.jsx';
-import WeatherSymbol from './WeatherSymbol';
 
 type AppState = {
   startTime: NamedStartTime;

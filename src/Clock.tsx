@@ -10,7 +10,6 @@ import ClockCoordinates from './ClockCoordinates';
 import { NamedStartTime } from './TimeSelect';
 import { Forecast } from './Forecast';
 import { AuroraForecast } from './AuroraForecast';
-import Temperature from './Temperature.jsx';
 
 const HOUR_HAND_LENGTH = 23;
 const MINUTE_HAND_LENGTH = 34;
@@ -102,7 +101,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     };
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     const forecastString = localStorage.getItem('forecast');
     const metadataString = localStorage.getItem('metadata');
     const positionString = localStorage.getItem('position');
@@ -133,16 +132,16 @@ class Clock extends React.Component<ClockProps, ClockState> {
       this.setState({
         weatherForecast: forecast,
         weatherForecastMetadata: metadata,
-        position: position,
+        position,
       });
     } else {
       console.log('No forecast found in local storage');
     }
 
     this.startGeolocationIfNeeded();
-  };
+  }
 
-  componentDidUpdate = () => {
+  componentDidUpdate() {
     if (this.props.startTime.startTime !== this.state.startTime.startTime) {
       this.setState(this._getInitialState());
     }
@@ -164,7 +163,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     if (!this.auroraForecastIsCurrent()) {
       this.bump_aurora_forecast();
     }
-  };
+  }
 
   getFixedPosition = (): WeatherLocation | null => {
     const params = new URLSearchParams(window.location.search);
@@ -329,15 +328,15 @@ class Clock extends React.Component<ClockProps, ClockState> {
   };
 
   download_weather = () => {
-    const latitude = this.state.position!.latitude;
-    const longitude = this.state.position!.longitude;
+    const { latitude } = this.state.position!;
+    const { longitude } = this.state.position!;
 
     this.setState({
       progress: <text className="progress">Downloading weather...</text>,
     });
 
     const url = `https://api-met-no-proxy-go-407804377208.europe-north1.run.app/locationforecast/2.0/classic?lat=${latitude};lon=${longitude}`;
-    console.log('Getting weather from: ' + url);
+    console.log(`Getting weather from: ${url}`);
 
     const self = this;
 
@@ -352,8 +351,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
         const forecast = self.parseWeatherXml(weatherXmlString);
         const metadata = {
           timestamp: new Date(),
-          latitude: latitude,
-          longitude: longitude,
+          latitude,
+          longitude,
         };
 
         console.log('Writing data to local storage:', forecast, metadata, self.state.position);
@@ -381,7 +380,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
   bump_aurora_forecast = () => {
     const url = 'https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json';
-    console.log('Getting aurora forecast from: ' + url);
+    console.log(`Getting aurora forecast from: ${url}`);
 
     const self = this;
     fetch(url)
@@ -413,7 +412,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
   parseWeatherXml = (weatherXmlString: string): Map<number, Forecast> => {
     const weatherXml = new window.DOMParser().parseFromString(weatherXmlString, 'text/xml');
     const allPrognoses = weatherXml.getElementsByTagName('time');
-    console.log('Parsing ' + allPrognoses.length + ' prognoses...');
+    console.log(`Parsing ${allPrognoses.length} prognoses...`);
 
     const forecasts: Map<number, Forecast> = new Map();
     for (let i = 0; i < allPrognoses.length; i++) {
@@ -432,7 +431,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
       if (!forecast) {
         forecast = {
-          timestamp: timestamp,
+          timestamp,
           span_h: dh,
         };
       }
@@ -496,7 +495,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     // FIXME: This doubles the center circle shadow, maybe draw
     // the center circle once here to get us only one of those?
     return (
-      <React.Fragment>
+      <>
         <Hand
           width={2.5}
           dx={nowCoords.hourDx(HOUR_HAND_LENGTH)}
@@ -507,13 +506,13 @@ class Clock extends React.Component<ClockProps, ClockState> {
           dx={nowCoords.minuteDx(MINUTE_HAND_LENGTH)}
           dy={nowCoords.minuteDy(MINUTE_HAND_LENGTH)}
         />
-      </React.Fragment>
+      </>
     );
   };
 
-  render = () => {
+  render() {
     return (
-      <React.Fragment>
+      <>
         <svg
           className="clockSvg"
           id="weatherclock"
@@ -526,15 +525,15 @@ class Clock extends React.Component<ClockProps, ClockState> {
           {this.getClockContents()}
         </svg>
         {this.state.error}
-      </React.Fragment>
+      </>
     );
-  };
+  }
 
   getClockContents = () => {
     if (this.state.weatherForecast) {
       if (this.props.startTime.daysFromNow !== 0) {
         return (
-          <React.Fragment>
+          <>
             <Weather
               weatherForecast={this.state.weatherForecast}
               auroraForecast={this.state.auroraForecast}
@@ -542,22 +541,21 @@ class Clock extends React.Component<ClockProps, ClockState> {
               now={this.state.startTime.startTime}
             />
             <text className="tomorrow">{this.state.startTime.name}</text>
-          </React.Fragment>
-        );
-      } else {
-        // Now
-        return (
-          <React.Fragment>
-            <Weather
-              weatherForecast={this.state.weatherForecast}
-              auroraForecast={this.state.auroraForecast}
-              latitude={this.state.position!.latitude}
-              now={this.state.startTime.startTime}
-            />
-            {this.renderHands()}
-          </React.Fragment>
+          </>
         );
       }
+      // Now
+      return (
+        <>
+          <Weather
+            weatherForecast={this.state.weatherForecast}
+            auroraForecast={this.state.auroraForecast}
+            latitude={this.state.position!.latitude}
+            now={this.state.startTime.startTime}
+          />
+          {this.renderHands()}
+        </>
+      );
     }
 
     if (this.state.error) {

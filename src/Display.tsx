@@ -3,8 +3,6 @@ import React from 'react';
 import './Display.css';
 
 import ClockCoordinates from './ClockCoordinates';
-import Temperature from './Temperature.jsx';
-import WeatherSymbol from './WeatherSymbol';
 
 const WIND_TEXT_RADIUS = 13;
 const WINDBOX_SCALE = 1.2;
