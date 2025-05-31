@@ -50,13 +50,6 @@ export default [
       'consistent-return': 2,
       'no-var': 1,
       curly: 1,
-      'no-console': 0,
-      'no-continue': 0,
-      '@typescript-eslint/naming-convention': 0,
-      'react/destructuring-assignment': 0,
-      'no-underscore-dangle': 0,
-      'max-classes-per-file': 0,
-      'react/require-default-props': 0,
     },
     settings: {
       react: {
