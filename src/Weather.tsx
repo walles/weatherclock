@@ -5,7 +5,7 @@ import WeatherSymbol from './WeatherSymbol';
 import Display from './Display';
 import ClockCoordinates from './ClockCoordinates';
 import { Forecast } from './Forecast';
-import { AuroraForecast } from './AuroraForecast';
+import AuroraForecast from './AuroraForecast';
 
 interface WeatherProps {
   weatherForecast: Map<number, Forecast>;

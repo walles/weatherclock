@@ -6,7 +6,7 @@ type Datapoint = {
   kpValue: number;
 };
 
-export class AuroraForecast {
+export default class AuroraForecast {
   data: Datapoint[];
 
   /**

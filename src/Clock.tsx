@@ -9,7 +9,7 @@ import ErrorDialog from './ErrorDialog';
 import ClockCoordinates from './ClockCoordinates';
 import { NamedStartTime } from './TimeSelect';
 import { Forecast } from './Forecast';
-import { AuroraForecast } from './AuroraForecast';
+import AuroraForecast from './AuroraForecast';
 
 const HOUR_HAND_LENGTH = 23;
 const MINUTE_HAND_LENGTH = 34;
