@@ -8,20 +8,17 @@ interface HandProps {
   dy: number;
 }
 
-class Hand extends React.Component<HandProps> {
+function Hand({ width, dx, dy }: HandProps) {
   // FIXME: Hands should protrude 2 units in the wrong direction as well
-  render() {
-    const { width, dx, dy } = this.props;
-    return (
-      <>
-        <line className="hand shadow" x1="0" y1="0" x2={dx} y2={dy} strokeWidth={width} />
-        <circle className="shadow" cx="0" cy="0" r="2" />
+  return (
+    <>
+      <line className="hand shadow" x1="0" y1="0" x2={dx} y2={dy} strokeWidth={width} />
+      <circle className="shadow" cx="0" cy="0" r="2" />
 
-        <line className="hand" x1="0" y1="0" x2={dx} y2={dy} strokeWidth={width} />
-        <circle cx="0" cy="0" r="2" />
-      </>
-    );
-  }
+      <line className="hand" x1="0" y1="0" x2={dx} y2={dy} strokeWidth={width} />
+      <circle cx="0" cy="0" r="2" />
+    </>
+  );
 }
 
 export default Hand;

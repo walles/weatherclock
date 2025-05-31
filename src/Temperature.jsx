@@ -6,20 +6,17 @@ import ClockCoordinates from './ClockCoordinates';
 
 const DISTANCE_FROM_CENTER = 39;
 
-class Temperature extends React.Component {
-  render() {
-    const { degreesCelsius = 0, coordinates } = this.props;
-    // Truncate decimals
-    const temperature = Math.trunc(degreesCelsius);
-    const x = coordinates.hourDx(DISTANCE_FROM_CENTER);
-    const y = coordinates.hourDy(DISTANCE_FROM_CENTER);
+function Temperature({ degreesCelsius = 0, coordinates }) {
+  // Truncate decimals
+  const temperature = Math.trunc(degreesCelsius);
+  const x = coordinates.hourDx(DISTANCE_FROM_CENTER);
+  const y = coordinates.hourDy(DISTANCE_FROM_CENTER);
 
-    return (
-      <text className="hour" x={x} y={y}>
-        {temperature}&deg;
-      </text>
-    );
-  }
+  return (
+    <text className="hour" x={x} y={y}>
+      {temperature}&deg;
+    </text>
+  );
 }
 
 Temperature.propTypes = {
