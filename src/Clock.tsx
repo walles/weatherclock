@@ -240,7 +240,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     return true
   }
 
-  setPosition = (position: Position) => {
+  setPosition = (position: GeolocationPosition) => {
     const weatherLocation = position.coords
     console.log(`got position: latitude=${weatherLocation.latitude}, longitude=${weatherLocation.longitude}`)
 
@@ -486,7 +486,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     return forecasts
   }
 
-  geoError = (error: PositionError) => {
+  geoError = (error: GeolocationPositionError) => {
     console.log('Geolocation failed')
     this.setState({
       // FIXME: Add a report-problem link?
@@ -499,12 +499,12 @@ class Clock extends React.Component<ClockProps, ClockState> {
       error: (
         <ErrorDialog
           title={error.message}
-          reload={window.location.reload.bind(window.location, true)}
+          reload={() => window.location.reload()}
         >
           If you are asked whether to allow the Weather Clock to know your
           current location, please say "yes".
         </ErrorDialog>
-      )
+      ),
     })
   }
 

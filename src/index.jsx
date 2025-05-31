@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App'
 import Temperature from './Temperature.jsx'
@@ -12,5 +12,8 @@ if (protocol === 'http:' && window.location.hostname !== 'localhost') {
   window.location.href =
     'https:' + window.location.href.substring(protocol.length)
 } else {
-  ReactDOM.render(<App />, document.getElementById('root'))
+  const container = document.getElementById('root')
+  if (container) {
+    createRoot(container).render(<App />)
+  }
 }
