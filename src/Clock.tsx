@@ -541,8 +541,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
   };
 
   render() {
-    const { startTime } = this.state;
-
     return (
       <>
         <svg
