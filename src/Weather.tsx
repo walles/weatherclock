@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Temperature from './Temperature.jsx';
+import Temperature from './Temperature';
 import WeatherSymbol from './WeatherSymbol';
 import Display from './Display';
 import ClockCoordinates from './ClockCoordinates';
@@ -19,7 +19,7 @@ interface WeatherProps {
  * up to and including the hour and minute hands.
  */
 class Weather extends React.Component<WeatherProps> {
-  renderTemperatures = (renderUs: Forecast[]) => {
+  static renderTemperatures = (renderUs: Forecast[]) => {
     return renderUs
       .filter((forecast) => forecast.celsius !== undefined)
       .map((forecast) => {
@@ -32,6 +32,31 @@ class Weather extends React.Component<WeatherProps> {
           />
         );
       });
+  };
+
+  static toWindString = (observations: Forecast[]): string => {
+    let minWind: number | undefined;
+    let maxWind: number | undefined;
+
+    observations.forEach((weather) => {
+      if (minWind === undefined || (weather.wind_m_s !== undefined && minWind > weather.wind_m_s)) {
+        minWind = weather.wind_m_s;
+      }
+      if (maxWind === undefined || (weather.wind_m_s !== undefined && maxWind < weather.wind_m_s)) {
+        maxWind = weather.wind_m_s;
+      }
+    });
+
+    if (minWind === undefined || maxWind === undefined) {
+      return '';
+    }
+
+    minWind = Math.round(minWind);
+    maxWind = Math.round(maxWind);
+    const windString = minWind === maxWind ? `${minWind} m/s` : `${minWind}-${maxWind} m/s`;
+    console.debug(`Wind: ${windString}`);
+
+    return windString;
   };
 
   renderWeathers = (renderUs: Forecast[]) => {
@@ -56,31 +81,6 @@ class Weather extends React.Component<WeatherProps> {
           />
         );
       });
-  };
-
-  toWindString = (observations: Forecast[]): string => {
-    let minWind: number | undefined;
-    let maxWind: number | undefined;
-
-    observations.forEach((weather) => {
-      if (minWind === undefined || (weather.wind_m_s !== undefined && minWind > weather.wind_m_s)) {
-        minWind = weather.wind_m_s;
-      }
-      if (maxWind === undefined || (weather.wind_m_s !== undefined && maxWind < weather.wind_m_s)) {
-        maxWind = weather.wind_m_s;
-      }
-    });
-
-    if (minWind === undefined || maxWind === undefined) {
-      return '';
-    }
-
-    minWind = Math.round(minWind);
-    maxWind = Math.round(maxWind);
-    const windString = minWind === maxWind ? `${minWind} m/s` : `${minWind}-${maxWind} m/s`;
-    console.debug(`Wind: ${windString}`);
-
-    return windString;
   };
 
   renderWindAndPrecipitation = (renderUs: Forecast[]) => {
@@ -111,7 +111,7 @@ class Weather extends React.Component<WeatherProps> {
     const precipitationDegrees = bestDegrees[1];
     const precipitationCoords = new ClockCoordinates((12.0 * precipitationDegrees) / 360.0);
 
-    const windString = this.toWindString(renderUs);
+    const windString = Weather.toWindString(renderUs);
 
     return (
       <>
@@ -151,7 +151,7 @@ class Weather extends React.Component<WeatherProps> {
     const renderUs = this.getForecastsToRender();
     return (
       <>
-        {this.renderTemperatures(renderUs)}
+        {Weather.renderTemperatures(renderUs)}
         {this.renderWeathers(renderUs)}
         {this.renderWindAndPrecipitation(renderUs)}
       </>

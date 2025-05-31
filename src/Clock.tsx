@@ -67,6 +67,73 @@ type ClockState = {
 };
 
 class Clock extends React.Component<ClockProps, ClockState> {
+  static deg2rad = (deg: number) => {
+    return deg * (Math.PI / 180);
+  };
+
+  /* Parses weather XML from yr.no into a weather object that maps timestamps (in
+   * milliseconds since the epoch) to forecasts. */
+  static parseWeatherXml = (weatherXmlString: string): Map<number, Forecast> => {
+    const weatherXml = new window.DOMParser().parseFromString(weatherXmlString, 'text/xml');
+    const allPrognoses = weatherXml.getElementsByTagName('time');
+    console.log(`Parsing ${allPrognoses.length} prognoses...`);
+
+    const forecasts: Map<number, Forecast> = new Map();
+    for (let i = 0; i < allPrognoses.length; i += 1) {
+      const prognosis = allPrognoses[i];
+
+      const from = new Date(prognosis.attributes.getNamedItem('from')!.value);
+      const to = new Date(prognosis.attributes.getNamedItem('to')!.value);
+      const dh = (to.getTime() - from.getTime()) / (3600 * 1000);
+      const timestamp = new Date((from.getTime() + to.getTime()) / 2);
+
+      let forecast = forecasts.get(timestamp.getTime());
+      if (forecast !== undefined && forecast.span_h <= dh) {
+        // There's already higher resolution data here
+        continue;
+      }
+
+      if (!forecast) {
+        forecast = {
+          timestamp,
+          span_h: dh,
+        };
+      }
+
+      const symbolNodes = prognosis.getElementsByTagName('symbol');
+      if (symbolNodes && symbolNodes.length > 0) {
+        const symbol_code = symbolNodes[0].attributes.getNamedItem('code')!.value;
+        forecast.symbol_code = symbol_code;
+      }
+
+      const celsiusNodes = prognosis.getElementsByTagName('temperature');
+      if (celsiusNodes && celsiusNodes.length > 0) {
+        const celsiusValue = celsiusNodes[0].attributes.getNamedItem('value')!.value;
+        forecast.celsius = parseFloat(celsiusValue);
+      }
+
+      const windNodes = prognosis.getElementsByTagName('windSpeed');
+      if (windNodes && windNodes.length > 0) {
+        const windValue = windNodes[0].attributes.getNamedItem('mps')!.value;
+        forecast.wind_m_s = parseFloat(windValue);
+      }
+
+      const precipitationNodes = prognosis.getElementsByTagName('precipitation');
+      if (precipitationNodes && precipitationNodes.length > 0) {
+        const maxAttribute = precipitationNodes[0].attributes.getNamedItem('maxvalue')!;
+        const expectedAttribute = precipitationNodes[0].attributes.getNamedItem('value')!;
+        const precipitationValue =
+          maxAttribute === null ? expectedAttribute.value : maxAttribute.value;
+        forecast.precipitation_mm = parseFloat(precipitationValue);
+      }
+
+      forecasts.set(timestamp.getTime(), forecast);
+    }
+
+    console.log(forecasts);
+    return forecasts;
+  };
+
   constructor(props: ClockProps) {
     super(props);
     const { startTime } = props;
@@ -154,7 +221,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
   }
 
-  getFixedPosition = (): WeatherLocation | null => {
+  static getFixedPosition = (): WeatherLocation | null => {
     const params = new URLSearchParams(window.location.search);
     const latitude = params.get('latitude');
     const longitude = params.get('longitude');
@@ -173,7 +240,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
     const latitudeNumber = parseFloat(latitude);
     const longitudeNumber = parseFloat(longitude);
-    if (isNaN(latitudeNumber) || isNaN(longitudeNumber)) {
+    if (Number.isNaN(latitudeNumber) || Number.isNaN(longitudeNumber)) {
       console.error(
         `Fixed position must get two numbers, not this: latitude=${latitude}, longitude=${longitude}`,
       );
@@ -186,6 +253,22 @@ class Clock extends React.Component<ClockProps, ClockState> {
       latitude: latitudeNumber,
       longitude: longitudeNumber,
     };
+  };
+
+  // From: https://stackoverflow.com/a/27943/473672
+  static getDistanceFromLatLonInKm = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const EARTH_RADIUS_KM = 6371;
+    const dLat = Clock.deg2rad(lat2 - lat1);
+    const dLon = Clock.deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(Clock.deg2rad(lat1)) *
+        Math.cos(Clock.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return EARTH_RADIUS_KM * c;
   };
 
   /**
@@ -212,7 +295,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       }
     }
 
-    const fixedPosition = this.getFixedPosition();
+    const fixedPosition = Clock.getFixedPosition();
     if (fixedPosition != null) {
       this.setState({
         progress: undefined,
@@ -244,26 +327,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
     });
   };
 
-  // From: https://stackoverflow.com/a/27943/473672
-  getDistanceFromLatLonInKm = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const EARTH_RADIUS_KM = 6371;
-    const dLat = this.deg2rad(lat2 - lat1);
-    const dLon = this.deg2rad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.deg2rad(lat1)) *
-        Math.cos(this.deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return EARTH_RADIUS_KM * c;
-  };
-
-  deg2rad = (deg: number) => {
-    return deg * (Math.PI / 180);
-  };
-
   /**
    * Relates to the weather forecast, not any other forecast.
    */
@@ -285,7 +348,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return false;
     }
 
-    const kmDistance = this.getDistanceFromLatLonInKm(
+    const kmDistance = Clock.getDistanceFromLatLonInKm(
       metadata.latitude,
       metadata.longitude,
       this.state.position.latitude,
@@ -337,7 +400,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         return response.text();
       })
       .then((weatherXmlString) => {
-        const forecast = self.parseWeatherXml(weatherXmlString);
+        const forecast = Clock.parseWeatherXml(weatherXmlString);
         const metadata = {
           timestamp: new Date(),
           latitude,
@@ -396,69 +459,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
       });
   };
 
-  /* Parses weather XML from yr.no into a weather object that maps timestamps (in
-   * milliseconds since the epoch) to forecasts. */
-  parseWeatherXml = (weatherXmlString: string): Map<number, Forecast> => {
-    const weatherXml = new window.DOMParser().parseFromString(weatherXmlString, 'text/xml');
-    const allPrognoses = weatherXml.getElementsByTagName('time');
-    console.log(`Parsing ${allPrognoses.length} prognoses...`);
-
-    const forecasts: Map<number, Forecast> = new Map();
-    for (let i = 0; i < allPrognoses.length; i++) {
-      const prognosis = allPrognoses[i];
-
-      const from = new Date(prognosis.attributes.getNamedItem('from')!.value);
-      const to = new Date(prognosis.attributes.getNamedItem('to')!.value);
-      const dh = (to.getTime() - from.getTime()) / (3600 * 1000);
-      const timestamp = new Date((from.getTime() + to.getTime()) / 2);
-
-      let forecast = forecasts.get(timestamp.getTime());
-      if (forecast !== undefined && forecast.span_h <= dh) {
-        // There's already higher resolution data here
-        continue;
-      }
-
-      if (!forecast) {
-        forecast = {
-          timestamp,
-          span_h: dh,
-        };
-      }
-
-      const symbolNodes = prognosis.getElementsByTagName('symbol');
-      if (symbolNodes && symbolNodes.length > 0) {
-        const symbol_code = symbolNodes[0].attributes.getNamedItem('code')!.value;
-        forecast.symbol_code = symbol_code;
-      }
-
-      const celsiusNodes = prognosis.getElementsByTagName('temperature');
-      if (celsiusNodes && celsiusNodes.length > 0) {
-        const celsiusValue = celsiusNodes[0].attributes.getNamedItem('value')!.value;
-        forecast.celsius = parseFloat(celsiusValue);
-      }
-
-      const windNodes = prognosis.getElementsByTagName('windSpeed');
-      if (windNodes && windNodes.length > 0) {
-        const windValue = windNodes[0].attributes.getNamedItem('mps')!.value;
-        forecast.wind_m_s = parseFloat(windValue);
-      }
-
-      const precipitationNodes = prognosis.getElementsByTagName('precipitation');
-      if (precipitationNodes && precipitationNodes.length > 0) {
-        const maxAttribute = precipitationNodes[0].attributes.getNamedItem('maxvalue')!;
-        const expectedAttribute = precipitationNodes[0].attributes.getNamedItem('value')!;
-        const precipitationValue =
-          maxAttribute === null ? expectedAttribute.value : maxAttribute.value;
-        forecast.precipitation_mm = parseFloat(precipitationValue);
-      }
-
-      forecasts.set(timestamp.getTime(), forecast);
-    }
-
-    console.log(forecasts);
-    return forecasts;
-  };
-
   geoError = (error: GeolocationPositionError) => {
     console.log('Geolocation failed');
     this.setState({
@@ -498,27 +498,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
       </>
     );
   };
-
-  render() {
-    const { startTime } = this.state;
-
-    return (
-      <>
-        <svg
-          className="clockSvg"
-          id="weatherclock"
-          xmlns="http://www.w3.org/2000/svg"
-          version="1.1"
-          viewBox="-50 -50 100 100"
-        >
-          <image x="-50" y="-50" width="100" height="100" xlinkHref="clock-frame.webp" />
-
-          {this.getClockContents()}
-        </svg>
-        {this.state.error}
-      </>
-    );
-  }
 
   getClockContents = () => {
     if (this.state.weatherForecast) {
@@ -561,6 +540,27 @@ class Clock extends React.Component<ClockProps, ClockState> {
     // Most likely the initial state
     return null;
   };
+
+  render() {
+    const { startTime } = this.state;
+
+    return (
+      <>
+        <svg
+          className="clockSvg"
+          id="weatherclock"
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+          viewBox="-50 -50 100 100"
+        >
+          <image x="-50" y="-50" width="100" height="100" xlinkHref="clock-frame.webp" />
+
+          {this.getClockContents()}
+        </svg>
+        {this.state.error}
+      </>
+    );
+  }
 }
 
 Clock.propTypes = {
