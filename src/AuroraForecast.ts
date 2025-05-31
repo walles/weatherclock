@@ -19,9 +19,9 @@ export class AuroraForecast {
    * ["2024-10-24 00:00:00","3.00","observed",null]
    */
   constructor(data: any) {
-    let forecast = [];
+    const forecast = [];
 
-    for (let i = 1; i < data.length; i++) {
+    for (let i = 1; i < data.length; i += 1) {
       const [timestamp, kpValue] = data[i];
       forecast.push({
         timestamp: new Date(`${timestamp}Z`),
@@ -52,7 +52,7 @@ export class AuroraForecast {
       return this.data[this.data.length - 1].kpValue;
     }
 
-    for (let i = 0; i < this.data.length - 1; i++) {
+    for (let i = 0; i < this.data.length - 1; i += 1) {
       if (time >= this.data[i].timestamp && time < this.data[i + 1].timestamp) {
         const timeDiff = this.data[i + 1].timestamp.getTime() - this.data[i].timestamp.getTime();
         const timeDiffNow = time.getTime() - this.data[i].timestamp.getTime();
