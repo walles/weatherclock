@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import './Clock.css';
 
@@ -472,7 +471,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       error: (
         <ErrorDialog title={error.message} reload={() => window.location.reload()}>
           If you are asked whether to allow the Weather Clock to know your current location, please
-          say "yes".
+          say &dquot;yes&dquot;.
         </ErrorDialog>
       ),
     });
@@ -562,10 +561,5 @@ class Clock extends React.Component<ClockProps, ClockState> {
     );
   }
 }
-
-Clock.propTypes = {
-  startTime: PropTypes.instanceOf(NamedStartTime).isRequired,
-  reload: PropTypes.func.isRequired,
-};
 
 export default Clock;
