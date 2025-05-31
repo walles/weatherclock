@@ -1,27 +1,27 @@
 svg {
-    width: 99dvmin;
-    height: 99dvmin;
+  width: 99dvmin;
+  height: 99dvmin;
 
-    display: block;
-    margin: auto;
+  display: block;
+  margin: auto;
 }
 
 text.progress {
-    font-size: 8px;
-    text-anchor: middle;
-    alignment-baseline: central;
-    dominant-baseline: central;
+  font-size: 8px;
+  text-anchor: middle;
+  alignment-baseline: central;
+  dominant-baseline: central;
 }
 
 /* FIXME: Maybe a rubberstamp effect like this one? https://codepen.io/555/pen/pdwvBP */
 text.tomorrow {
-    text-anchor: middle;
-    alignment-baseline: central;
-    dominant-baseline: central;
+  text-anchor: middle;
+  alignment-baseline: central;
+  dominant-baseline: central;
 
-    fill: darkred;  /* This is the text color in SVG */
-    font-family: serif;
+  fill: darkred; /* This is the text color in SVG */
+  font-family: serif;
 
-    transform: rotate(-60deg) scale(1.55);
-    opacity: 0.2;
+  transform: rotate(-60deg) scale(1.55);
+  opacity: 0.2;
 }

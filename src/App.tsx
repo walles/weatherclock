@@ -1,58 +1,49 @@
-import React from 'react'
-import './App.css'
+import React from 'react';
+import './App.css';
 
-import Clock from './Clock'
-import TimeSelect, { NamedStartTime } from './TimeSelect'
-import Temperature from './Temperature.jsx'
-import WeatherSymbol from './WeatherSymbol.jsx'
+import PageVisibility from 'react-page-visibility';
+import Clock from './Clock';
+import TimeSelect, { NamedStartTime } from './TimeSelect';
 
-import PageVisibility from 'react-page-visibility'
-
-type AppState = {
-  startTime: NamedStartTime
-}
-
-class App extends React.Component<{}, AppState> {
-  state = {
-    startTime: new NamedStartTime(0)
+class App extends React.Component<{}, { startTime: NamedStartTime }> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      startTime: new NamedStartTime(0),
+    };
   }
 
   setTimeToNow = () => {
     this.setState({
-      startTime: new NamedStartTime(0)
-    })
-  }
+      startTime: new NamedStartTime(0),
+    });
+  };
 
   handleVisibilityChange = (isVisible: boolean) => {
-    console.debug(`Page visibility changed: ${isVisible}`)
+    console.debug(`Page visibility changed: ${isVisible}`);
     if (isVisible) {
-      this.setTimeToNow()
+      this.setTimeToNow();
     }
-  }
+  };
 
   onSetStartTime = (startTime: NamedStartTime) => {
     if (!startTime) {
-      throw new Error(`Start time not set: ${startTime}`)
+      throw new Error(`Start time not set: ${startTime}`);
     }
     this.setState({
-      startTime: startTime
-    })
-  }
+      startTime,
+    });
+  };
 
-  render = () => {
+  render() {
+    const { startTime } = this.state;
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
-        <div className='App'>
-          <div className='ClockAndButtons'>
-            <TimeSelect
-              daysFromNow={this.state.startTime.daysFromNow}
-              onSetStartTime={this.onSetStartTime}
-            />
+        <div className="App">
+          <div className="ClockAndButtons">
+            <TimeSelect daysFromNow={startTime.daysFromNow} onSetStartTime={this.onSetStartTime} />
 
-            <Clock
-              startTime={this.state.startTime}
-              reload={this.setTimeToNow}
-            />
+            <Clock startTime={startTime} reload={this.setTimeToNow} />
 
             {/*
             If you add a Weatherclock launcher to your home screen on an iPhone,
@@ -61,34 +52,34 @@ class App extends React.Component<{}, AppState> {
 
             So we add a reload button of our own here.
             */}
-            <button type='button' className='updateButton' onClick={this.setTimeToNow}>
+            <button type="button" className="updateButton" onClick={this.setTimeToNow}>
               Update forecast
             </button>
           </div>
 
           <p>
-            Weather forecast from <a href='yr.no'>yr.no</a>, delivered by the{' '}
-            <a href='https://met.no/English/'>
-              Norwegian Meteorological Institute
+            Weather forecast from <a href="yr.no">yr.no</a>, delivered by the{' '}
+            <a href="https://met.no/English/">Norwegian Meteorological Institute</a> and the{' '}
+            <a href="https://www.nrk.no/">NRK</a>. Northern lights forecasts based on{' '}
+            <a href="https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json">
+              NOAA&apos;s Planetary K Index forecast
             </a>{' '}
-            and the <a href='https://www.nrk.no/'>NRK</a>. Northern lights forecasts based on{' '}
-            <a href="https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json">NOAA's
-            Planetary K Index forecast</a> together with{' '}
-            <a href="https://hjelp.yr.no/hc/en-us/articles/4411702484754-Aurora-forecast-on-Yr">YR's{' '}
-            interpretation thereof</a>.
+            together with{' '}
+            <a href="https://hjelp.yr.no/hc/en-us/articles/4411702484754-Aurora-forecast-on-Yr">
+              YR&apos;s interpretation thereof
+            </a>
+            .
           </p>
 
           <p>
-            <a
-              href={`https://github.com/walles/weatherclock/tree/${import.meta.env.VITE_GIT_SHA}`}
-            >
+            <a href={`https://github.com/walles/weatherclock/tree/${import.meta.env.VITE_GIT_SHA}`}>
               Source code on GitHub
             </a>
           </p>
         </div>
       </PageVisibility>
-    )
+    );
   }
 }
 
-export default App
+export default App;

@@ -2,12 +2,12 @@ class ClockCoordinates {
   decimalHour: number;
 
   constructor(time: number | Date) {
-    if (typeof time === "number") {
+    if (typeof time === 'number') {
       this.decimalHour = time;
-    } else if (typeof time === "object" && time.constructor.name === "Date") {
+    } else if (typeof time === 'object' && time.constructor.name === 'Date') {
       this.decimalHour = time.getHours() + time.getMinutes() / 60.0 + time.getSeconds() / 3600.0;
     } else {
-      throw new TypeError("Expected number (decimal hours) or Date");
+      throw new TypeError('Expected number (decimal hours) or Date');
     }
   }
 
@@ -41,7 +41,7 @@ class ClockCoordinates {
     return -Math.cos(radians) * radius - (size - 1) / 2;
   };
 
-  _degreesDistance = (d0: number, d1: number) => {
+  static _degreesDistance = (d0: number, d1: number) => {
     const distance = Math.abs(d1 - d0);
     if (distance > 180) {
       return 360 - distance;
@@ -59,10 +59,10 @@ class ClockCoordinates {
     const minuteDegrees = 360 * (this.decimalHour % 1.0);
     const hourDegrees = 360 * ((this.decimalHour % 12.0) / 12.0);
 
-    let degreesToRank: Map<number, number> = new Map();
+    const degreesToRank: Map<number, number> = new Map();
     degreeCandidates.forEach((degrees) => {
-      const minDistance = this._degreesDistance(degrees, minuteDegrees);
-      const hourDistance = this._degreesDistance(degrees, hourDegrees);
+      const minDistance = ClockCoordinates._degreesDistance(degrees, minuteDegrees);
+      const hourDistance = ClockCoordinates._degreesDistance(degrees, hourDegrees);
       degreesToRank.set(degrees, Math.min(minDistance, hourDistance));
     });
 

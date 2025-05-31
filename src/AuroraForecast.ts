@@ -6,7 +6,7 @@ type Datapoint = {
   kpValue: number;
 };
 
-export class AuroraForecast {
+export default class AuroraForecast {
   data: Datapoint[];
 
   /**
@@ -19,9 +19,9 @@ export class AuroraForecast {
    * ["2024-10-24 00:00:00","3.00","observed",null]
    */
   constructor(data: any) {
-    let forecast = [];
+    const forecast = [];
 
-    for (let i = 1; i < data.length; i++) {
+    for (let i = 1; i < data.length; i += 1) {
       const [timestamp, kpValue] = data[i];
       forecast.push({
         timestamp: new Date(`${timestamp}Z`),
@@ -31,7 +31,7 @@ export class AuroraForecast {
 
     this.data = forecast;
 
-    console.log("AuroraForecast created with", this.data.length, "datapoints");
+    console.log('AuroraForecast created with', this.data.length, 'datapoints');
     console.log(forecast);
   }
 
@@ -52,7 +52,7 @@ export class AuroraForecast {
       return this.data[this.data.length - 1].kpValue;
     }
 
-    for (let i = 0; i < this.data.length - 1; i++) {
+    for (let i = 0; i < this.data.length - 1; i += 1) {
       if (time >= this.data[i].timestamp && time < this.data[i + 1].timestamp) {
         const timeDiff = this.data[i + 1].timestamp.getTime() - this.data[i].timestamp.getTime();
         const timeDiffNow = time.getTime() - this.data[i].timestamp.getTime();
@@ -112,11 +112,11 @@ export class AuroraForecast {
     const kpValue = this.getAdjustedKpValue(time, latitude);
 
     if (kpValue >= 4) {
-      return "../../aurora-high";
+      return '../../aurora-high';
     }
 
     if (kpValue >= 1) {
-      return "../../aurora-low";
+      return '../../aurora-low';
     }
 
     return null;

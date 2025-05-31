@@ -1,1 +1,1 @@
-declare module 'react-page-visibility'
+declare module 'react-page-visibility';

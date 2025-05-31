@@ -11,7 +11,8 @@
     flex-direction: row;
   }
 
-  .updateButton, .timeSelect {
+  .updateButton,
+  .timeSelect {
     height: fit-content;
   }
 
@@ -39,7 +40,8 @@
     flex-direction: column;
   }
 
-  .updateButton, .timeSelect {
+  .updateButton,
+  .timeSelect {
     width: fit-content;
   }
 
