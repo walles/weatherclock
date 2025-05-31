@@ -139,7 +139,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     this.state = this.getInitialState(startTime);
   }
 
-  getInitialState(startTime) {
+  getInitialState(startTime: NamedStartTime) {
     if (navigator.geolocation) {
       return {
         startTime,
