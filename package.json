@@ -24,6 +24,7 @@
     "build": "VITE_GIT_SHA=$(git rev-parse HEAD) vite build",
     "preview": "vite preview",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
+    "typecheck": "tsc --noEmit",
     "test": "echo 'No test runner configured'",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
