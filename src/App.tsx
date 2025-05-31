@@ -78,7 +78,7 @@ class App extends React.Component<{}, AppState> {
 
           <p>
             <a
-              href={`https://github.com/walles/weatherclock/tree/${process.env.REACT_APP_GIT_SHA}`}
+              href={`https://github.com/walles/weatherclock/tree/${import.meta.env.VITE_GIT_SHA}`}
             >
               Source code on GitHub
             </a>
