@@ -1,12 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 import './Temperature.css';
 import ClockCoordinates from './ClockCoordinates';
 
 const DISTANCE_FROM_CENTER = 39;
 
-function Temperature({ degreesCelsius = 0, coordinates }) {
+interface TemperatureProps {
+  degreesCelsius?: number;
+  coordinates: ClockCoordinates;
+}
+
+function Temperature({ degreesCelsius, coordinates }: TemperatureProps) {
+  if (degreesCelsius === undefined || degreesCelsius === null) {
+    return null;
+  }
+
   // Truncate decimals
   const temperature = Math.trunc(degreesCelsius);
   const x = coordinates.hourDx(DISTANCE_FROM_CENTER);
@@ -18,10 +25,5 @@ function Temperature({ degreesCelsius = 0, coordinates }) {
     </text>
   );
 }
-
-Temperature.propTypes = {
-  degreesCelsius: PropTypes.number,
-  coordinates: PropTypes.instanceOf(ClockCoordinates),
-};
 
 export default Temperature;
