@@ -543,7 +543,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
             y='-50'
             width='100'
             height='100'
-            xlinkHref='/clock-frame.webp'
+            xlinkHref='clock-frame.webp'
           />
 
           {this.getClockContents()}
