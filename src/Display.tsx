@@ -4,7 +4,7 @@ import './Display.css';
 
 import ClockCoordinates from './ClockCoordinates';
 import Temperature from './Temperature.jsx';
-import WeatherSymbol from './WeatherSymbol.jsx';
+import WeatherSymbol from './WeatherSymbol';
 
 const WIND_TEXT_RADIUS = 13;
 const WINDBOX_SCALE = 1.2;
@@ -29,15 +29,15 @@ class Display extends React.Component<DisplayProps> {
     this.textRef = React.createRef();
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     const boundingBox = this.textRef.current!.getBBox();
     this.setState({
       textWidth: boundingBox.width,
       textHeight: boundingBox.height,
     });
-  };
+  }
 
-  render = () => {
+  render() {
     const x = this.props.coords.hourDx(WIND_TEXT_RADIUS);
     const y = this.props.coords.hourDy(WIND_TEXT_RADIUS);
 
@@ -45,7 +45,7 @@ class Display extends React.Component<DisplayProps> {
     const rh = this.state.textHeight * WINDBOX_SCALE;
 
     return (
-      <React.Fragment>
+      <>
         <rect x={x - rw / 2} y={y - rh / 2} width={rw} height={rh} rx="2" ry="2" className="wind" />
         <text
           ref={this.textRef}
@@ -57,9 +57,9 @@ class Display extends React.Component<DisplayProps> {
         >
           {this.props.children}
         </text>
-      </React.Fragment>
+      </>
     );
-  };
+  }
 }
 
 export default Display;

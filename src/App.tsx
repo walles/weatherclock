@@ -1,12 +1,11 @@
 import React from 'react';
 import './App.css';
 
+import PageVisibility from 'react-page-visibility';
 import Clock from './Clock';
 import TimeSelect, { NamedStartTime } from './TimeSelect';
 import Temperature from './Temperature.jsx';
-import WeatherSymbol from './WeatherSymbol.jsx';
-
-import PageVisibility from 'react-page-visibility';
+import WeatherSymbol from './WeatherSymbol';
 
 type AppState = {
   startTime: NamedStartTime;
@@ -35,11 +34,11 @@ class App extends React.Component<{}, AppState> {
       throw new Error(`Start time not set: ${startTime}`);
     }
     this.setState({
-      startTime: startTime,
+      startTime,
     });
   };
 
-  render = () => {
+  render() {
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
         <div className="App">
@@ -85,7 +84,7 @@ class App extends React.Component<{}, AppState> {
         </div>
       </PageVisibility>
     );
-  };
+  }
 }
 
 export default App;

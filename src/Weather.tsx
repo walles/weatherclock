@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Temperature from './Temperature.jsx';
-import WeatherSymbol from './WeatherSymbol.jsx';
+import WeatherSymbol from './WeatherSymbol';
 import Display from './Display';
 import ClockCoordinates from './ClockCoordinates';
 import { Forecast } from './Forecast';
@@ -40,7 +40,7 @@ class Weather extends React.Component<WeatherProps> {
       .map((forecast) => {
         const coords = new ClockCoordinates(forecast.timestamp);
 
-        let symbol_code = forecast.symbol_code;
+        let { symbol_code } = forecast;
         if (symbol_code === 'clearsky_night' && !!this.props.auroraForecast) {
           // It's night and the sky is clear. Will there be any northern lights?
           const auroraSymbol = this.props.auroraForecast.getAuroraSymbol(
@@ -63,8 +63,8 @@ class Weather extends React.Component<WeatherProps> {
   };
 
   toWindString = (observations: Forecast[]): string => {
-    let minWind: number | undefined = undefined;
-    let maxWind: number | undefined = undefined;
+    let minWind: number | undefined;
+    let maxWind: number | undefined;
 
     observations.forEach((weather) => {
       if (minWind === undefined || (weather.wind_m_s !== undefined && minWind > weather.wind_m_s)) {
@@ -117,10 +117,10 @@ class Weather extends React.Component<WeatherProps> {
     const windString = this.toWindString(renderUs);
 
     return (
-      <React.Fragment>
+      <>
         <Display coords={windCoords}>{windString}</Display>
         <Display coords={precipitationCoords}>{precipitationString}</Display>
-      </React.Fragment>
+      </>
     );
   };
 
@@ -149,16 +149,16 @@ class Weather extends React.Component<WeatherProps> {
     return renderUs;
   };
 
-  render = () => {
+  render() {
     const renderUs = this.getForecastsToRender();
     return (
-      <React.Fragment>
+      <>
         {this.renderTemperatures(renderUs)}
         {this.renderWeathers(renderUs)}
         {this.renderWindAndPrecipitation(renderUs)}
-      </React.Fragment>
+      </>
     );
-  };
+  }
 }
 
 export default Weather;
