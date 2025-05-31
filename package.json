@@ -23,7 +23,7 @@
     "start": "VITE_GIT_SHA=$(git rev-parse HEAD) vite",
     "build": "VITE_GIT_SHA=$(git rev-parse HEAD) vite build",
     "preview": "vite preview",
-    "lint": "eslint src/*.js* && eslint src/*.ts*",
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "test": "echo 'No test runner configured'",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
@@ -48,6 +48,9 @@
       "browser": true
     }
   },
+  "eslintIgnore": [
+    "src/**/*.d.ts"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",
