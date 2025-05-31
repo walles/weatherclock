@@ -43,6 +43,9 @@
       "consistent-return": 2,
       "no-var": 1,
       "curly": 1
+    },
+    "env": {
+      "browser": true
     }
   },
   "browserslist": {
