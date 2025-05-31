@@ -20,8 +20,8 @@
     "typescript": "^3.9.6"
   },
   "scripts": {
-    "start": "vite",
-    "build": "vite build",
+    "start": "VITE_GIT_SHA=$(git rev-parse HEAD) vite",
+    "build": "VITE_GIT_SHA=$(git rev-parse HEAD) vite build",
     "preview": "vite preview",
     "lint": "eslint src/*.js* && eslint src/*.ts*",
     "test": "echo 'No test runner configured'",
