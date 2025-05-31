@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 type TimeSelectProps = {
   daysFromNow: number; // 0, 1 or 2 for how many days out we want
@@ -67,9 +66,9 @@ export class NamedStartTime {
 }
 
 class TimeSelect extends React.Component<TimeSelectProps, {}> {
-  static propTypes = {
-    onSetStartTime: PropTypes.func.isRequired,
-    daysFromNow: PropTypes.number.isRequired,
+  onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { onSetStartTime } = this.props;
+    onSetStartTime(new NamedStartTime(parseInt(event.target.value, 10)));
   };
 
   render() {
@@ -90,11 +89,6 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
       </select>
     );
   }
-
-  onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { onSetStartTime } = this.props;
-    onSetStartTime(new NamedStartTime(parseInt(event.target.value, 10)));
-  };
 }
 
 export default TimeSelect;
