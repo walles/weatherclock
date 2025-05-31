@@ -3,21 +3,7 @@ import tsPlugin from '@typescript-eslint/eslint-plugin';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import prettierPlugin from 'eslint-plugin-prettier';
-
-// Browser globals for flat config (copied from ESLint's browser set)
-const browserGlobals = {
-  window: 'readonly',
-  document: 'readonly',
-  navigator: 'readonly',
-  location: 'readonly',
-  console: 'readonly',
-  alert: 'readonly',
-  setTimeout: 'readonly',
-  clearTimeout: 'readonly',
-  setInterval: 'readonly',
-  clearInterval: 'readonly',
-  // Add more as needed
-};
+import globals from 'globals';
 
 export default [
   {
@@ -29,7 +15,7 @@ export default [
         ecmaVersion: 2020,
         sourceType: 'module',
       },
-      globals: browserGlobals,
+      globals: globals.browser,
     },
     plugins: {
       '@typescript-eslint': tsPlugin,
