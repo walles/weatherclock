@@ -31,7 +31,7 @@ export class AuroraForecast {
 
     this.data = forecast;
 
-    console.log("AuroraForecast created with", this.data.length, "datapoints");
+    console.log('AuroraForecast created with', this.data.length, 'datapoints');
     console.log(forecast);
   }
 
@@ -112,11 +112,11 @@ export class AuroraForecast {
     const kpValue = this.getAdjustedKpValue(time, latitude);
 
     if (kpValue >= 4) {
-      return "../../aurora-high";
+      return '../../aurora-high';
     }
 
     if (kpValue >= 1) {
-      return "../../aurora-low";
+      return '../../aurora-low';
     }
 
     return null;

@@ -1,9 +1,9 @@
 text.wind {
-    color: black;
-    font-size: 5px;
-    font-family: serif;
+  color: black;
+  font-size: 5px;
+  font-family: serif;
 }
 
 rect.wind {
-    fill: #eee;
+  fill: #eee;
 }

@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import './Hand.css'
+import './Hand.css';
 
 interface HandProps {
-  width: number
-  dx: number
-  dy: number
+  width: number;
+  dx: number;
+  dy: number;
 }
 
 class Hand extends React.Component<HandProps> {
@@ -14,27 +14,27 @@ class Hand extends React.Component<HandProps> {
     return (
       <React.Fragment>
         <line
-          className='hand shadow'
-          x1='0'
-          y1='0'
+          className="hand shadow"
+          x1="0"
+          y1="0"
           x2={this.props.dx}
           y2={this.props.dy}
           strokeWidth={this.props.width}
         />
-        <circle className='shadow' cx='0' cy='0' r='2' />
+        <circle className="shadow" cx="0" cy="0" r="2" />
 
         <line
-          className='hand'
-          x1='0'
-          y1='0'
+          className="hand"
+          x1="0"
+          y1="0"
           x2={this.props.dx}
           y2={this.props.dy}
           strokeWidth={this.props.width}
         />
-        <circle cx='0' cy='0' r='2' />
+        <circle cx="0" cy="0" r="2" />
       </React.Fragment>
-    )
-  }
+    );
+  };
 }
 
-export default Hand
+export default Hand;

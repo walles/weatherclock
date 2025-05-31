@@ -2,12 +2,12 @@ class ClockCoordinates {
   decimalHour: number;
 
   constructor(time: number | Date) {
-    if (typeof time === "number") {
+    if (typeof time === 'number') {
       this.decimalHour = time;
-    } else if (typeof time === "object" && time.constructor.name === "Date") {
+    } else if (typeof time === 'object' && time.constructor.name === 'Date') {
       this.decimalHour = time.getHours() + time.getMinutes() / 60.0 + time.getSeconds() / 3600.0;
     } else {
-      throw new TypeError("Expected number (decimal hours) or Date");
+      throw new TypeError('Expected number (decimal hours) or Date');
     }
   }
 
