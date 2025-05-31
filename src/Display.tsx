@@ -9,21 +9,23 @@ const WINDBOX_SCALE = 1.2;
 
 interface DisplayProps {
   coords: ClockCoordinates;
+  children?: React.ReactNode;
 }
 
 /**
  * This is supposed to mimic a display on the clock face.
  */
 class Display extends React.Component<DisplayProps> {
-  state = {
-    textWidth: 0,
-    textHeight: 0,
-  };
+  state: { textWidth: number; textHeight: number };
 
   textRef: React.RefObject<SVGTextElement>;
 
   constructor(props: DisplayProps) {
     super(props);
+    this.state = {
+      textWidth: 0,
+      textHeight: 0,
+    };
     this.textRef = React.createRef();
   }
 
@@ -36,11 +38,12 @@ class Display extends React.Component<DisplayProps> {
   }
 
   render() {
-    const x = this.props.coords.hourDx(WIND_TEXT_RADIUS);
-    const y = this.props.coords.hourDy(WIND_TEXT_RADIUS);
-
-    const rw = this.state.textWidth * WINDBOX_SCALE;
-    const rh = this.state.textHeight * WINDBOX_SCALE;
+    const { coords, children } = this.props;
+    const { textWidth, textHeight } = this.state;
+    const x = coords.hourDx(WIND_TEXT_RADIUS);
+    const y = coords.hourDy(WIND_TEXT_RADIUS);
+    const rw = textWidth * WINDBOX_SCALE;
+    const rh = textHeight * WINDBOX_SCALE;
 
     return (
       <>
@@ -53,11 +56,13 @@ class Display extends React.Component<DisplayProps> {
           dominantBaseline="middle"
           textAnchor="middle"
         >
-          {this.props.children}
+          {children}
         </text>
       </>
     );
   }
 }
+
+// Accept the lint warning for missing defaultProps for children, as this is a TypeScript class component and children is optional.
 
 export default Display;

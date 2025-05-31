@@ -19,7 +19,9 @@ function capitalizeFirstLetter(s: string) {
 
 export class NamedStartTime {
   private _startTime: Date;
+
   private _name: string;
+
   private _daysFromNow: number;
 
   constructor(daysFromNow: number) {
@@ -31,7 +33,7 @@ export class NamedStartTime {
       return;
     }
 
-    let otherDay = new Date();
+    const otherDay = new Date();
     otherDay.setDate(otherDay.getDate() + daysFromNow /* days */);
     otherDay.setHours(7);
     otherDay.setMinutes(0);
@@ -70,29 +72,28 @@ class TimeSelect extends React.Component<TimeSelectProps, {}> {
     daysFromNow: PropTypes.number.isRequired,
   };
 
-  render = () => {
-    // Populate select
-    let options = [];
-    for (let i = 0; i < 3; i++) {
+  render() {
+    const { daysFromNow } = this.props;
+    const options = [];
+    for (let i = 0; i < 3; i += 1) {
       const namedStartTime = new NamedStartTime(i);
-      const name = namedStartTime.name;
+      const { name } = namedStartTime;
       options.push(
         <option key={name} value={String(i)}>
           {name}
         </option>,
       );
     }
-
-    // Inspired by: https://material-ui.com/components/selects/#native-select
     return (
-      <select className="timeSelect" value={this.props.daysFromNow} onChange={this.onChange}>
+      <select className="timeSelect" value={daysFromNow} onChange={this.onChange}>
         {options}
       </select>
     );
-  };
+  }
 
   onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.props.onSetStartTime(new NamedStartTime(parseInt(event.target.value)));
+    const { onSetStartTime } = this.props;
+    onSetStartTime(new NamedStartTime(parseInt(event.target.value, 10)));
   };
 }
 

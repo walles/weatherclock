@@ -10,31 +10,36 @@ import Button from '@material-ui/core/Button';
 interface ErrorProps {
   title: string;
   reload: () => void;
+  children?: React.ReactNode;
 }
 
 class ErrorDialog extends React.Component<ErrorProps> {
-  render = () => {
+  render() {
+    const { title, reload, children } = this.props;
+
     // Inspired by: https://material-ui.com/components/dialogs/#alerts
     return (
       <Dialog
         open
-        onClose={this.props.reload}
+        onClose={reload}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{this.props.title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">{this.props.children}</DialogContentText>
+          <DialogContentText id="alert-dialog-description">{children}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.reload} color="primary" autoFocus>
+          <Button onClick={reload} color="primary" autoFocus>
             Retry
           </Button>
           {/* FIXME: Add button for reporting an issue? */}
         </DialogActions>
       </Dialog>
     );
-  };
+  }
 }
+
+// Accept the lint warning for missing defaultProps for children, as this is a TypeScript class component and children is optional.
 
 export default ErrorDialog;

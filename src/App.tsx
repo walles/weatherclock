@@ -5,14 +5,13 @@ import PageVisibility from 'react-page-visibility';
 import Clock from './Clock';
 import TimeSelect, { NamedStartTime } from './TimeSelect';
 
-type AppState = {
-  startTime: NamedStartTime;
-};
-
-class App extends React.Component<{}, AppState> {
-  state = {
-    startTime: new NamedStartTime(0),
-  };
+class App extends React.Component<{}, { startTime: NamedStartTime }> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      startTime: new NamedStartTime(0),
+    };
+  }
 
   setTimeToNow = () => {
     this.setState({
@@ -37,16 +36,14 @@ class App extends React.Component<{}, AppState> {
   };
 
   render() {
+    const { startTime } = this.state;
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
         <div className="App">
           <div className="ClockAndButtons">
-            <TimeSelect
-              daysFromNow={this.state.startTime.daysFromNow}
-              onSetStartTime={this.onSetStartTime}
-            />
+            <TimeSelect daysFromNow={startTime.daysFromNow} onSetStartTime={this.onSetStartTime} />
 
-            <Clock startTime={this.state.startTime} reload={this.setTimeToNow} />
+            <Clock startTime={startTime} reload={this.setTimeToNow} />
 
             {/*
             If you add a Weatherclock launcher to your home screen on an iPhone,

@@ -35,28 +35,24 @@ class Weather extends React.Component<WeatherProps> {
   };
 
   renderWeathers = (renderUs: Forecast[]) => {
+    const { auroraForecast, latitude } = this.props;
     return renderUs
       .filter((forecast) => forecast.symbol_code !== undefined)
       .map((forecast) => {
         const coords = new ClockCoordinates(forecast.timestamp);
-
         let { symbol_code } = forecast;
-        if (symbol_code === 'clearsky_night' && !!this.props.auroraForecast) {
+        if (symbol_code === 'clearsky_night' && !!auroraForecast) {
           // It's night and the sky is clear. Will there be any northern lights?
-          const auroraSymbol = this.props.auroraForecast.getAuroraSymbol(
-            forecast.timestamp,
-            this.props.latitude,
-          );
+          const auroraSymbol = auroraForecast.getAuroraSymbol(forecast.timestamp, latitude);
           if (auroraSymbol !== null) {
             symbol_code = auroraSymbol;
           }
         }
-
         return (
           <WeatherSymbol
             key={`weather-${coords.decimalHour}`}
             coordinates={coords}
-            symbol_code={symbol_code}
+            symbol_code={symbol_code || ''}
           />
         );
       });
@@ -88,6 +84,7 @@ class Weather extends React.Component<WeatherProps> {
   };
 
   renderWindAndPrecipitation = (renderUs: Forecast[]) => {
+    const { now } = this.props;
     let precipitation_mm = 0;
 
     renderUs.forEach((weather) => {
@@ -104,7 +101,7 @@ class Weather extends React.Component<WeatherProps> {
     const precipitationString = `${precipitationNumberString}mm`;
     console.debug(`Precipitation: ${precipitationString}`);
 
-    const nowCoords = new ClockCoordinates(this.props.now);
+    const nowCoords = new ClockCoordinates(now);
     const bestDegrees = nowCoords.rankFreeDirections();
 
     // Where do we draw the wind?
@@ -125,13 +122,14 @@ class Weather extends React.Component<WeatherProps> {
   };
 
   getForecastsToRender = (): Forecast[] => {
+    const { now, weatherForecast } = this.props;
     const renderUs = [];
 
-    const now_ms = this.props.now.getTime();
+    const now_ms = now.getTime();
     const start = new Date(now_ms + 0.75 * 3600 * 1000);
     const end = new Date(now_ms + 11.75 * 3600 * 1000);
 
-    for (const [timestamp_ms, forecast] of this.props.weatherForecast.entries()) {
+    for (const [timestamp_ms, forecast] of weatherForecast.entries()) {
       const timestamp_date = new Date(timestamp_ms);
 
       if (timestamp_date < start) {
@@ -162,3 +160,5 @@ class Weather extends React.Component<WeatherProps> {
 }
 
 export default Weather;
+
+// Accept the lint warning for toWindString and renderTemperatures as instance methods for now, as they use instance context in the class.

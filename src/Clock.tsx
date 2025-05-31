@@ -67,39 +67,31 @@ type ClockState = {
 };
 
 class Clock extends React.Component<ClockProps, ClockState> {
-  static propTypes = {
-    startTime: PropTypes.instanceOf(NamedStartTime).isRequired,
-    reload: PropTypes.func.isRequired,
-  };
-
   constructor(props: ClockProps) {
     super(props);
-
-    this.state = this._getInitialState();
+    const { startTime } = props;
+    this.state = this.getInitialState(startTime);
   }
 
-  _getInitialState = (): ClockState => {
+  getInitialState(startTime) {
     if (navigator.geolocation) {
-      // FIXME: Invalidate forecast if it's too old (and decide what "too old" means)
       return {
-        startTime: this.props.startTime,
+        startTime,
         progress: undefined,
         error: undefined,
       };
     }
-
+    const { reload } = this.props;
     return {
-      startTime: this.props.startTime,
+      startTime,
       progress: undefined,
-
-      // FIXME: Add a link for contacting me with browser information
       error: (
-        <ErrorDialog title="Geolocation unsupported" reload={this.props.reload}>
+        <ErrorDialog title="Geolocation unsupported" reload={reload}>
           Please try <a href="https://getfirefox.com">another browser</a>.
         </ErrorDialog>
       ),
     };
-  };
+  }
 
   componentDidMount() {
     const forecastString = localStorage.getItem('forecast');
@@ -142,24 +134,21 @@ class Clock extends React.Component<ClockProps, ClockState> {
   }
 
   componentDidUpdate() {
-    if (this.props.startTime.startTime !== this.state.startTime.startTime) {
-      this.setState(this._getInitialState());
+    const { startTime } = this.props;
+    const { startTime: stateStartTime } = this.state;
+    if (startTime.startTime !== stateStartTime.startTime) {
+      this.setState(this.getInitialState(startTime));
     }
-
+    const { progress } = this.state;
     if (this.startGeolocationIfNeeded()) {
-      // Wait for a new location to show up in our state
       return;
     }
-
-    if (this.state.progress) {
-      // Something is already happening, don't interrupt it by getting a new forecast
+    if (progress) {
       return;
     }
-
     if (!this.forecastIsCurrent()) {
       this.download_weather();
     }
-
     if (!this.auroraForecastIsCurrent()) {
       this.bump_aurora_forecast();
     }
@@ -511,6 +500,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
   };
 
   render() {
+    const { startTime } = this.state;
+
     return (
       <>
         <svg
@@ -571,5 +562,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
     return null;
   };
 }
+
+Clock.propTypes = {
+  startTime: PropTypes.instanceOf(NamedStartTime).isRequired,
+  reload: PropTypes.func.isRequired,
+};
 
 export default Clock;
