@@ -3,6 +3,8 @@ import './App.css'
 
 import Clock from './Clock'
 import TimeSelect, { NamedStartTime } from './TimeSelect'
+import Temperature from './Temperature.jsx'
+import WeatherSymbol from './WeatherSymbol.jsx'
 
 import PageVisibility from 'react-page-visibility'
 
@@ -78,7 +80,7 @@ class App extends React.Component<{}, AppState> {
 
           <p>
             <a
-              href={`https://github.com/walles/weatherclock/tree/${process.env.REACT_APP_GIT_SHA}`}
+              href={`https://github.com/walles/weatherclock/tree/${import.meta.env.VITE_GIT_SHA}`}
             >
               Source code on GitHub
             </a>
