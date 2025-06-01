@@ -3,11 +3,12 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import UpdateIcon from '@mui/icons-material/Update';
+import ReplayIcon from '@mui/icons-material/Replay';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import NamedStartTime from './NamedStartTime';
+import Tooltip from '@mui/material/Tooltip';
 
 interface MainToolbarProps {
   daysFromNow: number;
@@ -48,9 +49,11 @@ const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }
             })()}
           </MenuItem>
         </Select>
-        <IconButton color="primary" sx={{ marginRight: 2 }}>
-          <UpdateIcon />
-        </IconButton>
+        <Tooltip title="Update forecast">
+          <IconButton color="primary" sx={{ marginRight: 2 }}>
+            <ReplayIcon />
+          </IconButton>
+        </Tooltip>
         <IconButton color="inherit" onClick={handleMenuOpen}>
           <MenuIcon />
         </IconButton>
