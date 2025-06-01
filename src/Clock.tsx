@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type ReactElement } from 'react';
 
 import './Clock.css';
 
@@ -43,8 +43,8 @@ type WeatherLocation = {
 type ClockState = {
   startTime: NamedStartTime;
 
-  error?: JSX.Element;
-  progress?: JSX.Element;
+  error?: ReactElement;
+  progress?: ReactElement;
 
   position?: WeatherLocation;
   positionTimestamp?: Date;
