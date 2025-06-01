@@ -21,7 +21,7 @@ const MainToolbar: React.FC = () => {
   };
 
   return (
-    <AppBar position="static" color="default" elevation={1}>
+    <AppBar position="static" color="primary" elevation={1}>
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 0, marginRight: 2 }}>
           WeatherClock

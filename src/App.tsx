@@ -5,6 +5,27 @@ import PageVisibility from 'react-page-visibility';
 import Clock from './Clock';
 import TimeSelect, { NamedStartTime } from './TimeSelect';
 import MainToolbar from './MainToolbar';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+function AppWithTheme() {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: prefersDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [prefersDarkMode],
+  );
+
+  return (
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  );
+}
 
 class App extends React.Component<{}, { startTime: NamedStartTime }> {
   constructor(props: {}) {
@@ -91,4 +112,4 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
   }
 }
 
-export default App;
+export default AppWithTheme;
