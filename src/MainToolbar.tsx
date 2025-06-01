@@ -50,7 +50,11 @@ const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }
           </MenuItem>
         </Select>
         <Tooltip title="Update forecast">
-          <IconButton color="primary" sx={{ marginRight: 2 }}>
+          <IconButton
+            color="primary"
+            sx={{ marginRight: 2 }}
+            onClick={() => onSetStartTime(new NamedStartTime(0))}
+          >
             <ReplayIcon />
           </IconButton>
         </Tooltip>
