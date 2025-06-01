@@ -7,7 +7,7 @@ import UpdateIcon from '@mui/icons-material/Update';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { NamedStartTime } from './TimeSelect';
+import NamedStartTime from './NamedStartTime';
 
 interface MainToolbarProps {
   daysFromNow: number;

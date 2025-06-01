@@ -3,7 +3,7 @@ import './App.css';
 
 import PageVisibility from 'react-page-visibility';
 import Clock from './Clock';
-import TimeSelect, { NamedStartTime } from './TimeSelect';
+import NamedStartTime from './NamedStartTime';
 import MainToolbar from './MainToolbar';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -65,11 +65,6 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
           <MainToolbar daysFromNow={startTime.daysFromNow} onSetStartTime={this.onSetStartTime} />
           <div className="App">
             <div className="ClockAndButtons">
-              <TimeSelect
-                daysFromNow={startTime.daysFromNow}
-                onSetStartTime={this.onSetStartTime}
-              />
-
               <Clock startTime={startTime} reload={this.setTimeToNow} />
 
               {/*
