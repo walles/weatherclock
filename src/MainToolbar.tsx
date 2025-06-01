@@ -4,20 +4,22 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import UpdateIcon from '@mui/icons-material/Update';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import { NamedStartTime } from './TimeSelect';
 
-const MainToolbar: React.FC = () => {
-  const [time, setTime] = React.useState(0);
-  const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null);
+interface MainToolbarProps {
+  daysFromNow: number;
+  onSetStartTime: (startTime: NamedStartTime) => void;
+}
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMenuAnchor(event.currentTarget);
-  };
+const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }) => {
+  const handleMenuOpen = () => {};
 
-  const handleMenuClose = () => {
-    setMenuAnchor(null);
+  const handleTimeChange = (event: SelectChangeEvent<number>) => {
+    const value = Number(event.target.value);
+    onSetStartTime(new NamedStartTime(value));
   };
 
   return (
@@ -27,8 +29,8 @@ const MainToolbar: React.FC = () => {
           WeatherClock
         </Typography>
         <Select
-          value={time}
-          onChange={(e) => setTime(Number(e.target.value))}
+          value={daysFromNow}
+          onChange={handleTimeChange}
           size="small"
           sx={{ minWidth: 120, marginRight: 2 }}
         >

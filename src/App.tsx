@@ -62,7 +62,7 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
         <>
-          <MainToolbar />
+          <MainToolbar daysFromNow={startTime.daysFromNow} onSetStartTime={this.onSetStartTime} />
           <div className="App">
             <div className="ClockAndButtons">
               <TimeSelect
