@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 
 import PageVisibility from 'react-page-visibility';
 import Clock from './Clock';
@@ -64,20 +63,7 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
         <>
           <MainToolbar daysFromNow={startTime.daysFromNow} onSetStartTime={this.onSetStartTime} />
           <div className="App">
-            <div className="ClockAndButtons">
-              <Clock startTime={startTime} reload={this.setTimeToNow} />
-
-              {/*
-              If you add a Weatherclock launcher to your home screen on an iPhone,
-              the page opened will not be in a web-browser (or at least look like
-              it's not).
-
-              So we add a reload button of our own here.
-              */}
-              <button type="button" className="updateButton" onClick={this.setTimeToNow}>
-                Update forecast
-              </button>
-            </div>
+            <Clock startTime={startTime} reload={this.setTimeToNow} />
 
             <p>
               Weather forecast from <a href="yr.no">yr.no</a>, delivered by the{' '}
