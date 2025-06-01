@@ -34,7 +34,17 @@ const MainToolbar: React.FC = () => {
         >
           <MenuItem value={0}>Now</MenuItem>
           <MenuItem value={1}>Tomorrow</MenuItem>
-          <MenuItem value={2}>Monday</MenuItem>
+          <MenuItem value={2}>
+            {(() => {
+              const day = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString(
+                navigator.language,
+                {
+                  weekday: 'long',
+                },
+              );
+              return day.charAt(0).toUpperCase() + day.slice(1);
+            })()}
+          </MenuItem>
         </Select>
         <IconButton color="primary" sx={{ marginRight: 2 }}>
           <UpdateIcon />
