@@ -66,6 +66,13 @@ the [proxy](proxy) directory.
 
 ## TODO
 
+- Show toasts when:
+  - Requesting geolocation
+  - Geolocation failed
+  - Geolocation succeeded
+  - Requesting weather data
+  - Weather data download failed
+  - Weather data download succeeded
 - Tick the hands automatically
 - Consider now-vs-tomorrow dropdown placement on both narrow and tall screen
   layouts.

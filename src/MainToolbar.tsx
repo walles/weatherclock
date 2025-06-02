@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -9,6 +9,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import NamedStartTime from './NamedStartTime';
 import Tooltip from '@mui/material/Tooltip';
+import Menu from '@mui/material/Menu';
+import AboutDialog from './AboutDialog';
 
 interface MainToolbarProps {
   daysFromNow: number;
@@ -16,7 +18,25 @@ interface MainToolbarProps {
 }
 
 const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }) => {
-  const handleMenuOpen = () => {};
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [aboutOpen, setAboutOpen] = useState(false);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
+
+  const handleAboutOpen = () => {
+    setAboutOpen(true);
+    handleMenuClose();
+  };
+
+  const handleAboutClose = () => {
+    setAboutOpen(false);
+  };
 
   const handleTimeChange = (event: SelectChangeEvent<number>) => {
     const value = Number(event.target.value);
@@ -61,6 +81,10 @@ const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }
         <IconButton color="inherit" onClick={handleMenuOpen}>
           <MenuIcon />
         </IconButton>
+        <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
+          <MenuItem onClick={handleAboutOpen}>About</MenuItem>
+        </Menu>
+        <AboutDialog open={aboutOpen} onClose={handleAboutClose} />
       </Toolbar>
     </AppBar>
   );

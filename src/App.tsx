@@ -62,31 +62,7 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
       <PageVisibility onChange={this.handleVisibilityChange}>
         <>
           <MainToolbar daysFromNow={startTime.daysFromNow} onSetStartTime={this.onSetStartTime} />
-          <div className="App">
-            <Clock startTime={startTime} reload={this.setTimeToNow} />
-
-            <p>
-              Weather forecast from <a href="yr.no">yr.no</a>, delivered by the{' '}
-              <a href="https://met.no/English/">Norwegian Meteorological Institute</a> and the{' '}
-              <a href="https://www.nrk.no/">NRK</a>. Northern lights forecasts based on{' '}
-              <a href="https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json">
-                NOAA&apos;s Planetary K Index forecast
-              </a>{' '}
-              together with{' '}
-              <a href="https://hjelp.yr.no/hc/en-us/articles/4411702484754-Aurora-forecast-on-Yr">
-                YR&apos;s interpretation thereof
-              </a>
-              .
-            </p>
-
-            <p>
-              <a
-                href={`https://github.com/walles/weatherclock/tree/${import.meta.env.VITE_GIT_SHA}`}
-              >
-                Source code on GitHub
-              </a>
-            </p>
-          </div>
+          <Clock startTime={startTime} reload={this.setTimeToNow} />
         </>
       </PageVisibility>
     );
