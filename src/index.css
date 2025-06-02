@@ -9,22 +9,6 @@ body {
   @media (prefers-color-scheme: dark) {
     background: black;
     color: lightgray;
-
-    a {
-      color: lightsteelblue;
-    }
-
-    a:visited {
-      color: lightcoral;
-    }
-
-    a:hover {
-      color: lightseagreen;
-    }
-
-    a:visited:hover {
-      color: lightpink;
-    }
   }
 }
 
