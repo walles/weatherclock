@@ -47,7 +47,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }
     <AppBar position="static" color="primary" elevation={1}>
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 0, marginRight: 2 }}>
-          WeatherClock
+          Weather Clock
         </Typography>
         <Select
           value={daysFromNow}

@@ -15,7 +15,7 @@ interface AboutDialogProps {
 const AboutDialog: React.FC<AboutDialogProps> = ({ open, onClose }) => {
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>About WeatherClock</DialogTitle>
+      <DialogTitle>About the Weather Clock</DialogTitle>
       <DialogContent>
         <Typography gutterBottom>
           Weather forecast from{' '}
