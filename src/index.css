@@ -10,11 +10,6 @@ body {
     background: black;
     color: lightgray;
 
-    /* Color the dropdown in the top right corner */
-    .MuiInputBase-root {
-      background: lightgray;
-    }
-
     a {
       color: lightsteelblue;
     }
