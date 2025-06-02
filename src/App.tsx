@@ -6,6 +6,8 @@ import NamedStartTime from './NamedStartTime';
 import MainToolbar from './MainToolbar';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import CssBaseline from '@mui/material/CssBaseline';
+import GlobalStyles from '@mui/material/GlobalStyles';
 
 function AppWithTheme() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -21,6 +23,15 @@ function AppWithTheme() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <GlobalStyles
+        styles={(theme) => ({
+          body: {
+            backgroundColor: theme.palette.background.default,
+            color: theme.palette.text.primary,
+          },
+        })}
+      />
       <App />
     </ThemeProvider>
   );
