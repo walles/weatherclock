@@ -8,6 +8,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import GlobalStyles from '@mui/material/GlobalStyles';
+import './App.css';
 
 function AppWithTheme() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -72,8 +73,12 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
     return (
       <PageVisibility onChange={this.handleVisibilityChange}>
         <>
-          <MainToolbar daysFromNow={startTime.daysFromNow} onSetStartTime={this.onSetStartTime} />
-          <Clock startTime={startTime} reload={this.setTimeToNow} />
+          <div className="toolbar-area">
+            <MainToolbar daysFromNow={startTime.daysFromNow} onSetStartTime={this.onSetStartTime} />
+          </div>
+          <div className="clock-area">
+            <Clock startTime={startTime} reload={this.setTimeToNow} />
+          </div>
         </>
       </PageVisibility>
     );

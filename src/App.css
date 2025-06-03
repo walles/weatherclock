@@ -1,0 +1,23 @@
+/* Layout for toolbar and clock area */
+.toolbar-area {
+  /* Make the toolbar as high as its contents */
+  flex-shrink: 0;
+}
+
+.clock-area {
+  /* Ensures the clock area fills the remaining space */
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Make the root container cover the whole viewport */
+body, #root {
+  height: 100dvh; /* Use dvh to account for dynamic viewport height */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
