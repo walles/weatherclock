@@ -46,9 +46,18 @@ const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }
   return (
     <AppBar position="static" color="primary" elevation={1}>
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 0, marginRight: 2 }}>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Weather Clock
         </Typography>
+        <Tooltip title="Update forecast">
+          <IconButton
+            color="primary"
+            sx={{ marginRight: 2 }}
+            onClick={() => onSetStartTime(new NamedStartTime(0))}
+          >
+            <ReplayIcon />
+          </IconButton>
+        </Tooltip>
         <Select
           value={daysFromNow}
           onChange={handleTimeChange}
@@ -69,15 +78,6 @@ const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }
             })()}
           </MenuItem>
         </Select>
-        <Tooltip title="Update forecast">
-          <IconButton
-            color="primary"
-            sx={{ marginRight: 2 }}
-            onClick={() => onSetStartTime(new NamedStartTime(0))}
-          >
-            <ReplayIcon />
-          </IconButton>
-        </Tooltip>
         <IconButton color="inherit" onClick={handleMenuOpen}>
           <MenuIcon />
         </IconButton>
