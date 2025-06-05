@@ -2,9 +2,6 @@
   .main-toolbar-title {
     display: none;
   }
-  .main-toolbar-actions {
-    margin-left: auto;
-  }
 }
 
 .main-toolbar {
@@ -16,13 +13,11 @@
 .main-toolbar-actions {
   display: flex;
   align-items: center;
-}
 
-.main-toolbar-refresh {
-  margin-right: 16px;
+  /* Right align by having an auto margin on the left. The right margin is fixed by default. */
+  margin-left: auto;
 }
 
 .main-toolbar-select {
-  min-width: 120px;
-  margin-right: 16px;
+  min-width: 7.5em;
 }
