@@ -11,6 +11,7 @@ import NamedStartTime from './NamedStartTime';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import AboutDialog from './AboutDialog';
+import './MainToolbar.css';
 
 interface MainToolbarProps {
   daysFromNow: number;
@@ -45,46 +46,48 @@ const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }
 
   return (
     <AppBar position="static" color="primary" elevation={1}>
-      <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+      <Toolbar className="main-toolbar">
+        <Typography variant="h6" className="main-toolbar-title">
           Weather Clock
         </Typography>
-        <Tooltip title="Update forecast">
-          <IconButton
-            color="primary"
-            sx={{ marginRight: 2 }}
-            onClick={() => onSetStartTime(new NamedStartTime(0))}
+        <div className="main-toolbar-actions">
+          <Tooltip title="Update forecast">
+            <IconButton
+              color="primary"
+              className="main-toolbar-refresh"
+              onClick={() => onSetStartTime(new NamedStartTime(0))}
+            >
+              <ReplayIcon />
+            </IconButton>
+          </Tooltip>
+          <Select
+            value={daysFromNow}
+            onChange={handleTimeChange}
+            size="small"
+            className="main-toolbar-select"
           >
-            <ReplayIcon />
+            <MenuItem value={0}>Now</MenuItem>
+            <MenuItem value={1}>Tomorrow</MenuItem>
+            <MenuItem value={2}>
+              {(() => {
+                const day = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString(
+                  navigator.language,
+                  {
+                    weekday: 'long',
+                  },
+                );
+                return day.charAt(0).toUpperCase() + day.slice(1);
+              })()}
+            </MenuItem>
+          </Select>
+          <IconButton color="inherit" onClick={handleMenuOpen}>
+            <MenuIcon />
           </IconButton>
-        </Tooltip>
-        <Select
-          value={daysFromNow}
-          onChange={handleTimeChange}
-          size="small"
-          sx={{ minWidth: 120, marginRight: 2 }}
-        >
-          <MenuItem value={0}>Now</MenuItem>
-          <MenuItem value={1}>Tomorrow</MenuItem>
-          <MenuItem value={2}>
-            {(() => {
-              const day = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString(
-                navigator.language,
-                {
-                  weekday: 'long',
-                },
-              );
-              return day.charAt(0).toUpperCase() + day.slice(1);
-            })()}
-          </MenuItem>
-        </Select>
-        <IconButton color="inherit" onClick={handleMenuOpen}>
-          <MenuIcon />
-        </IconButton>
-        <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
-          <MenuItem onClick={handleAboutOpen}>About</MenuItem>
-        </Menu>
-        <AboutDialog open={aboutOpen} onClose={handleAboutClose} />
+          <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
+            <MenuItem onClick={handleAboutOpen}>About</MenuItem>
+          </Menu>
+          <AboutDialog open={aboutOpen} onClose={handleAboutClose} />
+        </div>
       </Toolbar>
     </AppBar>
   );
