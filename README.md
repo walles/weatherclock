@@ -66,14 +66,12 @@ the [proxy](proxy) directory.
 
 ## TODO
 
+- Show toast when refresh requested but the data is already up to date. This
+  turned out to be trickier than initially expected make sure to test before
+  committing!
 - Tick the hands automatically
-- Consider now-vs-tomorrow dropdown placement on both narrow and tall screen
-  layouts.
-- Make the now-vs-tomorrow dropdown more visible?
 - Report a page view each time the page becomes visible. Do we get an initial
   visibility event on page load?
-- Report geolocation and weather download timings to Google Analytics
-- Remove the Update button since updates should now be automatic
 
 ### DONE
 
@@ -93,12 +91,17 @@ the [proxy](proxy) directory.
   - Requesting weather data
   - Weather data download failed
   - Weather data download succeeded
+- Consider now-vs-tomorrow dropdown placement on both narrow and tall screen
+  layouts.
+- Make the now-vs-tomorrow dropdown more visible?
 
 ### NOT DOING
 
 - Consider moving some logic from `componentDidMount()` and `componentDidUpdate()`
   into `render()`. Won't work; `render()` is not allowed to touch `state` or `props`.
 - Re-add Facebook Share Button.
+- Report geolocation and weather download timings to Google Analytics
+- Remove the Update button since updates should now be automatic
 
 ---
 
