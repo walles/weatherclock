@@ -46,6 +46,23 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
     };
   }
 
+  componentDidMount() {
+    // Attempt to lock orientation to portrait if supported and allowed
+    const orientation = window.screen.orientation;
+    if (orientation && (orientation as any).lock) {
+      (orientation as any)
+        .lock('portrait')
+        .then(() => {
+          console.log('Orientation lock to portrait succeeded.');
+        })
+        .catch((err: unknown) => {
+          console.warn('Orientation lock to portrait failed or is not allowed.', err);
+        });
+    } else {
+      console.info('Orientation lock is not supported by this browser.');
+    }
+  }
+
   setTimeToNow = () => {
     this.setState({
       startTime: new NamedStartTime(0),
