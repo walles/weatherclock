@@ -301,8 +301,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
   };
 
   bump_aurora_forecast = () => {
+    this.context.showToast({ message: 'Requesting aurora forecast…', type: 'info' });
     fetchAuroraForecast()
       .then((forecast) => {
+        this.context.showToast({ message: 'Aurora forecast download succeeded', type: 'success' });
         this.setState({
           auroraForecast: forecast,
           auroraForecastMetadata: {
@@ -311,6 +313,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         });
       })
       .catch((error) => {
+        this.context.showToast({ message: 'Aurora forecast download failed', type: 'error' });
         console.warn(error);
       });
   };
