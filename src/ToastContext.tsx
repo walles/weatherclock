@@ -37,6 +37,11 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const showToast = (newToast: Toast) => {
     console.log('Toast requested:', newToast);
+    if (toast && toast.message === newToast.message && toast.type === newToast.type && open) {
+      // Prevent infinite update loop if the same toast is requested while open
+      return;
+    }
+
     if (open && toast) {
       const currentRank = toastSeverityRank(toast.type);
       const newRank = toastSeverityRank(newToast.type);
