@@ -11,6 +11,7 @@ import { Forecast } from './Forecast';
 import AuroraForecast from './AuroraForecast';
 import { WeatherLocation, getFixedPosition, getDistanceFromLatLonInKm } from './PositionService';
 import { fetchAuroraForecast } from './AuroraService';
+import { downloadWeather, WeatherDownloadResult } from './WeatherService';
 
 const HOUR_HAND_LENGTH = 23;
 const MINUTE_HAND_LENGTH = 34;
@@ -63,69 +64,6 @@ type ClockState = {
 };
 
 class Clock extends React.Component<ClockProps, ClockState> {
-  /* Parses weather XML from yr.no into a weather object that maps timestamps (in
-   * milliseconds since the epoch) to forecasts. */
-  static parseWeatherXml = (weatherXmlString: string): Map<number, Forecast> => {
-    const weatherXml = new window.DOMParser().parseFromString(weatherXmlString, 'text/xml');
-    const allPrognoses = weatherXml.getElementsByTagName('time');
-    console.log(`Parsing ${allPrognoses.length} prognoses...`);
-
-    const forecasts: Map<number, Forecast> = new Map();
-    for (let i = 0; i < allPrognoses.length; i += 1) {
-      const prognosis = allPrognoses[i];
-
-      const from = new Date(prognosis.attributes.getNamedItem('from')!.value);
-      const to = new Date(prognosis.attributes.getNamedItem('to')!.value);
-      const dh = (to.getTime() - from.getTime()) / (3600 * 1000);
-      const timestamp = new Date((from.getTime() + to.getTime()) / 2);
-
-      let forecast = forecasts.get(timestamp.getTime());
-      if (forecast !== undefined && forecast.span_h <= dh) {
-        // There's already higher resolution data here
-        continue;
-      }
-
-      if (!forecast) {
-        forecast = {
-          timestamp,
-          span_h: dh,
-        };
-      }
-
-      const symbolNodes = prognosis.getElementsByTagName('symbol');
-      if (symbolNodes && symbolNodes.length > 0) {
-        const symbol_code = symbolNodes[0].attributes.getNamedItem('code')!.value;
-        forecast.symbol_code = symbol_code;
-      }
-
-      const celsiusNodes = prognosis.getElementsByTagName('temperature');
-      if (celsiusNodes && celsiusNodes.length > 0) {
-        const celsiusValue = celsiusNodes[0].attributes.getNamedItem('value')!.value;
-        forecast.celsius = parseFloat(celsiusValue);
-      }
-
-      const windNodes = prognosis.getElementsByTagName('windSpeed');
-      if (windNodes && windNodes.length > 0) {
-        const windValue = windNodes[0].attributes.getNamedItem('mps')!.value;
-        forecast.wind_m_s = parseFloat(windValue);
-      }
-
-      const precipitationNodes = prognosis.getElementsByTagName('precipitation');
-      if (precipitationNodes && precipitationNodes.length > 0) {
-        const maxAttribute = precipitationNodes[0].attributes.getNamedItem('maxvalue')!;
-        const expectedAttribute = precipitationNodes[0].attributes.getNamedItem('value')!;
-        const precipitationValue =
-          maxAttribute === null ? expectedAttribute.value : maxAttribute.value;
-        forecast.precipitation_mm = parseFloat(precipitationValue);
-      }
-
-      forecasts.set(timestamp.getTime(), forecast);
-    }
-
-    console.log(forecasts);
-    return forecasts;
-  };
-
   constructor(props: ClockProps) {
     super(props);
     const { startTime } = props;
@@ -324,46 +262,25 @@ class Clock extends React.Component<ClockProps, ClockState> {
   };
 
   download_weather = () => {
-    const { latitude } = this.state.position!;
-    const { longitude } = this.state.position!;
-
+    if (!this.state.position) {
+      return;
+    }
     this.setState({
       progress: <text className="progress">Downloading weather...</text>,
     });
-
-    const url = `https://api-met-no-proxy-go-407804377208.europe-north1.run.app/locationforecast/2.0/classic?lat=${latitude};lon=${longitude}`;
-    console.log(`Getting weather from: ${url}`);
-
-    const self = this;
-
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Response code from upstream: ${response.status}`);
-        }
-        return response.text();
-      })
-      .then((weatherXmlString) => {
-        const forecast = Clock.parseWeatherXml(weatherXmlString);
-        const metadata = {
-          timestamp: new Date(),
-          latitude,
-          longitude,
-        };
-
-        console.log('Writing data to local storage:', forecast, metadata, self.state.position);
+    downloadWeather(this.state.position)
+      .then(({ forecast, metadata }: WeatherDownloadResult) => {
+        console.log('Writing data to local storage:', forecast, metadata, this.state.position);
         localStorage.setItem('forecast', JSON.stringify(Array.from(forecast)));
         localStorage.setItem('metadata', JSON.stringify(metadata));
-        localStorage.setItem('position', JSON.stringify(self.state.position));
-
-        self.setState({
+        localStorage.setItem('position', JSON.stringify(this.state.position));
+        this.setState({
           weatherForecast: forecast,
           weatherForecastMetadata: metadata,
         });
       })
       .catch((error) => {
         console.error(error);
-
         this.setState({
           error: (
             <ErrorDialog title="Downloading weather failed" reload={this.props.reload}>
