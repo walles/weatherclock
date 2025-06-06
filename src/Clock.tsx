@@ -9,6 +9,7 @@ import ClockCoordinates from './ClockCoordinates';
 import NamedStartTime from './NamedStartTime';
 import { Forecast } from './Forecast';
 import AuroraForecast from './AuroraForecast';
+import { WeatherLocation, getFixedPosition, getDistanceFromLatLonInKm } from './PositionService';
 
 const HOUR_HAND_LENGTH = 23;
 const MINUTE_HAND_LENGTH = 34;
@@ -35,11 +36,6 @@ type ClockProps = {
   reload: () => void;
 };
 
-type WeatherLocation = {
-  latitude: number;
-  longitude: number;
-};
-
 type ClockState = {
   startTime: NamedStartTime;
 
@@ -51,9 +47,9 @@ type ClockState = {
 
   weatherForecast?: Map<number, Forecast>;
   weatherForecastMetadata?: {
-    // FIXME: Rather than the current timestamp, maybe track when yr.no
-    // thinks the next forecast will be available? That information is
-    // available in the XML.
+    // FIXME: Rather than the current timestamp, maybe track when yr.no thinks
+    // the next forecast will be available? That information is available in the
+    // XML.
     timestamp: Date;
     latitude: number;
     longitude: number;
@@ -66,10 +62,6 @@ type ClockState = {
 };
 
 class Clock extends React.Component<ClockProps, ClockState> {
-  static deg2rad = (deg: number) => {
-    return deg * (Math.PI / 180);
-  };
-
   /* Parses weather XML from yr.no into a weather object that maps timestamps (in
    * milliseconds since the epoch) to forecasts. */
   static parseWeatherXml = (weatherXmlString: string): Map<number, Forecast> => {
@@ -220,56 +212,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
   }
 
-  static getFixedPosition = (): WeatherLocation | null => {
-    const params = new URLSearchParams(window.location.search);
-    const latitude = params.get('latitude');
-    const longitude = params.get('longitude');
-
-    if (!latitude && !longitude) {
-      console.log('Set fixed position with query parameters ?latitude=...&longitude=...');
-      return null;
-    }
-
-    if (!(latitude && longitude)) {
-      console.error(
-        `Fixed position is missing one number: latitude=${latitude}, longitude=${longitude}`,
-      );
-      return null;
-    }
-
-    const latitudeNumber = parseFloat(latitude);
-    const longitudeNumber = parseFloat(longitude);
-    if (Number.isNaN(latitudeNumber) || Number.isNaN(longitudeNumber)) {
-      console.error(
-        `Fixed position must get two numbers, not this: latitude=${latitude}, longitude=${longitude}`,
-      );
-      return null;
-    }
-
-    console.log(`Using fixed position: latitude=${latitudeNumber}, longitude=${longitudeNumber}`);
-
-    return {
-      latitude: latitudeNumber,
-      longitude: longitudeNumber,
-    };
-  };
-
-  // From: https://stackoverflow.com/a/27943/473672
-  static getDistanceFromLatLonInKm = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const EARTH_RADIUS_KM = 6371;
-    const dLat = Clock.deg2rad(lat2 - lat1);
-    const dLon = Clock.deg2rad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(Clock.deg2rad(lat1)) *
-        Math.cos(Clock.deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return EARTH_RADIUS_KM * c;
-  };
-
   /**
    * Returns true if a new geolocation request was made, false otherwise.
    */
@@ -285,7 +227,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
 
     if (this.state.position && this.state.positionTimestamp) {
-      const position_age_ms = Date.now() - this.state.positionTimestamp!.getTime();
+      const position_age_ms = Date.now() - this.state.positionTimestamp.getTime();
 
       if (position_age_ms < POSITION_CACHE_MS) {
         // Already know where we are, never mind
@@ -294,7 +236,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       }
     }
 
-    const fixedPosition = Clock.getFixedPosition();
+    const fixedPosition = getFixedPosition();
     if (fixedPosition != null) {
       this.setState({
         progress: undefined,
@@ -314,11 +256,13 @@ class Clock extends React.Component<ClockProps, ClockState> {
   };
 
   setPosition = (position: GeolocationPosition) => {
-    const weatherLocation = position.coords;
+    const weatherLocation: WeatherLocation = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
     console.log(
       `got position: latitude=${weatherLocation.latitude}, longitude=${weatherLocation.longitude}`,
     );
-
     this.setState({
       progress: undefined,
       position: weatherLocation,
@@ -347,7 +291,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return false;
     }
 
-    const kmDistance = Clock.getDistanceFromLatLonInKm(
+    const kmDistance = getDistanceFromLatLonInKm(
       metadata.latitude,
       metadata.longitude,
       this.state.position.latitude,
