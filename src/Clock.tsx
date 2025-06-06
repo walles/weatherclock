@@ -271,11 +271,13 @@ class Clock extends React.Component<ClockProps, ClockState> {
     if (!this.state.position) {
       return;
     }
+    this.context.showToast({ message: 'Requesting weather data…', type: 'info' });
     this.setState({
       progress: <text className="progress">Downloading weather...</text>,
     });
     downloadWeather(this.state.position)
       .then(({ forecast, metadata }: WeatherDownloadResult) => {
+        this.context.showToast({ message: 'Weather data download succeeded', type: 'success' });
         console.log('Writing data to local storage:', forecast, metadata, this.state.position);
         localStorage.setItem('forecast', JSON.stringify(Array.from(forecast)));
         localStorage.setItem('metadata', JSON.stringify(metadata));
@@ -286,6 +288,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         });
       })
       .catch((error) => {
+        this.context.showToast({ message: 'Weather data download failed', type: 'error' });
         console.error(error);
         this.setState({
           error: (

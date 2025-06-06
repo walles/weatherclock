@@ -66,13 +66,6 @@ the [proxy](proxy) directory.
 
 ## TODO
 
-- Show toasts when:
-  - Requesting geolocation
-  - Geolocation failed
-  - Geolocation succeeded
-  - Requesting weather data
-  - Weather data download failed
-  - Weather data download succeeded
 - Tick the hands automatically
 - Consider now-vs-tomorrow dropdown placement on both narrow and tall screen
   layouts.
@@ -93,6 +86,13 @@ the [proxy](proxy) directory.
 - If the user hides and re-shows the web page, update it
 - Re-add Google Analytics
 - Add a "Now" vs "Tomorrow" dropdown in the top right corner.
+- Show toasts when:
+  - Requesting geolocation
+  - Geolocation failed
+  - Geolocation succeeded
+  - Requesting weather data
+  - Weather data download failed
+  - Weather data download succeeded
 
 ### NOT DOING
 
