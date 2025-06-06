@@ -3,7 +3,7 @@ import React from 'react';
 import PageVisibility from 'react-page-visibility';
 import Clock from './Clock';
 import NamedStartTime from './NamedStartTime';
-import MainToolbar from './MainToolbar';
+import MainToolbar, { getNotificationsEnabled } from './MainToolbar';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -34,7 +34,7 @@ function AppWithTheme() {
           },
         })}
       />
-      <ToastProvider>
+      <ToastProvider notificationsEnabled={getNotificationsEnabled()}>
         <App />
       </ToastProvider>
     </ThemeProvider>

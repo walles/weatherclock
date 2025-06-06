@@ -11,13 +11,18 @@ export interface Toast {
 
 interface ToastContextType {
   showToast: (toast: Toast) => void;
+  notificationsEnabled?: boolean;
 }
 
 export const ToastContext = React.createContext<ToastContextType>({
   showToast: () => {},
+  notificationsEnabled: false,
 });
 
-export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ToastProvider: React.FC<{
+  children: React.ReactNode;
+  notificationsEnabled?: boolean;
+}> = ({ children, notificationsEnabled = false }) => {
   const [open, setOpen] = React.useState(false);
   const [toast, setToast] = React.useState<Toast | null>(null);
 
@@ -37,6 +42,10 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const showToast = (newToast: Toast) => {
     console.log('Toast requested:', newToast);
+    if (!notificationsEnabled) {
+      console.log('Notifications are disabled, ignoring toast:', newToast);
+      return;
+    }
     if (toast && toast.message === newToast.message && toast.type === newToast.type && open) {
       // Prevent infinite update loop if the same toast is requested while open
       return;
@@ -62,7 +71,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    <ToastContext.Provider value={{ showToast, notificationsEnabled }}>
       {children}
       <Snackbar
         open={open}

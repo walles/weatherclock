@@ -18,9 +18,18 @@ interface MainToolbarProps {
   onSetStartTime: (startTime: NamedStartTime) => void;
 }
 
+export function getNotificationsEnabled(): boolean {
+  const stored = localStorage.getItem('notificationsEnabled');
+  if (stored === 'true') {
+    return true;
+  }
+  return false;
+}
+
 const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }) => {
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(getNotificationsEnabled);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMenuAnchorEl(event.currentTarget);
@@ -42,6 +51,15 @@ const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }
   const handleTimeChange = (event: SelectChangeEvent<number>) => {
     const value = Number(event.target.value);
     onSetStartTime(new NamedStartTime(value));
+  };
+
+  const handleToggleNotifications = () => {
+    setNotificationsEnabled((prev) => {
+      const next = !prev;
+      localStorage.setItem('notificationsEnabled', next ? 'true' : 'false');
+      return next;
+    });
+    handleMenuClose();
   };
 
   return (
@@ -84,6 +102,15 @@ const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }
             <MenuIcon />
           </IconButton>
           <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
+            <MenuItem onClick={handleToggleNotifications}>
+              <input
+                type="checkbox"
+                checked={notificationsEnabled}
+                readOnly
+                style={{ marginRight: 8 }}
+              />
+              Notifications
+            </MenuItem>
             <MenuItem onClick={handleAboutOpen}>About</MenuItem>
           </Menu>
           <AboutDialog open={aboutOpen} onClose={handleAboutClose} />
