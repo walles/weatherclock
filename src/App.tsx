@@ -55,8 +55,10 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
         .then(() => {
           console.log('Orientation lock to portrait succeeded.');
         })
-        .catch((err: unknown) => {
-          console.warn('Orientation lock to portrait failed or is not allowed.', err);
+        .catch((err: any) => {
+          // "The operation is insecure" is commonly logged here (at least on
+          // desktop), it just means the browser does not allow this operation.
+          console.warn('Orientation lock to portrait failed or is not allowed.', err?.message);
         });
     } else {
       console.info('Orientation lock is not supported by this browser.');
