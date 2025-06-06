@@ -6,7 +6,7 @@ import Weather from './Weather';
 import Hand from './Hand';
 import ErrorDialog from './ErrorDialog';
 import ClockCoordinates from './ClockCoordinates';
-import { NamedStartTime } from './TimeSelect';
+import NamedStartTime from './NamedStartTime';
 import { Forecast } from './Forecast';
 import AuroraForecast from './AuroraForecast';
 

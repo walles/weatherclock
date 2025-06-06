@@ -1,52 +1,24 @@
-.ClockAndButtons {
-  width: 100dvw;
-  height: 100dvh;
+/* Layout for toolbar and clock area */
+.toolbar-area {
+  /* Make the toolbar as high as its contents */
+  flex-shrink: 0;
+}
 
+.clock-area {
+  /* Ensures the clock area fills the remaining space */
+  flex: 1 1 auto;
   display: flex;
-  margin: auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  min-width: 0;
 }
 
-@media (orientation: landscape) {
-  .ClockAndButtons {
-    flex-direction: row;
-  }
-
-  .updateButton,
-  .timeSelect {
-    height: fit-content;
-  }
-
-  .updateButton {
-    order: 1;
-
-    position: absolute;
-    bottom: 0px;
-  }
-
-  .clockSvg {
-    order: 2;
-  }
-
-  .timeSelect {
-    order: 3;
-
-    position: absolute;
-    right: 0px;
-  }
-}
-
-@media (orientation: portrait) {
-  .ClockAndButtons {
-    flex-direction: column;
-  }
-
-  .updateButton,
-  .timeSelect {
-    width: fit-content;
-  }
-
-  .timeSelect {
-    position: absolute;
-    right: 0px;
-  }
+/* Make the root container cover the whole viewport */
+body,
+#root {
+  height: 100dvh; /* Use dvh to account for dynamic viewport height */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }

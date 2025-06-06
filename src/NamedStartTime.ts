@@ -1,10 +1,3 @@
-import React from 'react';
-
-type TimeSelectProps = {
-  daysFromNow: number; // 0, 1 or 2 for how many days out we want
-  onSetStartTime: (startTime: NamedStartTime) => void;
-};
-
 // From: https://stackoverflow.com/a/53930826/473672
 function capitalizeFirstLetter(s: string) {
   const firstCodeUnit = s[0];
@@ -16,7 +9,7 @@ function capitalizeFirstLetter(s: string) {
   return s.slice(0, 2).toUpperCase() + s.slice(2);
 }
 
-export class NamedStartTime {
+class NamedStartTime {
   private _startTime: Date;
 
   private _name: string;
@@ -65,30 +58,4 @@ export class NamedStartTime {
   }
 }
 
-class TimeSelect extends React.Component<TimeSelectProps, {}> {
-  onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { onSetStartTime } = this.props;
-    onSetStartTime(new NamedStartTime(parseInt(event.target.value, 10)));
-  };
-
-  render() {
-    const { daysFromNow } = this.props;
-    const options = [];
-    for (let i = 0; i < 3; i += 1) {
-      const namedStartTime = new NamedStartTime(i);
-      const { name } = namedStartTime;
-      options.push(
-        <option key={name} value={String(i)}>
-          {name}
-        </option>,
-      );
-    }
-    return (
-      <select className="timeSelect" value={daysFromNow} onChange={this.onChange}>
-        {options}
-      </select>
-    );
-  }
-}
-
-export default TimeSelect;
+export default NamedStartTime;

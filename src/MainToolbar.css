@@ -1,0 +1,23 @@
+@media (max-width: 25em) {
+  .main-toolbar-title {
+    display: none;
+  }
+}
+
+.main-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-toolbar-actions {
+  display: flex;
+  align-items: center;
+
+  /* Right align by having an auto margin on the left. The right margin is fixed by default. */
+  margin-left: auto;
+}
+
+.main-toolbar-select {
+  min-width: 7.5em;
+}
