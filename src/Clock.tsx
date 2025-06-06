@@ -12,6 +12,7 @@ import AuroraForecast from './AuroraForecast';
 import { WeatherLocation, getFixedPosition, getDistanceFromLatLonInKm } from './PositionService';
 import { fetchAuroraForecast } from './AuroraService';
 import { downloadWeather, WeatherDownloadResult } from './WeatherService';
+import { ToastContext } from './ToastContext';
 
 const HOUR_HAND_LENGTH = 23;
 const MINUTE_HAND_LENGTH = 34;
@@ -64,6 +65,9 @@ type ClockState = {
 };
 
 class Clock extends React.Component<ClockProps, ClockState> {
+  static contextType = ToastContext;
+  context!: React.ContextType<typeof ToastContext>;
+
   constructor(props: ClockProps) {
     super(props);
     const { startTime } = props;
@@ -185,6 +189,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return true;
     }
 
+    this.context.showToast({ message: 'Requesting geolocation…', type: 'info' });
     console.log('Geolocating...');
     this.setState({
       progress: <text className="progress">Locating phone...</text>,
@@ -202,6 +207,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     console.log(
       `got position: latitude=${weatherLocation.latitude}, longitude=${weatherLocation.longitude}`,
     );
+    this.context.showToast({ message: 'Geolocation succeeded', type: 'success' });
     this.setState({
       progress: undefined,
       position: weatherLocation,
@@ -265,11 +271,13 @@ class Clock extends React.Component<ClockProps, ClockState> {
     if (!this.state.position) {
       return;
     }
+    this.context.showToast({ message: 'Requesting weather data…', type: 'info' });
     this.setState({
       progress: <text className="progress">Downloading weather...</text>,
     });
     downloadWeather(this.state.position)
       .then(({ forecast, metadata }: WeatherDownloadResult) => {
+        this.context.showToast({ message: 'Weather data download succeeded', type: 'success' });
         console.log('Writing data to local storage:', forecast, metadata, this.state.position);
         localStorage.setItem('forecast', JSON.stringify(Array.from(forecast)));
         localStorage.setItem('metadata', JSON.stringify(metadata));
@@ -280,6 +288,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         });
       })
       .catch((error) => {
+        this.context.showToast({ message: 'Weather data download failed', type: 'error' });
         console.error(error);
         this.setState({
           error: (
@@ -292,8 +301,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
   };
 
   bump_aurora_forecast = () => {
+    this.context.showToast({ message: 'Requesting aurora forecast…', type: 'info' });
     fetchAuroraForecast()
       .then((forecast) => {
+        this.context.showToast({ message: 'Aurora forecast download succeeded', type: 'success' });
         this.setState({
           auroraForecast: forecast,
           auroraForecastMetadata: {
@@ -302,12 +313,14 @@ class Clock extends React.Component<ClockProps, ClockState> {
         });
       })
       .catch((error) => {
+        this.context.showToast({ message: 'Aurora forecast download failed', type: 'error' });
         console.warn(error);
       });
   };
 
   geoError = (error: GeolocationPositionError) => {
     console.log('Geolocation failed');
+    this.context.showToast({ message: 'Geolocation failed', type: 'error' });
     this.setState({
       // FIXME: Add a report-problem link?
       // FIXME: Make the error message text clickable and link it to a Google search

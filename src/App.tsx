@@ -3,12 +3,13 @@ import React from 'react';
 import PageVisibility from 'react-page-visibility';
 import Clock from './Clock';
 import NamedStartTime from './NamedStartTime';
-import MainToolbar from './MainToolbar';
+import MainToolbar, { getNotificationsEnabled } from './MainToolbar';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import './App.css';
+import { ToastProvider } from './ToastContext';
 
 function AppWithTheme() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -33,7 +34,9 @@ function AppWithTheme() {
           },
         })}
       />
-      <App />
+      <ToastProvider notificationsEnabled={getNotificationsEnabled()}>
+        <App />
+      </ToastProvider>
     </ThemeProvider>
   );
 }
