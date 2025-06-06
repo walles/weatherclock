@@ -12,6 +12,7 @@ import AuroraForecast from './AuroraForecast';
 import { WeatherLocation, getFixedPosition, getDistanceFromLatLonInKm } from './PositionService';
 import { fetchAuroraForecast } from './AuroraService';
 import { downloadWeather, WeatherDownloadResult } from './WeatherService';
+import { ToastContext } from './ToastContext';
 
 const HOUR_HAND_LENGTH = 23;
 const MINUTE_HAND_LENGTH = 34;
@@ -64,6 +65,9 @@ type ClockState = {
 };
 
 class Clock extends React.Component<ClockProps, ClockState> {
+  static contextType = ToastContext;
+  context!: React.ContextType<typeof ToastContext>;
+
   constructor(props: ClockProps) {
     super(props);
     const { startTime } = props;
@@ -185,6 +189,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return true;
     }
 
+    this.context.showToast({ message: 'Requesting geolocation…', type: 'info' });
     console.log('Geolocating...');
     this.setState({
       progress: <text className="progress">Locating phone...</text>,
@@ -202,6 +207,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     console.log(
       `got position: latitude=${weatherLocation.latitude}, longitude=${weatherLocation.longitude}`,
     );
+    this.context.showToast({ message: 'Geolocation succeeded', type: 'success' });
     this.setState({
       progress: undefined,
       position: weatherLocation,
@@ -308,6 +314,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
   geoError = (error: GeolocationPositionError) => {
     console.log('Geolocation failed');
+    this.context.showToast({ message: 'Geolocation failed', type: 'error' });
     this.setState({
       // FIXME: Add a report-problem link?
       // FIXME: Make the error message text clickable and link it to a Google search

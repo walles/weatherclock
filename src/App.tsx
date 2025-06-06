@@ -9,6 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import './App.css';
+import { ToastProvider } from './ToastContext';
 
 function AppWithTheme() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -33,7 +34,9 @@ function AppWithTheme() {
           },
         })}
       />
-      <App />
+      <ToastProvider>
+        <App />
+      </ToastProvider>
     </ThemeProvider>
   );
 }
