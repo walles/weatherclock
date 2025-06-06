@@ -15,7 +15,8 @@
 }
 
 /* Make the root container cover the whole viewport */
-body, #root {
+body,
+#root {
   height: 100dvh; /* Use dvh to account for dynamic viewport height */
   margin: 0;
   display: flex;
