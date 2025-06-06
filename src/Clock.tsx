@@ -10,6 +10,7 @@ import NamedStartTime from './NamedStartTime';
 import { Forecast } from './Forecast';
 import AuroraForecast from './AuroraForecast';
 import { WeatherLocation, getFixedPosition, getDistanceFromLatLonInKm } from './PositionService';
+import { fetchAuroraForecast } from './AuroraService';
 
 const HOUR_HAND_LENGTH = 23;
 const MINUTE_HAND_LENGTH = 34;
@@ -374,21 +375,9 @@ class Clock extends React.Component<ClockProps, ClockState> {
   };
 
   bump_aurora_forecast = () => {
-    const url = 'https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json';
-    console.log(`Getting aurora forecast from: ${url}`);
-
-    const self = this;
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Response code from aurora upstream: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        const forecast = new AuroraForecast(data);
-
-        self.setState({
+    fetchAuroraForecast()
+      .then((forecast) => {
+        this.setState({
           auroraForecast: forecast,
           auroraForecastMetadata: {
             timestamp: new Date(),
@@ -396,9 +385,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         });
       })
       .catch((error) => {
-        console.error(error);
-
-        // Let's not tell the user, aurora forecasts not showing is a corner case
+        console.warn(error);
       });
   };
 
