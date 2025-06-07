@@ -69,6 +69,11 @@ the [proxy](proxy) directory.
 - Show toast when refresh requested but the data is already up to date. This
   turned out to be trickier than initially expected make sure to test before
   committing!
+- Add menu entry for showing the current weather coordinates on
+  https://www.openstreetmap.org/?mlat=43.59021&mlon=1.40741 in a new tab. The
+  entry should be named "Show Location" and be tooltipped with "Show location of
+  the current forecast on a map". If there is no forecast, the menu entry should
+  be disabled.
 - Tick the hands automatically
 - Report a page view each time the page becomes visible. Do we get an initial
   visibility event on page load?
