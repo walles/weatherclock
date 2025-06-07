@@ -62,6 +62,7 @@ type ClockState = {
   auroraForecastMetadata?: {
     timestamp: Date;
   };
+  auroraForecastInProgress?: boolean;
 };
 
 class Clock extends React.Component<ClockProps, ClockState> {
@@ -150,8 +151,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
     if (!this.forecastIsCurrent()) {
       this.download_weather();
     }
-    if (!this.auroraForecastIsCurrent()) {
-      this.bump_aurora_forecast();
+    if (!this.auroraForecastIsCurrent() && !this.state.auroraForecastInProgress) {
+      this.setState({ auroraForecastInProgress: true }, () => {
+        this.bump_aurora_forecast();
+      });
     }
   }
 
@@ -315,6 +318,9 @@ class Clock extends React.Component<ClockProps, ClockState> {
       .catch((error) => {
         this.context.showToast({ message: 'Aurora forecast download failed', type: 'error' });
         console.warn(error);
+      })
+      .finally(() => {
+        this.setState({ auroraForecastInProgress: false });
       });
   };
 
