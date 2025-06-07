@@ -54,7 +54,6 @@ class Weather extends React.Component<WeatherProps> {
     minWind = Math.round(minWind);
     maxWind = Math.round(maxWind);
     const windString = minWind === maxWind ? `${minWind} m/s` : `${minWind}-${maxWind} m/s`;
-    console.debug(`Wind: ${windString}`);
 
     return windString;
   };
@@ -99,7 +98,6 @@ class Weather extends React.Component<WeatherProps> {
     }).format(precipitation_mm);
 
     const precipitationString = `${precipitationNumberString}mm`;
-    console.debug(`Precipitation: ${precipitationString}`);
 
     const nowCoords = new ClockCoordinates(now);
     const bestDegrees = nowCoords.rankFreeDirections();
@@ -143,7 +141,6 @@ class Weather extends React.Component<WeatherProps> {
       renderUs.push(forecast);
     });
 
-    console.debug(renderUs);
     return renderUs;
   };
 

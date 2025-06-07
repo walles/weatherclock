@@ -32,7 +32,6 @@ export default class AuroraForecast {
     this.data = forecast;
 
     console.log('AuroraForecast created with', this.data.length, 'datapoints');
-    console.log(forecast);
   }
 
   /**

@@ -41,9 +41,9 @@ export const ToastProvider: React.FC<{
   };
 
   const showToast = (newToast: Toast) => {
-    console.log('Toast requested:', newToast);
+    console.log(`Toast requested: ${newToast.type}: ${newToast.message}`);
     if (!notificationsEnabled) {
-      console.log('Notifications are disabled, ignoring toast:', newToast);
+      console.debug('Notifications are disabled, ignoring toast:', newToast);
       return;
     }
     if (toast && toast.message === newToast.message && toast.type === newToast.type && open) {

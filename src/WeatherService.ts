@@ -76,7 +76,6 @@ export function parseWeatherXml(weatherXmlString: string): Map<number, Forecast>
     forecasts.set(timestamp.getTime(), forecast);
   }
 
-  console.log(forecasts);
   return forecasts;
 }
 

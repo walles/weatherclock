@@ -177,7 +177,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
       if (position_age_ms < POSITION_CACHE_MS) {
         // Already know where we are, never mind
-        console.debug(`Retaining cached position of ${position_age_ms}ms age`);
+        const position_age_s = position_age_ms / 1000;
+        console.debug(`Retaining cached position of ${position_age_s}s age`);
         return false;
       }
     }
@@ -250,7 +251,11 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return false;
     }
 
-    console.debug(`Forecast considered current: ${ageMs / 1000.0}s old and ${kmDistance}km away`);
+    const kmDistanceRounded = Math.round(kmDistance * 1000) / 1000;
+    console.debug(
+      `Forecast considered current: ${ageMs / 1000.0}s old and ${kmDistanceRounded}km away`,
+    );
+
     return true;
   };
 
@@ -267,6 +272,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return false;
     }
 
+    console.debug(`Aurora forecast considered current: ${ageMs / 1000.0}s old`);
     return true;
   };
 
