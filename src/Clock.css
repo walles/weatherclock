@@ -31,8 +31,10 @@ text.tomorrow {
   font-family: 'Courier';
 
   /*
-  Note that these don't work in Safari on my mac as of 2025-06-18, even though
-  caniuse says they should:
+  Note that these don't work in Safari on my mac as of 2025-06-18:
+  https://github.com/mdn/browser-compat-data/issues/26358#issuecomment-2797316646
+
+  Even though caniuse says they should:
   https://caniuse.com/?search=mask-image%20svg
   */
   -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
