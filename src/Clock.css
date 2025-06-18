@@ -15,15 +15,30 @@ text.progress {
   dominant-baseline: central;
 }
 
-/* FIXME: Maybe a rubberstamp effect like this one? https://codepen.io/555/pen/pdwvBP */
+/* Based on: https://codepen.io/555/pen/pdwvBP */
 text.tomorrow {
   text-anchor: middle;
-  alignment-baseline: central;
   dominant-baseline: central;
 
   fill: darkred; /* This is the text color in SVG */
-  font-family: serif;
+  opacity: 0.8;
 
-  transform: rotate(-60deg) scale(1.55);
-  opacity: 0.2;
+  transform: rotate(-60deg) scale(0.45);
+
+  font-size: 3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: 'Courier';
+
+  /*
+  Note that these don't work in Safari on my mac as of 2025-06-18, even though
+  caniuse says they should:
+  https://caniuse.com/?search=mask-image%20svg
+  */
+  -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
+  -webkit-mask-size: 944px 604px;
+  -webkit-mask-position: 2rem 3rem;
+  mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
+  mask-size: 944px 604px;
+  mask-position: 2rem 3rem;
 }
