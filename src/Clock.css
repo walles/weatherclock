@@ -15,32 +15,24 @@ text.progress {
   dominant-baseline: central;
 }
 
-/* Based on: https://codepen.io/555/pen/pdwvBP */
 text.tomorrow {
   text-anchor: middle;
   dominant-baseline: central;
 
   fill: darkred; /* This is the text color in SVG */
-  opacity: 0.8;
-
-  transform: rotate(-60deg) scale(0.45);
-
-  font-size: 3rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-family: 'Courier';
+  opacity: 0.2;
+  font-family: serif;
+  font-size: 1.55em;
+  transform: rotate(-60deg);
 
   /*
-  Note that these don't work in Safari on my mac as of 2025-06-18:
-  https://github.com/mdn/browser-compat-data/issues/26358#issuecomment-2797316646
+  Outline the text so it's visible on the outside of the clock even in dark
+  mode.
 
-  Even though caniuse says they should:
-  https://caniuse.com/?search=mask-image%20svg
+  From: https://stackoverflow.com/a/55097644/473672
   */
-  -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
-  -webkit-mask-size: 944px 604px;
-  -webkit-mask-position: 2rem 3rem;
-  mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
-  mask-size: 944px 604px;
-  mask-position: 2rem 3rem;
+  stroke: white;
+  stroke-width: 0.1em;
+  stroke-linejoin: round;
+  paint-order: stroke;
 }
