@@ -1,6 +1,4 @@
 import React from 'react';
-
-import PageVisibility from 'react-page-visibility';
 import Clock from './Clock';
 import NamedStartTime from './NamedStartTime';
 import MainToolbar, { getNotificationsEnabled } from './MainToolbar';
@@ -10,6 +8,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import './App.css';
 import { ToastProvider } from './ToastContext';
+import { PageVisibilityHandler } from './PageVisibilityHandler';
 
 function AppWithTheme() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -76,9 +75,11 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
 
   handleVisibilityChange = (isVisible: boolean) => {
     console.debug(`Page visibility changed: ${isVisible}`);
-    if (isVisible) {
-      this.setTimeToNow();
+    if (!isVisible) {
+      return;
     }
+
+    this.setTimeToNow();
   };
 
   onSetStartTime = (startTime: NamedStartTime) => {
@@ -93,7 +94,7 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
   render() {
     const { startTime } = this.state;
     return (
-      <PageVisibility onChange={this.handleVisibilityChange}>
+      <PageVisibilityHandler onChange={this.handleVisibilityChange}>
         <>
           <div className="toolbar-area">
             <MainToolbar daysFromNow={startTime.daysFromNow} onSetStartTime={this.onSetStartTime} />
@@ -102,7 +103,7 @@ class App extends React.Component<{}, { startTime: NamedStartTime }> {
             <Clock startTime={startTime} reload={this.setTimeToNow} />
           </div>
         </>
-      </PageVisibility>
+      </PageVisibilityHandler>
     );
   }
 }
