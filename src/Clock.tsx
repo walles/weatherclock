@@ -130,7 +130,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         position,
       });
     } else {
-      console.log('No forecast found in local storage');
+      console.log('No weather forecast found in local storage');
     }
 
     this.startGeolocationIfNeeded();
@@ -192,7 +192,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
 
     this.context.showToast({ message: 'Requesting geolocation…', type: 'info' });
-    console.log('Geolocating...');
+    console.log('Geolocating position...');
     this.setState({
       geoLocationProgress: <text className="progress">Locating phone...</text>,
     });
@@ -207,7 +207,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       longitude: position.coords.longitude,
     };
     console.log(
-      `got position: latitude=${weatherLocation.latitude}, longitude=${weatherLocation.longitude}`,
+      `Got position: latitude=${weatherLocation.latitude}, longitude=${weatherLocation.longitude}`,
     );
     this.context.showToast({ message: 'Geolocation succeeded', type: 'success' });
     this.setState({
@@ -251,7 +251,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
     const kmDistanceRounded = Math.round(kmDistance * 1000) / 1000;
     console.debug(
-      `Forecast considered current: ${ageMs / 1000.0}s old and ${kmDistanceRounded}km away`,
+      `Weather forecast considered current: ${ageMs / 1000.0}s old and ${kmDistanceRounded}km away`,
     );
 
     return true;
@@ -335,7 +335,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
   };
 
   geoError = (error: GeolocationPositionError) => {
-    console.log('Geolocation failed');
+    console.log('Geolocating position failed');
     this.context.showToast({ message: 'Geolocation failed', type: 'error' });
     this.setState({
       // FIXME: Add a report-problem link?
