@@ -23,7 +23,8 @@
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
     "types": [
-      "vite/client"
+      "vite/client",
+      "jest"
     ]
   },
   "include": [
