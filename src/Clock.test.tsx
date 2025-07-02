@@ -52,11 +52,40 @@ describe('Clock componentDidUpdate', () => {
 
     // Set state and call lifecycle in act()
     act(() => {
-      instance.setState({ progress: undefined });
+      instance.setState({ weatherDownloadProgress: undefined });
       instance.componentDidUpdate();
     });
 
     // Assert
     expect(instance.download_weather).toHaveBeenCalled();
+  });
+});
+
+describe('Clock download_weather', () => {
+  it('does nothing if a download is already in progress', () => {
+    const ref = React.createRef<Clock>();
+    const startTime = new NamedStartTime(0);
+    const props = { startTime, reload: jest.fn() };
+    render(<Clock ref={ref} {...props} />);
+
+    const instance = ref.current!;
+
+    // Set up state: position is set, but weatherDownloadProgress is set (download in progress)
+    instance.setState({
+      position: { latitude: 1, longitude: 2 },
+      weatherDownloadProgress: <text>Downloading...</text>,
+    });
+
+    // Spy on setState and context.showToast
+    const setStateSpy = jest.spyOn(instance, 'setState');
+    instance.context = { showToast: jest.fn() } as any;
+    const showToastSpy = jest.spyOn(instance.context, 'showToast');
+
+    // Call download_weather directly
+    instance.download_weather();
+
+    // Should not call setState or showToast
+    expect(setStateSpy).not.toHaveBeenCalled();
+    expect(showToastSpy).not.toHaveBeenCalled();
   });
 });

@@ -43,10 +43,10 @@ type ClockState = {
   startTime: NamedStartTime;
 
   error?: ReactElement;
-  progress?: ReactElement;
 
   position?: WeatherLocation;
   positionTimestamp?: Date;
+  geoLocationProgress?: ReactElement;
 
   weatherForecast?: Map<number, Forecast>;
   weatherForecastMetadata?: {
@@ -57,6 +57,7 @@ type ClockState = {
     latitude: number;
     longitude: number;
   };
+  weatherDownloadProgress?: ReactElement;
 
   auroraForecast?: AuroraForecast;
   auroraForecastMetadata?: {
@@ -141,16 +142,13 @@ class Clock extends React.Component<ClockProps, ClockState> {
     if (startTime.startTime !== stateStartTime.startTime) {
       this.setState(this.getInitialState(startTime));
     }
-    const { progress } = this.state;
-    if (this.startGeolocationIfNeeded()) {
-      return;
-    }
-    if (progress) {
-      return;
-    }
+
+    this.startGeolocationIfNeeded();
+
     if (!this.forecastIsCurrent()) {
       this.download_weather();
     }
+
     if (!this.auroraForecastIsCurrent() && !this.state.auroraForecastInProgress) {
       this.setState({ auroraForecastInProgress: true }, () => {
         this.bump_aurora_forecast();
@@ -162,13 +160,13 @@ class Clock extends React.Component<ClockProps, ClockState> {
    * Returns true if a new geolocation request was made, false otherwise.
    */
   startGeolocationIfNeeded = (): boolean => {
-    if (this.state.progress) {
-      // Something is already in progress, never mind
+    if (this.state.geoLocationProgress) {
+      // Already geolocating, never mind
       return false;
     }
 
     if (this.state.error) {
-      // Something has gone wrong, never mind
+      // Something has gone wrong, avoid making things worse
       return false;
     }
 
@@ -186,7 +184,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     const fixedPosition = getFixedPosition();
     if (fixedPosition != null) {
       this.setState({
-        progress: undefined,
+        geoLocationProgress: undefined,
         position: fixedPosition,
         positionTimestamp: new Date(),
       });
@@ -196,7 +194,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     this.context.showToast({ message: 'Requesting geolocation…', type: 'info' });
     console.log('Geolocating...');
     this.setState({
-      progress: <text className="progress">Locating phone...</text>,
+      geoLocationProgress: <text className="progress">Locating phone...</text>,
     });
     navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError);
 
@@ -213,7 +211,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     );
     this.context.showToast({ message: 'Geolocation succeeded', type: 'success' });
     this.setState({
-      progress: undefined,
+      geoLocationProgress: undefined,
       position: weatherLocation,
       positionTimestamp: new Date(),
     });
@@ -280,10 +278,16 @@ class Clock extends React.Component<ClockProps, ClockState> {
     if (!this.state.position) {
       return;
     }
+    if (this.state.weatherDownloadProgress) {
+      // Already in progress, never mind
+      return;
+    }
+
     this.context.showToast({ message: 'Requesting weather data…', type: 'info' });
     this.setState({
-      progress: <text className="progress">Downloading weather...</text>,
+      weatherDownloadProgress: <text className="progress">Downloading weather...</text>,
     });
+
     downloadWeather(this.state.position)
       .then(({ forecast, metadata }: WeatherDownloadResult) => {
         this.context.showToast({ message: 'Weather data download succeeded', type: 'success' });
@@ -405,8 +409,12 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return this.renderHands();
     }
 
-    if (this.state.progress) {
-      return this.state.progress;
+    if (this.state.geoLocationProgress) {
+      return this.state.geoLocationProgress;
+    }
+
+    if (this.state.weatherDownloadProgress) {
+      return this.state.weatherDownloadProgress;
     }
 
     // Most likely the initial state
