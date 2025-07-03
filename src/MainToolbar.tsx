@@ -3,12 +3,10 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import ReplayIcon from '@mui/icons-material/Replay';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import NamedStartTime from './NamedStartTime';
-import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import AboutDialog from './AboutDialog';
 import './MainToolbar.css';
@@ -69,15 +67,6 @@ const MainToolbar: React.FC<MainToolbarProps> = ({ daysFromNow, onSetStartTime }
           Weather Clock
         </Typography>
         <div className="main-toolbar-actions">
-          <Tooltip title="Update forecast">
-            <IconButton
-              color="primary"
-              className="main-toolbar-refresh"
-              onClick={() => onSetStartTime(new NamedStartTime(0))}
-            >
-              <ReplayIcon />
-            </IconButton>
-          </Tooltip>
           <Select
             value={daysFromNow}
             onChange={handleTimeChange}

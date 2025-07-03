@@ -14,6 +14,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
+
+      # NOTE: If you change this list, update package.json/"scripts"/"ci" as well
       - run: npm install
       - run: npm run typecheck
       - run: npm run build

@@ -48,6 +48,15 @@ npm install && npm start
 
 This will start the app at [http://localhost:5173](http://localhost:5173) and reload automatically on changes.
 
+## Running Tests (Development)
+
+This will build, format, lint and test the app. This should do the same tests
+that are done in CI:
+
+```fish
+npm run ci
+```
+
 ## Deploy
 
 To deploy updates:

@@ -159,15 +159,15 @@ class Clock extends React.Component<ClockProps, ClockState> {
   /**
    * Returns true if a new geolocation request was made, false otherwise.
    */
-  startGeolocationIfNeeded = (): boolean => {
+  startGeolocationIfNeeded = (): void => {
     if (this.state.geoLocationProgress) {
       // Already geolocating, never mind
-      return false;
+      return;
     }
 
     if (this.state.error) {
       // Something has gone wrong, avoid making things worse
-      return false;
+      return;
     }
 
     if (this.state.position && this.state.positionTimestamp) {
@@ -177,7 +177,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         // Already know where we are, never mind
         const position_age_s = position_age_ms / 1000;
         console.debug(`Retaining cached position of ${position_age_s}s age`);
-        return false;
+        return;
       }
     }
 
@@ -188,7 +188,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
         position: fixedPosition,
         positionTimestamp: new Date(),
       });
-      return true;
+      return;
     }
 
     this.context.showToast({ message: 'Requesting geolocation…', type: 'info' });
@@ -197,8 +197,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
       geoLocationProgress: <text className="progress">Locating phone...</text>,
     });
     navigator.geolocation.getCurrentPosition(this.setPosition, this.geoError);
-
-    return true;
   };
 
   setPosition = (position: GeolocationPosition) => {

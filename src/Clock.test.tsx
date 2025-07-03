@@ -45,7 +45,7 @@ describe('Clock componentDidUpdate', () => {
     const instance = ref.current!;
 
     // Mock methods
-    jest.spyOn(instance, 'startGeolocationIfNeeded').mockReturnValue(false);
+    jest.spyOn(instance, 'startGeolocationIfNeeded').mockImplementation(jest.fn());
     jest.spyOn(instance, 'forecastIsCurrent').mockReturnValue(false);
     jest.spyOn(instance, 'download_weather').mockImplementation(jest.fn());
     jest.spyOn(instance, 'auroraForecastIsCurrent').mockReturnValue(true);

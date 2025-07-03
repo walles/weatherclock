@@ -22,6 +22,7 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
+    "ci": "npm run typecheck && npm run build && npm run format && npm run lint && npm run test",
     "start": "VITE_GIT_SHA=$(git rev-parse HEAD) vite",
     "build": "VITE_GIT_SHA=$(git rev-parse HEAD) vite build",
     "preview": "vite preview",
