@@ -96,43 +96,70 @@ class Clock extends React.Component<ClockProps, ClockState> {
     };
   }
 
-  componentDidMount() {
+  /**
+   * Writes weather forecast, metadata, and position to localStorage from state.
+   */
+  persistToLocalStorage = () => {
+    if (this.state.weatherForecast) {
+      localStorage.setItem('forecast', JSON.stringify(Array.from(this.state.weatherForecast)));
+    }
+
+    if (this.state.weatherForecastMetadata) {
+      localStorage.setItem('metadata', JSON.stringify(this.state.weatherForecastMetadata));
+    }
+
+    if (this.state.position) {
+      localStorage.setItem('position', JSON.stringify(this.state.position));
+    }
+  };
+
+  /**
+   * Reads weather forecast, metadata, and position from localStorage and updates state if found.
+   */
+  restoreFromLocalStorage = () => {
     const forecastString = localStorage.getItem('forecast');
     const metadataString = localStorage.getItem('metadata');
     const positionString = localStorage.getItem('position');
-    if (forecastString && metadataString && positionString) {
+
+    const newState: Partial<ClockState> = {};
+
+    if (forecastString) {
       // Recreate the map from our pair wise JSON representation
       const forecastArray = JSON.parse(forecastString);
       const forecast = new Map<number, Forecast>();
-      forecastArray.forEach((pair: [number, Forecast]) => {
+      for (const pair of forecastArray) {
         const key = pair[0];
         const value = pair[1];
         const timestamp = new Date(value.timestamp);
         value.timestamp = timestamp;
-
         forecast.set(key, value);
-      });
+      }
+      newState.weatherForecast = forecast;
+    }
 
+    if (metadataString) {
       const metadataFromJson = JSON.parse(metadataString);
-      const metadata = {
+      newState.weatherForecastMetadata = {
         timestamp: new Date(metadataFromJson.timestamp),
         latitude: metadataFromJson.latitude,
         longitude: metadataFromJson.longitude,
       };
-
-      const position = JSON.parse(positionString);
-
-      console.log('Restoring data from local storage:', forecast, metadata, position);
-
-      this.setState({
-        weatherForecast: forecast,
-        weatherForecastMetadata: metadata,
-        position,
-      });
-    } else {
-      console.log('No weather forecast found in local storage');
     }
 
+    if (positionString) {
+      newState.position = JSON.parse(positionString);
+    }
+
+    if (newState.weatherForecast || newState.weatherForecastMetadata || newState.position) {
+      console.log('Restoring state from local storage:', newState);
+      this.setState(newState as Pick<ClockState, keyof ClockState>);
+    } else {
+      console.log('No state found in local storage');
+    }
+  };
+
+  componentDidMount() {
+    this.restoreFromLocalStorage();
     this.startGeolocationIfNeeded();
   }
 
@@ -208,11 +235,14 @@ class Clock extends React.Component<ClockProps, ClockState> {
       `Got position: latitude=${weatherLocation.latitude}, longitude=${weatherLocation.longitude}`,
     );
     this.context.showToast({ message: 'Geolocation succeeded', type: 'success' });
-    this.setState({
-      geoLocationProgress: undefined,
-      position: weatherLocation,
-      positionTimestamp: new Date(),
-    });
+    this.setState(
+      {
+        geoLocationProgress: undefined,
+        position: weatherLocation,
+        positionTimestamp: new Date(),
+      },
+      this.persistToLocalStorage,
+    );
   };
 
   /**
@@ -290,13 +320,13 @@ class Clock extends React.Component<ClockProps, ClockState> {
       .then(({ forecast, metadata }: WeatherDownloadResult) => {
         this.context.showToast({ message: 'Weather data download succeeded', type: 'success' });
         console.log('Writing data to local storage:', forecast, metadata, this.state.position);
-        localStorage.setItem('forecast', JSON.stringify(Array.from(forecast)));
-        localStorage.setItem('metadata', JSON.stringify(metadata));
-        localStorage.setItem('position', JSON.stringify(this.state.position));
-        this.setState({
-          weatherForecast: forecast,
-          weatherForecastMetadata: metadata,
-        });
+        this.setState(
+          {
+            weatherForecast: forecast,
+            weatherForecastMetadata: metadata,
+          },
+          this.persistToLocalStorage,
+        );
       })
       .catch((error) => {
         this.context.showToast({ message: 'Weather data download failed', type: 'error' });
