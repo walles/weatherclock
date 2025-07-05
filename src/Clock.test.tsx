@@ -33,6 +33,26 @@ import { render, act } from '@testing-library/react';
 import Clock from './Clock';
 import NamedStartTime from './NamedStartTime';
 
+beforeAll(() => {
+  // Without this the clock context roundtrip test fails with an anonymous
+  // AggregateError.
+  if (!(SVGElement.prototype as any).getBBox) {
+    (SVGElement.prototype as any).getBBox = function () {
+      return { x: 0, y: 0, width: 100, height: 20 };
+    };
+  }
+
+  // Without this we big yellow warning blobs printed during testing
+  if (!global.fetch) {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({}),
+      }),
+    ) as any;
+  }
+});
+
 describe('Clock componentDidUpdate', () => {
   it('calls download_weather if forecast is not current', () => {
     // Create a ref to access the class instance
@@ -87,5 +107,65 @@ describe('Clock download_weather', () => {
     // Should not call setState or showToast
     expect(setStateSpy).not.toHaveBeenCalled();
     expect(showToastSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('Clock localStorage roundtrip', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('persists and restores forecast, metadata, and position', () => {
+    // Subclass Clock to override side-effect methods before mount
+    class TestableClock extends Clock {
+      download_weather = jest.fn();
+      startGeolocationIfNeeded = jest.fn();
+    }
+
+    const ref = React.createRef<TestableClock>();
+    const startTime = new NamedStartTime(0);
+    const props = { startTime, reload: jest.fn() };
+    render(<TestableClock ref={ref} {...props} />);
+    const instance = ref.current!;
+
+    // Prepare test data
+    const weatherForecast = new Map([
+      [
+        123,
+        {
+          timestamp: new Date('2025-07-04T12:00:00Z'),
+          symbol_code: 'clearsky_day',
+          span_h: 1,
+        },
+      ],
+    ]);
+    const weatherForecastMetadata = {
+      timestamp: new Date('2025-07-04T11:00:00Z'),
+      latitude: 10,
+      longitude: 20,
+    };
+    const position = { latitude: 10, longitude: 20 };
+
+    // Populate a fake state to persist
+    instance.state = {
+      startTime,
+      weatherForecast,
+      weatherForecastMetadata,
+      position,
+      error: undefined,
+    };
+    instance.persistToLocalStorage();
+
+    const ref2 = React.createRef<TestableClock>();
+    render(<TestableClock ref={ref2} {...props} />);
+
+    const instance2 = ref2.current!;
+    instance2.restoreFromLocalStorage();
+
+    // Check restored state
+    const restored = ref2.current!.state;
+    expect(restored.weatherForecast).toEqual(weatherForecast);
+    expect(restored.weatherForecastMetadata).toEqual(weatherForecastMetadata);
+    expect(restored.position).toEqual(position);
   });
 });
