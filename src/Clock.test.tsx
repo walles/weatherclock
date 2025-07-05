@@ -67,7 +67,7 @@ describe('Clock componentDidUpdate', () => {
     // Mock methods
     jest.spyOn(instance, 'startGeolocationIfNeeded').mockImplementation(jest.fn());
     jest.spyOn(instance, 'forecastIsCurrent').mockReturnValue(false);
-    jest.spyOn(instance, 'download_weather').mockImplementation(jest.fn());
+    jest.spyOn(instance, 'downloadWeatherIfNeeded').mockImplementation(jest.fn());
     jest.spyOn(instance, 'auroraForecastIsCurrent').mockReturnValue(true);
 
     // Set state and call lifecycle in act()
@@ -77,7 +77,7 @@ describe('Clock componentDidUpdate', () => {
     });
 
     // Assert
-    expect(instance.download_weather).toHaveBeenCalled();
+    expect(instance.downloadWeatherIfNeeded).toHaveBeenCalled();
   });
 });
 
@@ -102,7 +102,7 @@ describe('Clock download_weather', () => {
     const showToastSpy = jest.spyOn(instance.context, 'showToast');
 
     // Call download_weather directly
-    instance.download_weather();
+    instance.downloadWeatherIfNeeded();
 
     // Should not call setState or showToast
     expect(setStateSpy).not.toHaveBeenCalled();
@@ -118,7 +118,7 @@ describe('Clock localStorage roundtrip', () => {
   it('persists and restores all expected state', () => {
     // Subclass Clock to override side-effect methods before mount
     class TestableClock extends Clock {
-      download_weather = jest.fn();
+      downloadWeatherIfNeeded = jest.fn();
       startGeolocationIfNeeded = jest.fn();
     }
 

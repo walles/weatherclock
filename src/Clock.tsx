@@ -120,7 +120,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
   /**
    * Reads weather forecast, metadata, and position from localStorage and updates state if found.
    */
-  restoreFromLocalStorage = () => {
+  restoreFromLocalStorage = (afterRestore?: () => void) => {
     const forecastString = localStorage.getItem('forecast');
     const metadataString = localStorage.getItem('forecastMetadata');
     const positionString = localStorage.getItem('position');
@@ -166,15 +166,20 @@ class Clock extends React.Component<ClockProps, ClockState> {
       newState.positionTimestamp
     ) {
       console.log('Restoring state from local storage:', newState);
-      this.setState(newState as Pick<ClockState, keyof ClockState>);
+      this.setState(newState as Pick<ClockState, keyof ClockState>, afterRestore);
     } else {
       console.log('No state found in local storage');
+      if (afterRestore) {
+        afterRestore();
+      }
     }
   };
 
   componentDidMount() {
-    this.restoreFromLocalStorage();
-    this.startGeolocationIfNeeded();
+    this.restoreFromLocalStorage(() => {
+      this.startGeolocationIfNeeded();
+      this.downloadWeatherIfNeeded();
+    });
   }
 
   componentDidUpdate() {
@@ -185,10 +190,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
 
     this.startGeolocationIfNeeded();
-
-    if (!this.forecastIsCurrent()) {
-      this.download_weather();
-    }
+    this.downloadWeatherIfNeeded();
 
     if (!this.auroraForecastIsCurrent() && !this.state.auroraForecastInProgress) {
       this.setState({ auroraForecastInProgress: true }, () => {
@@ -320,12 +322,15 @@ class Clock extends React.Component<ClockProps, ClockState> {
     return true;
   };
 
-  download_weather = () => {
+  downloadWeatherIfNeeded = () => {
     if (!this.state.position) {
       return;
     }
     if (this.state.weatherDownloadProgress) {
       // Already in progress, never mind
+      return;
+    }
+    if (this.forecastIsCurrent()) {
       return;
     }
 
