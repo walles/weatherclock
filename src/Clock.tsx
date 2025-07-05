@@ -105,7 +105,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
 
     if (this.state.weatherForecastMetadata) {
-      localStorage.setItem('metadata', JSON.stringify(this.state.weatherForecastMetadata));
+      localStorage.setItem('forecastMetadata', JSON.stringify(this.state.weatherForecastMetadata));
     }
 
     if (this.state.position) {
@@ -122,7 +122,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
    */
   restoreFromLocalStorage = () => {
     const forecastString = localStorage.getItem('forecast');
-    const metadataString = localStorage.getItem('metadata');
+    const metadataString = localStorage.getItem('forecastMetadata');
     const positionString = localStorage.getItem('position');
     const positionTimestampString = localStorage.getItem('positionTimestamp');
 
