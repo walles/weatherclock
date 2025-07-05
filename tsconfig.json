@@ -24,7 +24,8 @@
     "strictPropertyInitialization": true,
     "types": [
       "vite/client",
-      "jest"
+      "jest",
+      "node"
     ]
   },
   "include": [
