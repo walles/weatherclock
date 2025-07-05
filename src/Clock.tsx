@@ -267,6 +267,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
       // No forecast at all, that's not current
       return false;
     }
+    if (!this.state.weatherForecastMetadata) {
+      // No metadata, can't check age or distance
+      return false;
+    }
 
     const metadata = this.state.weatherForecastMetadata!;
     const ageMs = Date.now() - metadata.timestamp.getTime();
