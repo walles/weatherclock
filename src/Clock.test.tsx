@@ -115,7 +115,7 @@ describe('Clock localStorage roundtrip', () => {
     localStorage.clear();
   });
 
-  it('persists and restores forecast, metadata, and position', () => {
+  it('persists and restores all expected state', () => {
     // Subclass Clock to override side-effect methods before mount
     class TestableClock extends Clock {
       download_weather = jest.fn();
@@ -145,6 +145,7 @@ describe('Clock localStorage roundtrip', () => {
       longitude: 20,
     };
     const position = { latitude: 10, longitude: 20 };
+    const positionTimestamp = new Date('2025-07-04T11:00:00Z');
 
     // Populate a fake state to persist
     instance.state = {
@@ -152,6 +153,7 @@ describe('Clock localStorage roundtrip', () => {
       weatherForecast,
       weatherForecastMetadata,
       position,
+      positionTimestamp,
       error: undefined,
     };
     instance.persistToLocalStorage();
@@ -167,5 +169,6 @@ describe('Clock localStorage roundtrip', () => {
     expect(restored.weatherForecast).toEqual(weatherForecast);
     expect(restored.weatherForecastMetadata).toEqual(weatherForecastMetadata);
     expect(restored.position).toEqual(position);
+    expect(restored.positionTimestamp).toEqual(positionTimestamp);
   });
 });

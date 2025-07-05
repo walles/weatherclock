@@ -111,6 +111,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
     if (this.state.position) {
       localStorage.setItem('position', JSON.stringify(this.state.position));
     }
+
+    if (this.state.positionTimestamp) {
+      localStorage.setItem('positionTimestamp', this.state.positionTimestamp.toISOString());
+    }
   };
 
   /**
@@ -120,6 +124,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     const forecastString = localStorage.getItem('forecast');
     const metadataString = localStorage.getItem('metadata');
     const positionString = localStorage.getItem('position');
+    const positionTimestampString = localStorage.getItem('positionTimestamp');
 
     const newState: Partial<ClockState> = {};
 
@@ -150,7 +155,16 @@ class Clock extends React.Component<ClockProps, ClockState> {
       newState.position = JSON.parse(positionString);
     }
 
-    if (newState.weatherForecast || newState.weatherForecastMetadata || newState.position) {
+    if (positionTimestampString) {
+      newState.positionTimestamp = new Date(positionTimestampString);
+    }
+
+    if (
+      newState.weatherForecast ||
+      newState.weatherForecastMetadata ||
+      newState.position ||
+      newState.positionTimestamp
+    ) {
       console.log('Restoring state from local storage:', newState);
       this.setState(newState as Pick<ClockState, keyof ClockState>);
     } else {
