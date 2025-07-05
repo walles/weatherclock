@@ -32,6 +32,7 @@ import React from 'react';
 import { render, act } from '@testing-library/react';
 import Clock from './Clock';
 import NamedStartTime from './NamedStartTime';
+import AuroraForecast from './AuroraForecast';
 
 beforeAll(() => {
   // Without this the clock context roundtrip test fails with an anonymous
@@ -129,6 +130,8 @@ describe('Clock localStorage roundtrip', () => {
     const instance = ref.current!;
 
     // Prepare test data
+    const position = { latitude: 10, longitude: 20 };
+    const positionTimestamp = new Date('2025-07-04T11:00:00Z');
     const weatherForecast = new Map([
       [
         123,
@@ -144,8 +147,14 @@ describe('Clock localStorage roundtrip', () => {
       latitude: 10,
       longitude: 20,
     };
-    const position = { latitude: 10, longitude: 20 };
-    const positionTimestamp = new Date('2025-07-04T11:00:00Z');
+    // AuroraForecast expects an array of arrays, first row is header
+    const auroraForecast = new AuroraForecast([
+      ['time_tag', 'kp'],
+      ['2025-07-04T13:00:00', '5.00'],
+    ]);
+    const auroraForecastMetadata = {
+      timestamp: new Date('2025-07-04T12:30:00Z'),
+    };
 
     // Populate a fake state to persist
     instance.state = {
@@ -154,7 +163,8 @@ describe('Clock localStorage roundtrip', () => {
       weatherForecastMetadata,
       position,
       positionTimestamp,
-      error: undefined,
+      auroraForecast,
+      auroraForecastMetadata,
     };
     instance.persistToLocalStorage();
 
@@ -166,9 +176,11 @@ describe('Clock localStorage roundtrip', () => {
 
     // Check restored state
     const restored = ref2.current!.state;
-    expect(restored.weatherForecast).toEqual(weatherForecast);
-    expect(restored.weatherForecastMetadata).toEqual(weatherForecastMetadata);
     expect(restored.position).toEqual(position);
     expect(restored.positionTimestamp).toEqual(positionTimestamp);
+    expect(restored.weatherForecast).toEqual(weatherForecast);
+    expect(restored.weatherForecastMetadata).toEqual(weatherForecastMetadata);
+    expect(restored.auroraForecast).toEqual(auroraForecast);
+    expect(restored.auroraForecastMetadata).toEqual(auroraForecastMetadata);
   });
 });

@@ -23,8 +23,16 @@ export default class AuroraForecast {
 
     for (let i = 1; i < data.length; i += 1) {
       const [timestamp, kpValue] = data[i];
+      let ts: Date;
+      if (timestamp instanceof Date) {
+        ts = timestamp;
+      } else {
+        // Handle NOAA's timestamps, they are UTC but lack timezone suffix, like
+        // "2024-10-24 00:00:00"
+        ts = new Date(`${timestamp}Z`);
+      }
       forecast.push({
-        timestamp: new Date(`${timestamp}Z`),
+        timestamp: ts,
         kpValue: parseFloat(kpValue),
       });
     }

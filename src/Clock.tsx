@@ -100,6 +100,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
    * Writes weather forecast, metadata, and position to localStorage from state.
    */
   persistToLocalStorage = () => {
+    console.debug('Persisting state to local storage...', this.state);
+
     if (this.state.weatherForecast) {
       localStorage.setItem('forecast', JSON.stringify(Array.from(this.state.weatherForecast)));
     }
@@ -115,6 +117,24 @@ class Clock extends React.Component<ClockProps, ClockState> {
     if (this.state.positionTimestamp) {
       localStorage.setItem('positionTimestamp', this.state.positionTimestamp.toISOString());
     }
+
+    if (this.state.auroraForecast) {
+      // AuroraForecast is constructed from an array of arrays, so persist as such
+      const auroraData = this.state.auroraForecast.data.map((d: any) => [
+        d.timestamp.toISOString(),
+        d.kpValue,
+      ]);
+      // Add header row to match constructor expectations
+      const auroraArray = [['time_tag', 'kp'], ...auroraData];
+      localStorage.setItem('auroraForecast', JSON.stringify(auroraArray));
+    }
+
+    if (this.state.auroraForecastMetadata) {
+      localStorage.setItem(
+        'auroraForecastMetadata',
+        JSON.stringify(this.state.auroraForecastMetadata),
+      );
+    }
   };
 
   /**
@@ -125,6 +145,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
     const metadataString = localStorage.getItem('forecastMetadata');
     const positionString = localStorage.getItem('position');
     const positionTimestampString = localStorage.getItem('positionTimestamp');
+    const auroraForecastString = localStorage.getItem('auroraForecast');
+    const auroraForecastMetadataString = localStorage.getItem('auroraForecastMetadata');
 
     const newState: Partial<ClockState> = {};
 
@@ -157,6 +179,29 @@ class Clock extends React.Component<ClockProps, ClockState> {
 
     if (positionTimestampString) {
       newState.positionTimestamp = new Date(positionTimestampString);
+    }
+
+    if (auroraForecastString) {
+      const auroraArray = JSON.parse(auroraForecastString);
+      // Convert ISO string timestamps to the expected format for AuroraForecast
+      if (Array.isArray(auroraArray) && auroraArray.length > 0) {
+        const header = auroraArray[0];
+        const rows = auroraArray.slice(1).map((row: any[]) => {
+          // rows are ISO string, convert to Date object for AuroraForecast constructor
+          if (typeof row[0] === 'string') {
+            row[0] = new Date(row[0]);
+          }
+          return row;
+        });
+        newState.auroraForecast = new AuroraForecast([header, ...rows]);
+      }
+    }
+
+    if (auroraForecastMetadataString) {
+      const auroraMetadataFromJson = JSON.parse(auroraForecastMetadataString);
+      newState.auroraForecastMetadata = {
+        timestamp: new Date(auroraMetadataFromJson.timestamp),
+      };
     }
 
     if (
@@ -310,6 +355,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
       // No forecast at all, that's not current
       return false;
     }
+    if (!this.state.auroraForecastMetadata) {
+      // No metadata, can't check age
+      return false;
+    }
 
     const metadata = this.state.auroraForecastMetadata!;
     const ageMs = Date.now() - metadata.timestamp.getTime();
@@ -369,12 +418,15 @@ class Clock extends React.Component<ClockProps, ClockState> {
     fetchAuroraForecast()
       .then((forecast) => {
         this.context.showToast({ message: 'Aurora forecast download succeeded', type: 'success' });
-        this.setState({
-          auroraForecast: forecast,
-          auroraForecastMetadata: {
-            timestamp: new Date(),
+        this.setState(
+          {
+            auroraForecast: forecast,
+            auroraForecastMetadata: {
+              timestamp: new Date(),
+            },
           },
-        });
+          this.persistToLocalStorage,
+        );
       })
       .catch((error) => {
         this.context.showToast({ message: 'Aurora forecast download failed', type: 'error' });
