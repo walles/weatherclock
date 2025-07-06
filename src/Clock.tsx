@@ -512,12 +512,12 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return this.renderHands();
     }
 
-    if (this.state.geoLocationProgress) {
-      return this.state.geoLocationProgress;
-    }
-
     if (this.state.weatherDownloadProgress) {
       return this.state.weatherDownloadProgress;
+    }
+
+    if (this.state.geoLocationProgress) {
+      return this.state.geoLocationProgress;
     }
 
     // Most likely the initial state
