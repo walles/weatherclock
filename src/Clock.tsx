@@ -308,29 +308,26 @@ class Clock extends React.Component<ClockProps, ClockState> {
     );
   };
 
-  /**
-   * Relates to the weather forecast, not any other forecast.
-   */
-  forecastIsCurrent = () => {
+  weatherForecastNeedsUpdating = (): boolean => {
     if (!this.state.weatherForecast) {
       // No forecast at all, that's not current
-      return false;
+      return true;
     }
     if (!this.state.weatherForecastMetadata) {
       // No metadata, can't check age or distance
-      return false;
+      return true;
     }
 
     const metadata = this.state.weatherForecastMetadata!;
     const ageMs = Date.now() - metadata.timestamp.getTime();
     if (ageMs > FORECAST_CACHE_MS) {
       // Forecast too old, that's not current
-      return false;
+      return true;
     }
 
     if (!this.state.position) {
       // No position, can't check distance
-      return false;
+      return true;
     }
 
     const kmDistance = getDistanceFromLatLonInKm(
@@ -341,7 +338,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
     );
     if (kmDistance > FORECAST_CACHE_KM) {
       // Forecast from too far away, that's not current
-      return false;
+      return true;
     }
 
     const kmDistanceRounded = Math.round(kmDistance * 1000) / 1000;
@@ -349,7 +346,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       `Weather forecast considered current: ${ageMs / 1000.0}s old and ${kmDistanceRounded}km away`,
     );
 
-    return true;
+    return false;
   };
 
   auroraForecastIsCurrent = () => {
@@ -381,7 +378,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
       // Already in progress, never mind
       return;
     }
-    if (this.forecastIsCurrent()) {
+    if (!this.weatherForecastNeedsUpdating()) {
       return;
     }
 
