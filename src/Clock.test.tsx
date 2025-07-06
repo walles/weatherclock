@@ -166,7 +166,7 @@ describe('Clock localStorage roundtrip', () => {
       auroraForecast,
       auroraForecastMetadata,
     };
-    instance.persistToLocalStorage();
+    instance.persistToLocalStorage('roundtrip test');
 
     const ref2 = React.createRef<TestableClock>();
     render(<TestableClock ref={ref2} {...props} />);

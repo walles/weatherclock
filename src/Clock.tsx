@@ -99,8 +99,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
   /**
    * Writes weather forecast, metadata, and position to localStorage from state.
    */
-  persistToLocalStorage = () => {
-    console.debug('Persisting state to local storage...', this.state);
+  persistToLocalStorage = (reason: string) => {
+    console.debug(`Persisting state to local storage (${reason})...`, this.state);
 
     if (this.state.weatherForecast) {
       localStorage.setItem('forecast', JSON.stringify(Array.from(this.state.weatherForecast)));
@@ -302,7 +302,9 @@ class Clock extends React.Component<ClockProps, ClockState> {
         position: weatherLocation,
         positionTimestamp: new Date(),
       },
-      this.persistToLocalStorage,
+      () => {
+        this.persistToLocalStorage('received new location');
+      },
     );
   };
 
@@ -396,7 +398,9 @@ class Clock extends React.Component<ClockProps, ClockState> {
             weatherForecast: forecast,
             weatherForecastMetadata: metadata,
           },
-          this.persistToLocalStorage,
+          () => {
+            this.persistToLocalStorage('received new weather data');
+          },
         );
       })
       .catch((error) => {
@@ -424,7 +428,9 @@ class Clock extends React.Component<ClockProps, ClockState> {
               timestamp: new Date(),
             },
           },
-          this.persistToLocalStorage,
+          () => {
+            this.persistToLocalStorage('received new aurora forecast');
+          },
         );
       })
       .catch((error) => {
