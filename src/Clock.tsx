@@ -391,7 +391,6 @@ class Clock extends React.Component<ClockProps, ClockState> {
     downloadWeather(this.state.position)
       .then(({ forecast, metadata }: WeatherDownloadResult) => {
         this.context.showToast({ message: 'Weather data download succeeded', type: 'success' });
-        console.log('Writing data to local storage:', forecast, metadata, this.state.position);
         this.setState(
           {
             weatherForecast: forecast,
