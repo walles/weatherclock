@@ -112,10 +112,19 @@ export function hasDataForNow(forecast: Map<number, Forecast>): boolean {
   }
 
   if (!last1hTimestamp) {
-    return false;
+    // The interpretation here is that we are in some place where we don't get
+    // 1h resolution data ever. Just go with what we have.
+    console.warn('No 1h resolution data found in forecast, displaying anyway');
+    return true;
   }
 
   const hoursUntilLast1hTimestamp = (last1hTimestamp - Date.now()) / (3600 * 1000);
+  if (hoursUntilLast1hTimestamp < 11) {
+    console.warn(
+      `Last 1h resolution data is ${hoursUntilLast1hTimestamp} hours away, awaiting new data`,
+    );
+    return false;
+  }
 
-  return hoursUntilLast1hTimestamp >= 11;
+  return true;
 }
