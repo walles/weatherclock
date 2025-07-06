@@ -121,6 +121,7 @@ describe('Clock localStorage roundtrip', () => {
     class TestableClock extends Clock {
       downloadWeatherIfNeeded = jest.fn();
       startGeolocationIfNeeded = jest.fn();
+      bump_aurora_forecast = jest.fn();
     }
 
     const ref = React.createRef<TestableClock>();
