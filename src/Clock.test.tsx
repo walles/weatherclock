@@ -172,9 +172,6 @@ describe('Clock localStorage roundtrip', () => {
     const ref2 = React.createRef<TestableClock>();
     render(<TestableClock ref={ref2} {...props} />);
 
-    const instance2 = ref2.current!;
-    instance2.restoreFromLocalStorage();
-
     // Check restored state
     const restored = ref2.current!.state;
     expect(restored.position).toEqual(position);
