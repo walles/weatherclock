@@ -97,3 +97,25 @@ export async function downloadWeather(position: WeatherLocation): Promise<Weathe
   };
   return { forecast, metadata };
 }
+
+/**
+ * Checks that the forecast has enough 1h resolution data to cover the
+ * now-display.
+ */
+export function hasDataForNow(forecast: Map<number, Forecast>): boolean {
+  // Find the last timestamp with span_h of 1 hour
+  let last1hTimestamp: number | undefined;
+  for (const [timestamp, data] of forecast) {
+    if (data.span_h === 1 && (last1hTimestamp === undefined || timestamp > last1hTimestamp)) {
+      last1hTimestamp = timestamp;
+    }
+  }
+
+  if (!last1hTimestamp) {
+    return false;
+  }
+
+  const hoursUntilLast1hTimestamp = (last1hTimestamp - Date.now()) / (3600 * 1000);
+
+  return hoursUntilLast1hTimestamp >= 11;
+}

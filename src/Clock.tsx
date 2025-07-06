@@ -11,7 +11,7 @@ import { Forecast } from './Forecast';
 import AuroraForecast from './AuroraForecast';
 import { WeatherLocation, getFixedPosition, getDistanceFromLatLonInKm } from './PositionService';
 import { fetchAuroraForecast } from './AuroraService';
-import { downloadWeather, WeatherDownloadResult } from './WeatherService';
+import { downloadWeather, hasDataForNow, WeatherDownloadResult } from './WeatherService';
 import { ToastContext } from './ToastContext';
 
 const HOUR_HAND_LENGTH = 23;
@@ -481,7 +481,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
   };
 
   getClockContents = () => {
-    if (this.state.weatherForecast) {
+    if (this.state.weatherForecast && hasDataForNow(this.state.weatherForecast)) {
       if (this.props.startTime.daysFromNow !== 0) {
         return (
           <>
