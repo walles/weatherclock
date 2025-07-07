@@ -41,13 +41,14 @@ export const ToastProvider: React.FC<{
   };
 
   const showToast = (newToast: Toast) => {
-    console.log(`Toast requested: ${newToast.type}: ${newToast.message}`);
-    if (!notificationsEnabled) {
-      console.debug('Notifications are disabled, ignoring toast:', newToast);
-      return;
-    }
     if (toast && toast.message === newToast.message && toast.type === newToast.type && open) {
       // Prevent infinite update loop if the same toast is requested while open
+      console.debug('Ignoring toast (already showing):', newToast);
+      return;
+    }
+
+    if (!notificationsEnabled) {
+      console.debug('Ignoring toast (notifications disabled):', newToast);
       return;
     }
 
@@ -55,10 +56,12 @@ export const ToastProvider: React.FC<{
       const currentRank = toastSeverityRank(toast.type);
       const newRank = toastSeverityRank(newToast.type);
       if (newRank < currentRank) {
-        console.log('Ignored toast (lower severity):', newToast, 'Current toast:', toast);
+        console.log('Ignoring toast (lower severity):', newToast, 'Current toast:', toast);
         return;
       }
     }
+
+    console.log(`Showing toast: ${newToast.type}: ${newToast.message}...`);
     setToast(newToast);
     setOpen(true);
   };
