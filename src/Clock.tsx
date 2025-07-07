@@ -522,8 +522,13 @@ class Clock extends React.Component<ClockProps, ClockState> {
       return this.state.geoLocationProgress;
     }
 
-    // Most likely the initial state
-    return null;
+    // Most likely the initial state.
+    //
+    // If somebody reports actually seeing this, other than possibly flashing
+    // by, something is wrong. Either geolocation or weather download should
+    // already be ongoing, and in those cases we should already have picked that
+    // to show ^.
+    return <text className="progress">Waiting...</text>;
   };
 
   render() {
