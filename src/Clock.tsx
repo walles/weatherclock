@@ -73,27 +73,23 @@ class Clock extends React.Component<ClockProps, ClockState> {
   constructor(props: ClockProps) {
     super(props);
     const { startTime } = props;
-    this.state = this.getInitialState(startTime);
+    this.state = {
+      startTime,
+      error: this.getInitialError(),
+    };
   }
 
-  getInitialState(startTime: NamedStartTime) {
+  getInitialError(): ReactElement | undefined {
     if (navigator.geolocation) {
-      return {
-        startTime,
-        progress: undefined,
-        error: undefined,
-      };
+      return undefined;
     }
+
     const { reload } = this.props;
-    return {
-      startTime,
-      progress: undefined,
-      error: (
-        <ErrorDialog title="Geolocation unsupported" reload={reload}>
-          Please try <a href="https://getfirefox.com">another browser</a>.
-        </ErrorDialog>
-      ),
-    };
+    return (
+      <ErrorDialog title="Geolocation unsupported" reload={reload}>
+        Please try <a href="https://getfirefox.com">another browser</a>.
+      </ErrorDialog>
+    );
   }
 
   /**
@@ -231,7 +227,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
     const { startTime } = this.props;
     const { startTime: stateStartTime } = this.state;
     if (startTime.startTime !== stateStartTime.startTime) {
-      this.setState(this.getInitialState(startTime));
+      this.setState({
+        startTime,
+        error: this.getInitialError(),
+      });
     }
 
     this.startGeolocationIfNeeded();
