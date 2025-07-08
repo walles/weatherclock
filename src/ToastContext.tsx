@@ -61,7 +61,7 @@ export const ToastProvider: React.FC<{
       }
     }
 
-    console.log(`Showing toast: ${newToast.type}: ${newToast.message}...`);
+    console.log('Showing toast:', newToast);
     setToast(newToast);
     setOpen(true);
   };
