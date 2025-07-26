@@ -382,34 +382,44 @@ class Clock extends React.Component<ClockProps, ClockState> {
     }
 
     this.context.showToast({ message: 'Requesting weather data…', type: 'info' });
-    this.setState({
-      weatherDownloadProgress: <text className="progress">Downloading weather...</text>,
-    });
-
-    downloadWeather(this.state.position)
-      .then(({ forecast, metadata }: WeatherDownloadResult) => {
-        this.context.showToast({ message: 'Weather data download succeeded', type: 'success' });
-        this.setState(
-          {
-            weatherForecast: forecast,
-            weatherForecastMetadata: metadata,
-          },
-          () => {
-            this.persistToLocalStorage('received new weather data');
-          },
-        );
-      })
-      .catch((error) => {
-        this.context.showToast({ message: 'Weather data download failed', type: 'error' });
-        console.error(error);
-        this.setState({
-          error: (
-            <ErrorDialog title="Downloading weather failed" reload={this.props.reload}>
-              {error.message}
-            </ErrorDialog>
-          ),
-        });
-      });
+    this.setState(
+      {
+        weatherDownloadProgress: <text className="progress">Downloading weather...</text>,
+      },
+      () => {
+        const position = this.state.position;
+        if (!position) {
+          console.warn('No position available, cannot download weather');
+          return;
+        }
+        downloadWeather(position)
+          .then(({ forecast, metadata }: WeatherDownloadResult) => {
+            this.context.showToast({ message: 'Weather data download succeeded', type: 'success' });
+            this.setState(
+              {
+                weatherForecast: forecast,
+                weatherForecastMetadata: metadata,
+                weatherDownloadProgress: undefined,
+              },
+              () => {
+                this.persistToLocalStorage('received new weather data');
+              },
+            );
+          })
+          .catch((error) => {
+            this.context.showToast({ message: 'Weather data download failed', type: 'error' });
+            console.error(error);
+            this.setState({
+              error: (
+                <ErrorDialog title="Downloading weather failed" reload={this.props.reload}>
+                  {error.message}
+                </ErrorDialog>
+              ),
+              weatherDownloadProgress: undefined, // We aren't downloading anymore
+            });
+          });
+      },
+    );
   };
 
   bump_aurora_forecast = () => {
