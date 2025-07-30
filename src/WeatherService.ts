@@ -103,7 +103,7 @@ export async function downloadWeather(position: WeatherLocation): Promise<Weathe
  * now-display.
  */
 export function hasDataForNow(forecast: Map<number, Forecast>): boolean {
-  // Find the last timestamp with span_h of 1 hour
+  // Find the furthest away timestamp with span_h of 1 hour
   let last1hTimestamp: number | undefined;
   for (const [timestamp, data] of forecast) {
     if (data.span_h === 1 && (last1hTimestamp === undefined || timestamp > last1hTimestamp)) {

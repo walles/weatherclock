@@ -323,6 +323,10 @@ class Clock extends React.Component<ClockProps, ClockState> {
       // Forecast too old, that's not current
       return true;
     }
+    if (!hasDataForNow(this.state.weatherForecast)) {
+      // Not enough 1h resolution data for today, we need an update
+      return true;
+    }
 
     if (!this.state.position) {
       // No position, can't check distance
@@ -537,6 +541,8 @@ class Clock extends React.Component<ClockProps, ClockState> {
     // by, something is wrong. Either geolocation or weather download should
     // already be ongoing, and in those cases we should already have picked that
     // to show ^.
+    this.startGeolocationIfNeeded();
+    this.downloadWeatherIfNeeded();
     return <text className="progress">Waiting...</text>;
   };
 
