@@ -59,6 +59,7 @@ const AboutDialog: React.FC<AboutDialogProps> = ({ open, onClose }) => {
           >
             Source code on GitHub
           </Link>
+          . Deploy build done on {import.meta.env.VITE_BUILD_TIMESTAMP}.
         </Typography>
       </DialogContent>
       <DialogActions>

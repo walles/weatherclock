@@ -23,8 +23,8 @@
   },
   "scripts": {
     "ci": "npm run typecheck && npm run build && npm run format && npm run lint && npm run test",
-    "start": "VITE_GIT_SHA=$(git rev-parse HEAD) vite",
-    "build": "VITE_GIT_SHA=$(git rev-parse HEAD) vite build",
+    "start": "VITE_GIT_SHA=$(git rev-parse HEAD) VITE_BUILD_TIMESTAMP=$(LANG= TZ=CET date) vite",
+    "build": "VITE_GIT_SHA=$(git rev-parse HEAD) VITE_BUILD_TIMESTAMP=$(LANG= TZ=CET date) vite build",
     "preview": "vite preview",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "typecheck": "tsc --noEmit",
