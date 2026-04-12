@@ -10,31 +10,45 @@ export default class AuroraForecast {
   data: Datapoint[];
 
   /**
-   * The incoming data is a JSON array.
+   * The incoming data is a JSON array in one of two formats:
    *
-   * The first element contains header information for the other elements:
-   * ["time_tag","kp","observed","noaa_scale"]
+   * Legacy format: first element is a header array, rest are data arrays:
+   *   ["time_tag","kp","observed","noaa_scale"]
+   *   ["2024-10-24 00:00:00","3.00","observed",null]
    *
-   * The other elements are the forecasted KP values. Timestamps are in UTC:
-   * ["2024-10-24 00:00:00","3.00","observed",null]
+   * Current format: array of objects:
+   *   {"time_tag":"2026-04-05T00:00:00","kp":3.67,"observed":"observed","noaa_scale":null}
+   *
+   * Timestamps are in UTC but lack a timezone suffix.
    */
   constructor(data: any) {
     const forecast = [];
 
-    for (let i = 1; i < data.length; i += 1) {
-      const [timestamp, kpValue] = data[i];
-      let ts: Date;
-      if (timestamp instanceof Date) {
-        ts = timestamp;
-      } else {
-        // Handle NOAA's timestamps, they are UTC but lack timezone suffix, like
-        // "2024-10-24 00:00:00"
-        ts = new Date(`${timestamp}Z`);
+    const isObjectFormat = data.length > 0 && typeof data[0] === 'object' && !Array.isArray(data[0]);
+
+    if (isObjectFormat) {
+      for (let i = 0; i < data.length; i += 1) {
+        const entry = data[i];
+        const ts = new Date(`${entry.time_tag}Z`);
+        forecast.push({
+          timestamp: ts,
+          kpValue: parseFloat(entry.kp),
+        });
       }
-      forecast.push({
-        timestamp: ts,
-        kpValue: parseFloat(kpValue),
-      });
+    } else {
+      for (let i = 1; i < data.length; i += 1) {
+        const [timestamp, kpValue] = data[i];
+        let ts: Date;
+        if (timestamp instanceof Date) {
+          ts = timestamp;
+        } else {
+          ts = new Date(`${timestamp}Z`);
+        }
+        forecast.push({
+          timestamp: ts,
+          kpValue: parseFloat(kpValue),
+        });
+      }
     }
 
     this.data = forecast;
