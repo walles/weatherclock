@@ -24,7 +24,8 @@ export default class AuroraForecast {
   constructor(data: any) {
     const forecast = [];
 
-    const isObjectFormat = data.length > 0 && typeof data[0] === 'object' && !Array.isArray(data[0]);
+    const isObjectFormat =
+      data.length > 0 && typeof data[0] === 'object' && !Array.isArray(data[0]);
 
     if (isObjectFormat) {
       for (let i = 0; i < data.length; i += 1) {
