@@ -31,6 +31,9 @@ const FORECAST_CACHE_MS = 2 * HOUR_MS;
  * of days, so we won't win much from fetching it more often. */
 const AURORA_FORECAST_CACHE_MS = 7 * HOUR_MS;
 
+/** Wait a bit before retrying a failed aurora download. */
+const AURORA_FORECAST_RETRY_DELAY_MS = 5 * MINUTE_MS;
+
 /** If we move less than this, assume forecast is still valid */
 const FORECAST_CACHE_KM = 5;
 
@@ -63,6 +66,7 @@ type ClockState = {
   auroraForecastMetadata?: {
     timestamp: Date;
   };
+  auroraForecastRetryNotBefore?: Date;
   auroraForecastInProgress?: boolean;
 };
 
@@ -236,7 +240,11 @@ class Clock extends React.Component<ClockProps, ClockState> {
     this.startGeolocationIfNeeded();
     this.downloadWeatherIfNeeded();
 
-    if (!this.auroraForecastIsCurrent() && !this.state.auroraForecastInProgress) {
+    if (
+      !this.auroraForecastIsCurrent() &&
+      !this.auroraForecastRetryBlocked() &&
+      !this.state.auroraForecastInProgress
+    ) {
       this.setState({ auroraForecastInProgress: true }, () => {
         this.bump_aurora_forecast();
       });
@@ -373,6 +381,21 @@ class Clock extends React.Component<ClockProps, ClockState> {
     return true;
   };
 
+  auroraForecastRetryBlocked = () => {
+    const { auroraForecastRetryNotBefore } = this.state;
+    if (!auroraForecastRetryNotBefore) {
+      return false;
+    }
+
+    const retryDelayMs = auroraForecastRetryNotBefore.getTime() - Date.now();
+    if (retryDelayMs <= 0) {
+      return false;
+    }
+
+    console.debug(`Aurora forecast retry blocked for ${retryDelayMs / 1000.0}s`);
+    return true;
+  };
+
   downloadWeatherIfNeeded = () => {
     if (!this.state.position) {
       return;
@@ -437,6 +460,7 @@ class Clock extends React.Component<ClockProps, ClockState> {
             auroraForecastMetadata: {
               timestamp: new Date(),
             },
+            auroraForecastRetryNotBefore: undefined,
           },
           () => {
             this.persistToLocalStorage('received new aurora forecast');
@@ -446,6 +470,9 @@ class Clock extends React.Component<ClockProps, ClockState> {
       .catch((error) => {
         this.context.showToast({ message: 'Aurora forecast download failed', type: 'error' });
         console.warn(error);
+        this.setState({
+          auroraForecastRetryNotBefore: new Date(Date.now() + AURORA_FORECAST_RETRY_DELAY_MS),
+        });
       })
       .finally(() => {
         this.setState({ auroraForecastInProgress: false });
